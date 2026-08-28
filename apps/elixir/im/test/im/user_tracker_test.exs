@@ -27,6 +27,7 @@ defmodule IM.UserTrackerTest do
         false
 
       true ->
+        # 轮询 ETS 直至 UserTracker 写入设备
         Process.sleep(20)
         wait_until(fun, attempts - 1)
     end

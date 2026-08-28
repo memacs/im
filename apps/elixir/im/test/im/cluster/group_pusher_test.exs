@@ -50,6 +50,7 @@ defmodule IM.Cluster.GroupPusherTest do
       end)
 
     Enum.each(pids, fn _ -> assert_receive {:ready, _}, 1000 end)
+    # 等待 UserTracker 完成跨进程注册后再推送
     Process.sleep(50)
 
     msg = %ChatMessage{msg_id: "m1", from: "a", to: "g", conv_id: "g:g1", content: "hi"}

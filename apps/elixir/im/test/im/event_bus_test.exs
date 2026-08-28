@@ -70,6 +70,7 @@ defmodule IM.EventBusTest do
         false
 
       true ->
+        # 轮询等待 EventBus buffer flush
         Process.sleep(10)
         wait_until(fun, n - 1)
     end

@@ -96,6 +96,7 @@ defmodule IM.Services.MsgId do
         {:reply, fallback_id(app_key), state}
 
       now == state.last_ts and state.seq >= @max_sequence ->
+        # 同毫秒 Snowflake 序号用尽，让步 1ms 以切换时间戳
         Process.sleep(1)
         {:reply, snowflake(now + 1, state.worker_id, 0), %{state | last_ts: now + 1, seq: 0}}
 

@@ -20,8 +20,7 @@ defmodule IMWeb.Plugs.LogContext do
         trace_id = Map.get(assigns, :trace_id)
 
         if is_binary(trace_id) and trace_id != "" do
-          require Logger
-          Logger.metadata(trace_id: trace_id)
+          IM.Log.put_trace_id(trace_id)
         end
     end
 

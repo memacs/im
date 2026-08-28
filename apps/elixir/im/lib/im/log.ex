@@ -14,6 +14,8 @@ defmodule IM.Log do
     packet_decode_error storage_failed push_failed cluster_dispatch_failed
     handler_crash internal_error packet_error auth_failed rate_limited
     channel_subscribe_denied channel_publish_dropped channel_push_failed
+    startup_redis_cache_memory startup_redis_missing_cluster
+    startup_event_bus_brokers_missing
   )a
 
   @doc """
@@ -47,6 +49,19 @@ defmodule IM.Log do
   def context_metadata do
     Logger.metadata()
     |> Keyword.take([:trace_id, :app_key, :user_id, :device_id, :session_id])
+  end
+
+  @doc """
+  仅写入 `trace_id`（REST 在构造 MessageContext 之前）。
+
+  ## 示例
+
+      IM.Log.put_trace_id("tr-1")
+  """
+  @spec put_trace_id(String.t()) :: :ok
+  def put_trace_id(trace_id) when is_binary(trace_id) do
+    Logger.metadata(trace_id: trace_id)
+    :ok
   end
 
   defmacro info(event, fields \\ []) do

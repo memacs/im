@@ -9,6 +9,16 @@ defmodule IM.Services.Auth do
   alias IM.Stores.UserDeviceStore
   alias Pb.Im.Protocol.{AuthReq, AuthResp, DeviceResource}
 
+  @platforms %{
+    "ios" => :ios,
+    "android" => :android,
+    "web" => :web,
+    "harmony" => :harmony,
+    "windows" => :windows,
+    "macos" => :macos,
+    "linux" => :linux
+  }
+
   @doc """
   处理鉴权请求。成功返回 `%{resp: AuthResp.t(), context: MessageContext.t(), kick_oldest: ...}`。
 
@@ -96,8 +106,9 @@ defmodule IM.Services.Auth do
   end
 
   defp platform_atom(platform) when is_binary(platform) do
-    String.to_atom(platform)
-  rescue
-    _ -> :unknown
+    Map.get(@platforms, String.downcase(platform), :unknown)
   end
+
+  defp platform_atom(platform) when is_atom(platform), do: platform
+  defp platform_atom(_), do: :unknown
 end

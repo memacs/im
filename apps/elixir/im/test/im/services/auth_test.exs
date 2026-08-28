@@ -25,6 +25,24 @@ defmodule IM.Services.AuthTest do
     assert resp.payload_compression == :PAYLOAD_COMPRESSION_NONE
     assert ctx.trace_id == "tr-1"
     assert ctx.device_id == device_id
+    assert ctx.platform == :ios
+  end
+
+  test "未知 platform 映射为 :unknown" do
+    %{token: token, app_key: app_key, user_id: user_id, device_id: device_id} =
+      AuthFixtures.login!()
+
+    req = %AuthReq{
+      app_key: app_key,
+      user_id: user_id,
+      token: token,
+      device_id: device_id,
+      platform: "custom-os-#{System.unique_integer([:positive])}",
+      sdk_ver: "1.0"
+    }
+
+    assert {:ok, %{context: ctx}} = Auth.authenticate(req, "tr-plat")
+    assert ctx.platform == :unknown
   end
 
   test "无效 token 失败" do

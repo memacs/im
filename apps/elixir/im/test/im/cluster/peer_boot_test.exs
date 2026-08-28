@@ -71,6 +71,16 @@ defmodule IM.ClusterPeerBootTest do
   end
 
   defp wait(fun, n \\ 50) do
-    if fun.(), do: true, else: n > 0 && Process.sleep(50) && wait(fun, n - 1)
+    if fun.() do
+      true
+    else
+      if n > 0 do
+        # 轮询 peer 节点进程就绪
+        Process.sleep(50)
+        wait(fun, n - 1)
+      else
+        false
+      end
+    end
   end
 end

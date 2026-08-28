@@ -179,6 +179,7 @@ defmodule IM.ClusterPeer do
         false
 
       true ->
+        # 轮询 cluster peer 侧异步状态
         Process.sleep(50)
         wait_until(fun, attempts - 1)
     end

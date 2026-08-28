@@ -9,6 +9,8 @@ defmodule IM.Application do
 
   use Application
 
+  require IM.Log
+
   @impl true
   def start(_type, _args) do
     children =
@@ -87,19 +89,14 @@ defmodule IM.Application do
       clustered? = IM.Cluster.topologies() != []
 
       if (is_nil(redis_url) or redis_url == "") and cache_impl == IM.Cache.Memory do
-        require Logger
-
-        Logger.warning("""
-        [IM] REDIS_URL 未配置，Cache 使用进程内 Memory。
-        多节点下缓存/未读/发号将不一致；请配置 REDIS_URL（见 gap-review G-41 / deploy-guide）。
-        """)
+        IM.Log.warning(:startup_redis_cache_memory,
+          reason: "REDIS_URL 未配置，Cache 使用进程内 Memory；多节点下缓存/未读/发号将不一致（见 deploy-guide）"
+        )
       end
 
       if clustered? and (is_nil(redis_url) or redis_url == "") do
-        require Logger
-
-        Logger.warning(
-          "[IM] libcluster 已启用但 REDIS_URL 为空；集群部署须配置 Redis（见 deploy/elixir/im/k8s/im/configmap.yaml）。"
+        IM.Log.warning(:startup_redis_missing_cluster,
+          reason: "libcluster 已启用但 REDIS_URL 为空；集群部署须配置 Redis"
         )
       end
     end
@@ -112,17 +109,15 @@ defmodule IM.Application do
 
     cond do
       enabled and producer == IM.EventBus.Producer.Brod and brokers == [] ->
-        require Logger
-
-        Logger.warning("""
-        [IM] EVENT_BUS_ENABLED=true 且 EVENT_BUS_PRODUCER=brod，但 KAFKA_BROKERS 为空。
-        旁路 produce 将失败；请配置 broker 或改用 overlays/kafka-event-bus（见 deploy-guide §6）。
-        """)
+        IM.Log.warning(:startup_event_bus_brokers_missing,
+          reason: "EVENT_BUS_ENABLED 且 brod producer，但 KAFKA_BROKERS 为空"
+        )
 
       enabled ->
-        require Logger
-
-        Logger.info("[IM] Event Bus 已启用：producer=#{inspect(producer)} brokers=#{length(brokers)}")
+        IM.Log.info(:startup_event_bus_enabled,
+          producer: inspect(producer),
+          broker_count: length(brokers)
+        )
 
       true ->
         :ok

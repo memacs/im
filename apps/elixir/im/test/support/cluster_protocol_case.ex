@@ -52,6 +52,7 @@ defmodule IM.ClusterProtocolCase do
 
         on_exit(fn ->
           disconnect_all_clients!(tracker)
+          # 等待 WS 连接与 Sandbox 在 peer 节点上释放后再停 cluster
           Process.sleep(200)
           ClusterPeer.stop_cluster!()
 

@@ -71,6 +71,7 @@ defmodule IM.EventBus.DownstreamTest do
         false
 
       true ->
+        # 轮询等待异步旁路写入 Kafka/Memory buffer
         Process.sleep(10)
         wait(fun, n - 1)
     end

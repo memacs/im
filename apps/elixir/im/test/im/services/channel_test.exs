@@ -111,6 +111,7 @@ defmodule IM.Services.ChannelTest do
         false
 
       true ->
+        # 轮询直至 channel 订阅状态可见
         Process.sleep(10)
         wait_until(fun, n - 1)
     end

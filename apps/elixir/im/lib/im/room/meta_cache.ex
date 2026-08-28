@@ -51,11 +51,14 @@ defmodule IM.Room.MetaCache do
   end
 
   defp atomize(map) when is_map(map) do
-    Map.new(map, fn {k, v} ->
-      {if(is_binary(k), do: String.to_existing_atom(k), else: k), v}
+    Enum.reduce(@fields, %{}, fn field, acc ->
+      key = Atom.to_string(field)
+
+      case Map.get(map, key) || Map.get(map, field) do
+        nil -> acc
+        v -> Map.put(acc, field, v)
+      end
     end)
-  rescue
-    ArgumentError -> Map.new(map, fn {k, v} -> {String.to_atom(k), v} end)
   end
 
   defp meta_key(app_key, room_id), do: "im:room:meta:#{app_key}:#{room_id}"

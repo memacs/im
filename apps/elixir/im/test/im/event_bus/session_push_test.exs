@@ -38,6 +38,7 @@ defmodule IM.EventBus.SessionPushTest do
 
     before = length(Buffer.snapshot())
     assert :ok = Session.heartbeat(ctx)
+    # 等待可能存在的异步 flush，确认 mode=off 时 buffer 不增长
     Process.sleep(20)
     assert length(Buffer.snapshot()) == before
 
@@ -79,6 +80,7 @@ defmodule IM.EventBus.SessionPushTest do
         false
 
       true ->
+        # 轮询 session heartbeat 写入 buffer
         Process.sleep(10)
         wait(fun, n - 1)
     end
