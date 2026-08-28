@@ -41,3 +41,6 @@ config :im, audit_sync: true
 
 # Oban：inline 在调用进程同步执行，兼容 SQL Sandbox
 config :im, Oban, testing: :inline, queues: false, plugins: false
+
+# 测试隔离：不默认写 Kafka 旁路（EventBus 单测自行开启）
+config :im, event_bus_enabled: false

@@ -21,6 +21,7 @@ defmodule IM.EventBus.DownstreamTest do
   test "5000 规模群只写 1 条 aggregated downstream" do
     before = length(Buffer.snapshot())
     recipients = for i <- 1..5000, do: "u#{i}"
+    payload = <<1, 2, 3>>
 
     assert :ok =
              Downstream.publish_push(
@@ -32,7 +33,13 @@ defmodule IM.EventBus.DownstreamTest do
                  member_count: 5000
                },
                recipients,
-               %{from_user_id: "owner"}
+               %{
+                 from_user_id: "owner",
+                 app_key: "app",
+                 trace_id: "tr",
+                 cmd: 101,
+                 payload: payload
+               }
              )
 
     assert wait(fn -> length(Buffer.snapshot()) > before end)
@@ -45,6 +52,9 @@ defmodule IM.EventBus.DownstreamTest do
     [{_, event}] = downs
     assert event.fanout.mode in [:group_aggregated, :direct]
     assert event.fanout.recipient_count == 5000
+    assert event.payload == payload
+    assert event.cmd == 101
+    assert event.trace_id == "tr"
 
     if event.fanout.mode == :group_aggregated do
       assert length(event.fanout.audience.recipient_user_ids) <= 500

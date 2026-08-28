@@ -173,9 +173,14 @@ kafka_brokers =
       end)
   end
 
-if kafka_brokers != [] or System.get_env("EVENT_BUS_ENABLED") in ~w(true 1) or
+if kafka_brokers != [] or System.get_env("EVENT_BUS_ENABLED") in ~w(true 1 false 0) or
      System.get_env("EVENT_BUS_PRODUCER") in ~w(brod memory) do
-  event_bus_enabled = System.get_env("EVENT_BUS_ENABLED") in ~w(true 1)
+  event_bus_enabled =
+    case System.get_env("EVENT_BUS_ENABLED") do
+      v when v in ~w(true 1) -> true
+      v when v in ~w(false 0) -> false
+      _ -> Application.get_env(:im, :event_bus_enabled, false)
+    end
 
   event_bus_producer =
     case System.get_env("EVENT_BUS_PRODUCER") do
@@ -195,7 +200,7 @@ if kafka_brokers != [] or System.get_env("EVENT_BUS_ENABLED") in ~w(true 1) or
   prev_kafka = Application.get_env(:im, :event_bus_kafka, [])
 
   config :im,
-    event_bus_enabled: event_bus_enabled || Application.get_env(:im, :event_bus_enabled, false),
+    event_bus_enabled: event_bus_enabled,
     event_bus_producer: event_bus_producer,
     event_bus_kafka:
       prev_kafka

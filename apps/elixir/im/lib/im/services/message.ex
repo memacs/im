@@ -8,7 +8,7 @@ defmodule IM.Services.Message do
   require IM.Log
 
   alias IM.Domain.{ConvId, Error, MessageContext}
-  alias IM.EventBus
+  alias IM.EventBus.Upstream
   alias IM.Gateway.CidDedup
   alias IM.Group.FanoutPolicy
   alias IM.Hooks.PreSend
@@ -58,21 +58,7 @@ defmodule IM.Services.Message do
             end
 
           # 旁路：失败/禁用/write_kafka=false 均不阻塞 ACK
-          _ =
-            EventBus.publish(
-              :upstream,
-              %{
-                msg_id: persisted.message.msg_id,
-                conv_id: persisted.message.conv_id,
-                chat_type: msg.chat_type,
-                app_key: ctx.app_key,
-                from: ctx.user_id,
-                device_id: ctx.device_id,
-                trace_id: ctx.trace_id,
-                duplicate?: persisted.duplicate?
-              },
-              write_kafka: Map.get(ctx, :write_kafka, true) != false
-            )
+          _ = Upstream.publish_message_send(msg, ctx, persisted, opts)
 
           {:ok,
            %{

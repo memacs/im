@@ -20,14 +20,20 @@ defmodule IM.EventBus.Downstream do
     {list, truncated?} = truncate(Enum.uniq(recipient_user_ids), max)
 
     EventBus.publish(:downstream, %{
+      event_id: Map.get(message, :msg_id) || Map.get(message, "msg_id"),
       msg_id: Map.get(message, :msg_id) || Map.get(message, "msg_id"),
+      app_key: first_str(meta, message, :app_key),
+      trace_id: first_str(meta, message, :trace_id),
+      cmd: Map.get(meta, :cmd) || Map.get(meta, "cmd") || 0,
       conv_id: Map.get(message, :conv_id),
       chat_type: Map.get(message, :chat_type),
+      payload: Map.get(meta, :payload) || Map.get(meta, "payload") || <<>>,
       fanout: %{
         mode: mode,
         recipient_count: length(recipient_user_ids),
         audience: %{
           from_user_id: Map.get(meta, :from_user_id) || Map.get(message, :from),
+          from_device_id: Map.get(meta, :from_device_id),
           recipient_user_ids: list,
           recipient_list_truncated: truncated?,
           recipient_list_max: max
@@ -58,5 +64,10 @@ defmodule IM.EventBus.Downstream do
 
   defp cfg(key, default) do
     Application.get_env(:im, :event_bus_kafka, []) |> Keyword.get(key, default)
+  end
+
+  defp first_str(meta, message, key) do
+    Map.get(meta, key) || Map.get(meta, to_string(key)) ||
+      Map.get(message, key) || Map.get(message, to_string(key)) || ""
   end
 end

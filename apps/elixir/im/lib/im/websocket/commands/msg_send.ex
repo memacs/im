@@ -17,7 +17,16 @@ defmodule IM.WebSocket.Commands.MsgSend do
     with {:ok, %MsgSendReq{message: msg}} <- Codec.decode_payload(packet, MsgSendReq),
          route_key = resolve_route_key(packet, msg),
          {:ok, result} <-
-           ClusterRouter.call(route_key, Message, :send, [msg, ctx, [cid: packet.cid]]),
+           ClusterRouter.call(route_key, Message, :send, [
+             msg,
+             ctx,
+             [
+               cid: packet.cid,
+               cmd: packet.cmd,
+               payload: packet.payload,
+               route_key: route_key
+             ]
+           ]),
          {:ok, ack_packet} <- Reply.ok(packet, :CMD_MSG_ACK_DOWN, result.ack),
          {:ok, ack_bin} <- Codec.encode(ack_packet) do
       unless result.duplicate? do
@@ -106,7 +115,7 @@ defmodule IM.WebSocket.Commands.MsgSend do
                 end)
             end
 
-            # 旁路下行 1 条（大群 aggregated）
+            # 旁路下行 1 条（大群 aggregated）；payload = CMD_MSG_PUSH 的 Packet.payload
             _ =
               Downstream.publish_push(
                 %{
@@ -118,7 +127,14 @@ defmodule IM.WebSocket.Commands.MsgSend do
                   app_key: app_key
                 },
                 recipients,
-                %{from_user_id: result.sender_user_id}
+                %{
+                  from_user_id: result.sender_user_id,
+                  from_device_id: result.sender_device_id,
+                  app_key: app_key,
+                  trace_id: trace_id,
+                  cmd: push_packet.cmd,
+                  payload: push_packet.payload
+                }
               )
 
           _ ->

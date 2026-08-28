@@ -3,13 +3,6 @@ kind: Kustomization
 
 namespace: im-dev
 
-# 本地全栈 + Redpanda + Event Bus 旁路（按需）
+# 与 overlays/local 等价（local 已含 Redpanda + Event Bus 默认开）；保留本 overlay 供显式引用
 resources:
   - ../local
-  - redpanda.yaml
-
-patches:
-  - path: configmap-patch.yaml
-    target:
-      kind: ConfigMap
-      name: im

@@ -3,10 +3,11 @@ kind: Kustomization
 
 namespace: im-dev
 
-# 本地全栈：依赖 + IM Release（与线上同一 Dockerfile / Deployment 形态）
+# 本地全栈：依赖 + IM Release + Redpanda（Kafka 旁路默认开，见 im/configmap.yaml）
 resources:
   - ../../base
   - ../../im
+  - redpanda.yaml
 
 images:
   - name: im

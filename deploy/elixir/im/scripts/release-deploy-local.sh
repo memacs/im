@@ -41,6 +41,11 @@ if [[ "$SKIP_DEPLOY" != "1" ]]; then
   kubectl -n "$NAMESPACE" rollout status statefulset/redis --timeout=120s
   kubectl -n "$NAMESPACE" rollout status statefulset/postgres --timeout=180s
 
+  if kubectl -n "$NAMESPACE" get deployment redpanda &>/dev/null; then
+    log "Waiting for Redpanda..."
+    kubectl -n "$NAMESPACE" rollout status deployment/redpanda --timeout=180s
+  fi
+
   if kubectl -n "$NAMESPACE" get deployment im &>/dev/null; then
     # 本地用固定 tag im:local，镜像重建不改变 Deployment spec，
     # kubectl apply 因此不会触发滚动更新 —— 必须显式 restart，否则跑的还是旧镜像。

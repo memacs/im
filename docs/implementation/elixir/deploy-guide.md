@@ -87,7 +87,7 @@ mise run flamegraph
 
 ## 6. Event Bus（Kafka 旁路）
 
-默认 **关闭**（`EVENT_BUS_ENABLED=false`）。开启后 IM 可写 `im.upstream` / `im.session` / `im.downstream` / **`im.push`**（离线移动推送）。
+默认 **开启**（`EVENT_BUS_ENABLED=true`）。本地 `overlays/local` 含 Redpanda；生产须配置 `KAFKA_BROKERS`。关闭：`EVENT_BUS_ENABLED=false`。
 
 **本地 K8s 一键开启**（含 Redpanda）：
 

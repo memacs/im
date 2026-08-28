@@ -41,8 +41,8 @@ config :im,
     # :fail_closed 异常时拦截发送；:fail_open 记日志后继续
     on_exception: :fail_closed
   ],
-  # Kafka 旁路默认关；开启后用 Kafka→Buffer→Producer（默认 Memory）
-  event_bus_enabled: false,
+  # Kafka 旁路默认开；无 broker 时用 Memory Producer（runtime 可切 brod）
+  event_bus_enabled: true,
   event_bus: IM.EventBus.Kafka,
   event_bus_producer: IM.EventBus.Producer.Memory,
   event_bus_buffer_max: 10_000,

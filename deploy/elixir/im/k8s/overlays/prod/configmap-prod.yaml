@@ -15,10 +15,10 @@ data:
   CLUSTER_STRATEGY: "kubernetes"
   CLUSTER_SERVICE: "im-headless"
   CLUSTER_APP_NAME: "im"
-  # Kafka 旁路（默认关；有 broker 时开启）
-  EVENT_BUS_ENABLED: "false"
+  # Kafka 旁路（默认开；须配置托管 broker）
+  EVENT_BUS_ENABLED: "true"
   EVENT_BUS_PRODUCER: "brod"
-  KAFKA_BROKERS: ""
+  KAFKA_BROKERS: "kafka.example.com:9092"
   # 生产建议按需开启 Oban Cron（见 deploy-guide.md §7）
   # UNREAD_FLUSH_AUTO: "true"
   # PERMISSION_RECONCILE_AUTO: "true"

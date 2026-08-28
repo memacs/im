@@ -15,10 +15,10 @@ data:
   # 集群内 Service DNS — 与 deps 栈一致
   # 注意：DATABASE_URL 含密码，放在 Secret im-runtime 中，不在此处
   REDIS_URL: "redis://redis.im-dev.svc.cluster.local:6379"
-  # Kafka 旁路（默认关；有 broker 时设 EVENT_BUS_ENABLED=true + EVENT_BUS_PRODUCER=brod）
-  KAFKA_BROKERS: ""
-  EVENT_BUS_ENABLED: "false"
-  EVENT_BUS_PRODUCER: "memory"
+  # Kafka 旁路（默认开；本地 Redpanda 见 overlays/local）
+  KAFKA_BROKERS: "redpanda.im-dev.svc.cluster.local:9092"
+  EVENT_BUS_ENABLED: "true"
+  EVENT_BUS_PRODUCER: "brod"
   KAFKA_CLIENT_ID: "im_kafka"
   # ── Oban Cron（默认关；生产按需开启）────────────────────────────────────────
   # UNREAD_FLUSH_AUTO: "true"          # 未读 Redis → PG，默认 */5 * * * *

@@ -49,8 +49,9 @@ defmodule IM.EventBusTest do
 
     # cast 异步，短暂自旋
     assert wait_until(fn -> length(Buffer.snapshot()) > before end)
+
     assert Enum.any?(Buffer.snapshot(), fn {t, e} ->
-             t == :upstream and e.msg_id == result.message.msg_id
+             t == :upstream and e.msg_id == result.message.msg_id and e.payload != <<>>
            end)
   end
 
