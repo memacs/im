@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IM 即时通讯系统 · 功能介绍</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #06080f;
+      --bg-card: rgba(14, 20, 36, 0.72);
+      --border: rgba(120, 180, 255, 0.14);
+      --text: #e8edf7;
+      --muted: #8b9bb8;
+      --accent: #3dd6c6;
+      --accent-2: #5b8cff;
+      --accent-3: #ffb347;
+      --accent-4: #ff6b9d;
+      --glow: rgba(61, 214, 198, 0.35);
+      --font: "Noto Sans SC", system-ui, sans-serif;
+      --mono: "JetBrains Mono", monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── Background mesh ── */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 20%, rgba(61, 214, 198, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 75%, rgba(91, 140, 255, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(255, 107, 157, 0.04) 0%, transparent 50%);
+    }
+
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(120, 180, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(120, 180, 255, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 80%);
+    }
+
+    /* ── Progress nav ── */
+    .progress-nav {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .progress-nav a {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      background: transparent;
+      transition: all 0.35s ease;
+      display: block;
+    }
+
+    .progress-nav a.active,
+    .progress-nav a:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--glow);
+      transform: scale(1.3);
+    }
+
+    /* ── Scene sections ── */
+    .scene {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+    }
+
+    .scene-inner {
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .scene-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .scene-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.1s forwards;
+    }
+
+    .scene-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 640px;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.2s forwards;
+    }
+
+    /* ── Hero ── */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease infinite;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.15s forwards;
+    }
+
+    .hero-title .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--muted);
+      max-width: 560px;
+      margin: 1.5rem 0 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.3s forwards;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.45s forwards;
+    }
+
+    .stat-item .num {
+      font-family: var(--mono);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .stat-item .lbl {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      animation: bounce 2s ease infinite;
+    }
+
+    .scroll-hint svg { opacity: 0.5; }
+
+    /* ── Feature cards grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      backdrop-filter: blur(12px);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    .card.visible {
+      animation: cardIn 0.6s ease forwards;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(61, 214, 198, 0.35);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(61, 214, 198, 0.1);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-icon.c1 { background: rgba(61, 214, 198, 0.15); }
+    .card-icon.c2 { background: rgba(91, 140, 255, 0.15); }
+    .card-icon.c3 { background: rgba(255, 179, 71, 0.15); }
+    .card-icon.c4 { background: rgba(255, 107, 157, 0.15); }
+
+    .card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.65rem;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Architecture diagram ── */
+    .arch-diagram {
+      position: relative;
+      padding: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+
+    .arch-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .arch-node {
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-align: center;
+      min-width: 120px;
+      position: relative;
+      background: rgba(255, 255, 255, 0.03);
+      opacity: 0;
+    }
+
+    .arch-node.visible { animation: nodePop 0.5s ease forwards; }
+
+    .arch-node.primary {
+      border-color: rgba(61, 214, 198, 0.4);
+      background: rgba(61, 214, 198, 0.08);
+      font-weight: 700;
+    }
+
+    .arch-node.secondary {
+      border-color: rgba(91, 140, 255, 0.35);
+      background: rgba(91, 140, 255, 0.06);
+    }
+
+    .arch-arrow {
+      color: var(--muted);
+      font-size: 1.2rem;
+      opacity: 0;
+    }
+
+    .arch-arrow.visible { animation: fadeIn 0.4s ease forwards; }
+
+    .arch-connectors {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* ── Message flow animation ── */
+    .flow-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    @media (max-width: 768px) {
+      .flow-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+
+    .flow-node {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .flow-node .icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      margin: 0 auto 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      border: 2px solid var(--border);
+    }
+
+    .flow-node .label {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .flow-node .sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 1.5rem;
+    }
+
+    .packet {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      background: var(--accent);
+      position: absolute;
+      box-shadow: 0 0 8px var(--glow);
+      animation: packetFly 3s ease-in-out infinite;
+    }
+
+    .flow-wrap { position: relative; }
+
+    /* ── Three modes showcase ── */
+    .modes-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .modes-row { grid-template-columns: 1fr; }
+      .msg-ext-grid { grid-template-columns: 1fr !important; }
+      .progress-nav { display: none; }
+    }
+
+    .msg-ext-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .mode-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: scale(0.92);
+    }
+
+    .mode-card.visible { animation: modeIn 0.7s ease forwards; }
+
+    .mode-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .mode-card.m1::before { background: var(--accent); }
+    .mode-card.m2::before { background: var(--accent-2); }
+    .mode-card.m3::before { background: var(--accent-3); }
+
+    .mode-emoji { font-size: 2.5rem; margin-bottom: 0.75rem; }
+
+    .mode-card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+    .mode-card p { font-size: 0.85rem; color: var(--muted); }
+
+    .mode-features {
+      list-style: none;
+      margin-top: 1rem;
+      text-align: left;
+    }
+
+    .mode-features li {
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding: 0.25rem 0;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .mode-features li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    /* ── Timeline for message extensions ── */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent), var(--accent-2), var(--accent-4));
+      opacity: 0.3;
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+
+    .tl-item.visible { animation: slideRight 0.5s ease forwards; }
+
+    .tl-item::before {
+      content: "";
+      position: absolute;
+      left: -2rem;
+      top: 0.45rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 8px var(--glow);
+    }
+
+    .tl-item h4 { font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .tl-item p { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── Kafka topics strip ── */
+    .kafka-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .kafka-topic {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(255, 179, 71, 0.08);
+      color: var(--accent-3);
+      opacity: 0;
+    }
+
+    .kafka-topic.visible { animation: fadeIn 0.4s ease forwards; }
+
+    /* ── Tech stack pills ── */
+    .tech-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+    }
+
+    .pill {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.04);
+      opacity: 0;
+    }
+
+    .pill.visible { animation: pillIn 0.4s ease forwards; }
+
+    /* ── CTA footer ── */
+    .cta-section {
+      text-align: center;
+    }
+
+    .cta-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-btn.primary {
+      background: linear-gradient(135deg, var(--accent), #2bb8a8);
+      color: #06080f;
+    }
+
+    .cta-btn.secondary {
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(61, 214, 198, 0.25);
+    }
+
+    /* ── Auto-play control ── */
+    .controls {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(14, 20, 36, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 0.6rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      font-family: var(--font);
+      font-size: 0.78rem;
+      transition: all 0.2s;
+    }
+
+    .ctrl-btn:hover, .ctrl-btn.active {
+      color: var(--accent);
+      background: rgba(61, 214, 198, 0.1);
+    }
+
+    /* ── Keyframes ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes nodePop {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes modeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(-16px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes pillIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(6px); }
+    }
+
+    @keyframes packetFly {
+      0% { left: 10%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 90%; opacity: 0; }
+    }
+
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
+    }
+
+    /* floating particles */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.15;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 0.15; }
+      90% { opacity: 0.15; }
+      to { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-mesh"></div>
+<div class="grid-overlay"></div>
+<div class="particles" id="particles"></div>
+
+<nav class="progress-nav" id="progressNav" aria-label="章节导航"></nav>
+
+<div class="controls">
+  <button class="ctrl-btn" id="btnPrev" title="上一屏">◀ 上一屏</button>
+  <button class="ctrl-btn active" id="btnAuto" title="自动播放">▶ 自动播放</button>
+  <button class="ctrl-btn" id="btnNext" title="下一屏">下一屏 ▶</button>
+</div>
+
+<!-- ═══ Scene 0: Hero ═══ -->
+<section class="scene" id="s0" data-title="首页">
+  <div class="scene-inner">
+    <div class="hero-badge"><span class="dot"></span> Phase 0–13 已完成 · WebSocket + Protobuf</div>
+    <h1 class="hero-title">
+      面向百万在线的<br><span class="highlight">即时通讯后端</span>
+    </h1>
+    <p class="hero-sub">
+      WebSocket 实时通道 + REST 双通道管理接口。覆盖单聊、群聊、聊天室、应用通道全场景，
+      内置离线补拉、多端同步、Kafka 旁路与 K8s 水平扩展。
+    </p>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="num">3</div><div class="lbl">会话形态</div></div>
+      <div class="stat-item"><div class="num">30+</div><div class="lbl">设计模块</div></div>
+      <div class="stat-item"><div class="num">5</div><div class="lbl">Kafka Topic</div></div>
+      <div class="stat-item"><div class="num">∞</div><div class="lbl">水平扩展</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>向下滚动探索</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- ═══ Scene 1: Architecture ═══ -->
+<section class="scene" id="s1" data-title="架构">
+  <div class="scene-inner">
+    <div class="scene-label">01 · 系统架构</div>
+    <h2 class="scene-title">双通道 · 水平扩展 · 旁路不挡主路</h2>
+    <p class="scene-desc">实时走 WebSocket 长连接，管理走 REST API——同一套 Dispatch 业务逻辑，行为完全一致。</p>
+    <div class="arch-diagram" id="archDiagram">
+      <div class="arch-row">
+        <div class="arch-node" data-delay="0">📱 iOS</div>
+        <div class="arch-node" data-delay="100">🤖 Android</div>
+        <div class="arch-node" data-delay="200">🌐 Web</div>
+        <div class="arch-node" data-delay="300">🖥️ 服务端</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-arrow" data-delay="400">↕ HTTPS REST</div>
+        <div class="arch-arrow" data-delay="450">↕ WS 二进制 Protobuf</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-node primary" data-delay="500" style="min-width:280px">
+          ⚡ IM 集群（多 Access 节点 · libcluster）
+        </div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-node secondary" data-delay="600">🐘 PostgreSQL<br><small style="color:var(--muted)">消息/会话/群</small></div>
+        <div class="arch-node secondary" data-delay="700">🔴 Redis<br><small style="color:var(--muted)">在线/序号/缓存</small></div>
+        <div class="arch-node secondary" data-delay="800">📨 Kafka<br><small style="color:var(--muted)">旁路事件</small></div>
+        <div class="arch-node secondary" data-delay="900">📲 APNs/FCM<br><small style="color:var(--muted)">离线推送</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 2: Connection & Auth ═══ -->
+<section class="scene" id="s2" data-title="连接鉴权">
+  <div class="scene-inner">
+    <div class="scene-label">02 · 连接与账号</div>
+    <h2 class="scene-title">安全接入 · 多端在线 · 设备管控</h2>
+    <p class="scene-desc">HTTP 登录获取 access_token，WebSocket 首包鉴权；心跳保活、断线重连与离线恢复。</p>
+    <div class="card-grid" data-stagger>
+      <div class="card" data-delay="0">
+        <div class="card-icon c1">🔐</div>
+        <h3>HTTP 登录 + WS 鉴权</h3>
+        <p>POST /api/v1/sessions 获取 token，WebSocket Auth 包完成首包鉴权。</p>
+        <div class="card-tags"><span class="tag">auth.proto</span><span class="tag">Bearer</span></div>
+      </div>
+      <div class="card" data-delay="80">
+        <div class="card-icon c2">💓</div>
+        <h3>心跳与重连</h3>
+        <p>定时心跳保活，断线自动重连，Session 状态恢复。</p>
+        <div class="card-tags"><span class="tag">Heartbeat</span><span class="tag">Reconnect</span></div>
+      </div>
+      <div class="card" data-delay="160">
+        <div class="card-icon c3">📱</div>
+        <h3>多端在线</h3>
+        <p>同一用户多设备同时在线，消息同步推送到各端。</p>
+        <div class="card-tags"><span class="tag">Multi-Device</span><span class="tag">Registry</span></div>
+      </div>
+      <div class="card" data-delay="240">
+        <div class="card-icon c4">🚫</div>
+        <h3>设备管控</h3>
+        <p>设备数限制、互踢、封禁；Internal API 踢人下线。</p>
+        <div class="card-tags"><span class="tag">Kick</span><span class="tag">DeviceBan</span></div>
+      </div>
+      <div class="card" data-delay="320">
+        <div class="card-icon c1">🏢</div>
+        <h3>多租户隔离</h3>
+        <p>按 app_key 隔离租户，适合 SaaS 与多业务线共用集群。</p>
+        <div class="card-tags"><span class="tag">app_key</span></div>
+      </div>
+      <div class="card" data-delay="400">
+        <div class="card-icon c2">🗜️</div>
+        <h3>Payload 压缩</h3>
+        <p>gzip/zstd 协商压缩，弱网场景降低带宽消耗。</p>
+        <div class="card-tags"><span class="tag">Compression</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 3: Three conversation modes ═══ -->
+<section class="scene" id="s3" data-title="三种会话">
+  <div class="scene-inner">
+    <div class="scene-label">03 · 三种会话形态</div>
+    <h2 class="scene-title">单聊 · 群聊 · 聊天室</h2>
+    <p class="scene-desc">三种会话各取所需：持久化离线、小群直推大群扇出、万人实时广播。</p>
+    <div class="modes-row">
+      <div class="mode-card m1" data-delay="0">
+        <div class="mode-emoji">💬</div>
+        <h3>单聊</h3>
+        <p>1:1 私聊，消息持久化</p>
+        <ul class="mode-features">
+          <li>离线拉取补消息</li>
+          <li>已读回执 / 未读数</li>
+          <li>撤回 / 编辑 / 阅后即焚</li>
+          <li>流式消息（AI 回复）</li>
+        </ul>
+      </div>
+      <div class="mode-card m2" data-delay="150">
+        <div class="mode-emoji">👥</div>
+        <h3>群聊</h3>
+        <p>小群直推 + 大群树状扇出</p>
+        <ul class="mode-features">
+          <li>建群 / 邀请 / 踢人 / 转让</li>
+          <li>群资料与成员管理</li>
+          <li>离线拉取（群收件箱）</li>
+          <li>GroupPusher 跨节点扇出</li>
+        </ul>
+      </div>
+      <div class="mode-card m3" data-delay="300">
+        <div class="mode-emoji">🎤</div>
+        <h3>聊天室</h3>
+        <p>万人级实时广播</p>
+        <ul class="mode-features">
+          <li>加入 / 离开</li>
+          <li>PubSub 广播</li>
+          <li>默认不落离线历史</li>
+          <li>直播 / 活动互动</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 4: Message flow ═══ -->
+<section class="scene" id="s4" data-title="消息链路">
+  <div class="scene-inner">
+    <div class="scene-label">04 · 消息发送链路</div>
+    <h2 class="scene-title">双阶段 ACK · 少拷贝投递</h2>
+    <p class="scene-desc">发送方先收到「服务端已收到」同步 ACK，再异步推送给对端；Kafka 旁路不拖慢聊天主路径。</p>
+    <div class="flow-wrap">
+      <div class="flow-container">
+        <div class="flow-node">
+          <div class="icon" style="border-color:var(--accent)">📤</div>
+          <div class="label">发送方</div>
+          <div class="sub">MSG_SEND</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="icon" style="border-color:var(--accent-2)">⚡</div>
+          <div class="label">IM 服务端</div>
+          <div class="sub">持久化 + ACK</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">
+          <div class="icon" style="border-color:var(--accent-3)">📥</div>
+          <div class="label">接收方</div>
+          <div class="sub">PUSH / PUSH_BATCH</div>
+        </div>
+      </div>
+      <div class="packet" style="top:50%"></div>
+    </div>
+    <div class="card-grid" style="margin-top:1.5rem" data-stagger>
+      <div class="card" data-delay="0">
+        <div class="card-icon c1">📦</div>
+        <h3>批量下行 PUSH_BATCH</h3>
+        <p>合并多条推送，降低大包开销。</p>
+      </div>
+      <div class="card" data-delay="80">
+        <div class="card-icon c2">⚖️</div>
+        <h3>WFQ 优先级队列</h3>
+        <p>ACK / 普通消息 / 低优先级互不饿死。</p>
+      </div>
+      <div class="card" data-delay="160">
+        <div class="card-icon c3">📡</div>
+        <h3>透传信令</h3>
+        <p>打字状态、自定义实时信号，不进消息库。</p>
+      </div>
+      <div class="card" data-delay="240">
+        <div class="card-icon c4">🔄</div>
+        <h3>零拷贝扇出</h3>
+        <p>packet_binary 整包只编码一次，跨节点传递。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 5: Message extensions ═══ -->
+<section class="scene" id="s5" data-title="消息扩展">
+  <div class="scene-inner">
+    <div class="scene-label">05 · 消息与会话扩展</div>
+    <h2 class="scene-title">完整的消息生命周期管理</h2>
+    <p class="scene-desc">从发送到已读、撤回、编辑、销毁——覆盖 IM 产品所需的全部消息能力。</p>
+    <div class="msg-ext-grid">
+      <div class="timeline" id="msgTimeline">
+        <div class="tl-item" data-delay="0"><h4>📬 离线拉取</h4><p>上线后按收件箱序号补消息（单聊 + 群聊）</p></div>
+        <div class="tl-item" data-delay="100"><h4>✅ 已读回执</h4><p>消息已读状态同步，支持未读数缓存与刷盘</p></div>
+        <div class="tl-item" data-delay="200"><h4>↩️ 消息撤回</h4><p>发送方撤回，对端收到撤回通知</p></div>
+        <div class="tl-item" data-delay="300"><h4>✏️ 消息编辑</h4><p>修改已发送消息内容，推送编辑事件</p></div>
+        <div class="tl-item" data-delay="400"><h4>🔥 阅后即焚</h4><p>单聊阅后定时销毁，Oban 定时清理</p></div>
+        <div class="tl-item" data-delay="500"><h4>🌊 流式消息</h4><p>AI 回复、长文本分段推送</p></div>
+        <div class="tl-item" data-delay="600"><h4>⏰ TTL 清理</h4><p>消息过期自动 purge，Cron 任务</p></div>
+      </div>
+      <div class="card-grid" style="grid-template-columns:1fr">
+        <div class="card" data-delay="0">
+          <div class="card-icon c2">🔢</div>
+          <h3>Snowflake msg_id 发号</h3>
+          <p>分布式唯一消息 ID，Redis Lease 保障多节点不冲突。</p>
+        </div>
+        <div class="card" data-delay="100">
+          <div class="card-icon c3">📊</div>
+          <h3>未读数缓存</h3>
+          <p>Conversation UnreadCache，定时刷库持久化。</p>
+        </div>
+        <div class="card" data-delay="200">
+          <div class="card-icon c1">🪝</div>
+          <h3>Hook 流水线</h3>
+          <p>PreSend Hook 扩展点，业务方可注入审核/过滤逻辑。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 6: Social ═══ -->
+<section class="scene" id="s6" data-title="社交管理">
+  <div class="scene-inner">
+    <div class="scene-label">06 · 社交与房间管理</div>
+    <h2 class="scene-title">好友 · 群组 · 权限管控</h2>
+    <p class="scene-desc">完整的社交关系链与群组生命周期管理，权限变更跨节点秒级生效。</p>
+    <div class="card-grid" data-stagger>
+      <div class="card" data-delay="0">
+        <div class="card-icon c4">🤝</div>
+        <h3>好友系统</h3>
+        <p>申请、同意、拒绝、删除、拉黑、备注——完整好友关系链。</p>
+        <div class="card-tags"><span class="tag">friend.proto</span></div>
+      </div>
+      <div class="card" data-delay="80">
+        <div class="card-icon c2">👥</div>
+        <h3>群组管理</h3>
+        <p>建群、邀请、踢人、转让、群资料；大群树状扇出优化。</p>
+        <div class="card-tags"><span class="tag">group.proto</span></div>
+      </div>
+      <div class="card" data-delay="160">
+        <div class="card-icon c3">🎪</div>
+        <h3>聊天室管理</h3>
+        <p>加入/离开、成员缓存、PubSub 万人广播。</p>
+        <div class="card-tags"><span class="tag">room.proto</span></div>
+      </div>
+      <div class="card" data-delay="240">
+        <div class="card-icon c1">🛡️</div>
+        <h3>权限热缓存</h3>
+        <p>拉黑、禁言、封禁变更跨节点秒级生效，定时对账。</p>
+        <div class="card-tags"><span class="tag">Permission L1</span><span class="tag">Reconciler</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 7: App Channel ═══ -->
+<section class="scene" id="s7" data-title="应用通道">
+  <div class="scene-inner">
+    <div class="scene-label">07 · 应用通道 App Channel</div>
+    <h2 class="scene-title">业务事件不走聊天会话</h2>
+    <p class="scene-desc">订单状态、车队告警、个人提醒——后端广播 + 客户端上报，统一 Kafka 出口，不进会话列表。</p>
+    <div class="card-grid" data-stagger>
+      <div class="card" data-delay="0">
+        <div class="card-icon c3">📢</div>
+        <h3>Topic 订阅广播</h3>
+        <p>客户端订阅业务 Topic，后端经 Internal API 向订阅者广播。</p>
+        <div class="card-tags"><span class="tag">channel.proto</span></div>
+      </div>
+      <div class="card" data-delay="80">
+        <div class="card-icon c2">📤</div>
+        <h3>客户端事件上报</h3>
+        <p>限速 1 条/秒，异步写入 Kafka im.app_events。</p>
+      </div>
+      <div class="card" data-delay="160">
+        <div class="card-icon c1">🌐</div>
+        <h3>共享 Topic 广播</h3>
+        <p>车队告警、物联网事件等一对多广播场景。</p>
+      </div>
+      <div class="card" data-delay="240">
+        <div class="card-icon c4">👤</div>
+        <h3>私有 Channel</h3>
+        <p>personal:{user_id} 单点下发，订单/个人提醒。</p>
+      </div>
+    </div>
+    <div class="kafka-strip" id="kafkaStrip">
+      <span class="kafka-topic" data-delay="0">im.upstream</span>
+      <span class="kafka-topic" data-delay="80">im.downstream</span>
+      <span class="kafka-topic" data-delay="160">im.delivery</span>
+      <span class="kafka-topic" data-delay="240">im.push</span>
+      <span class="kafka-topic" data-delay="320">im.app_events</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 8: Platform ═══ -->
+<section class="scene" id="s8" data-title="平台能力">
+  <div class="scene-inner">
+    <div class="scene-label">08 · 平台与企业级能力</div>
+    <h2 class="scene-title">可观测 · 可运维 · 可扩展</h2>
+    <p class="scene-desc">Prometheus 指标、统一 JSON 日志 trace_id 全链路；K8s Release 部署，多节点 libcluster 水平扩展。</p>
+    <div class="card-grid" data-stagger>
+      <div class="card" data-delay="0">
+        <div class="card-icon c2">📊</div>
+        <h3>Prometheus 指标</h3>
+        <p>GET /metrics 暴露业务与系统指标。</p>
+      </div>
+      <div class="card" data-delay="80">
+        <div class="card-icon c1">🔍</div>
+        <h3>统一 trace_id</h3>
+        <p>HTTP/WS 入口贯穿 ACK、推送、Kafka、日志。</p>
+      </div>
+      <div class="card" data-delay="160">
+        <div class="card-icon c3">📲</div>
+        <h3>系统推送 APNs/FCM</h3>
+        <p>设备离线时手机通知栏提醒，Kafka im.push 对接。</p>
+      </div>
+      <div class="card" data-delay="240">
+        <div class="card-icon c4">☸️</div>
+        <h3>K8s 集群部署</h3>
+        <p>Release 镜像、HPA 扩缩、滚动发布零中断。</p>
+      </div>
+      <div class="card" data-delay="320">
+        <div class="card-icon c2">🔗</div>
+        <h3>REST 双通道</h3>
+        <p>/api/v1 对外 + /internal/v1 内网（踢人、代发、广播）。</p>
+      </div>
+      <div class="card" data-delay="400">
+        <div class="card-icon c1">🌳</div>
+        <h3>跨节点扇出</h3>
+        <p>Phoenix.Tracker + Cluster.Router route_key 分片。</p>
+      </div>
+      <div class="card" data-delay="480">
+        <div class="card-icon c3">⏱️</div>
+        <h3>Oban 后台任务</h3>
+        <p>未读刷盘、权限对账、TTL 清理、群收件箱扇出。</p>
+      </div>
+      <div class="card" data-delay="560">
+        <div class="card-icon c4">🔥</div>
+        <h3>CPU 火焰图</h3>
+        <p>Erlang 原生 perf 热点排查，mise run flamegraph。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 9: Tech stack & tools ═══ -->
+<section class="scene" id="s9" data-title="技术栈">
+  <div class="scene-inner">
+    <div class="scene-label">09 · 技术栈与工具链</div>
+    <h2 class="scene-title">协议先行 · 工程就绪</h2>
+    <p class="scene-desc">Protobuf 定义 + 30+ 设计文档 + CI 门禁；参考客户端、压测工具、Web 控制台一应俱全。</p>
+    <div class="tech-pills" id="techPills">
+      <span class="pill" data-delay="0">WebSocket 二进制</span>
+      <span class="pill" data-delay="40">Protobuf 3</span>
+      <span class="pill" data-delay="80">Phoenix 1.8</span>
+      <span class="pill" data-delay="120">Elixir/OTP</span>
+      <span class="pill" data-delay="160">Ecto + PostgreSQL</span>
+      <span class="pill" data-delay="200">Redix (Redis)</span>
+      <span class="pill" data-delay="240">Broadway (Kafka)</span>
+      <span class="pill" data-delay="280">libcluster</span>
+      <span class="pill" data-delay="320">Phoenix.Tracker</span>
+      <span class="pill" data-delay="360">Oban</span>
+      <span class="pill" data-delay="400">ExCoveralls ≥80%</span>
+      <span class="pill" data-delay="440">GitHub Actions CI</span>
+      <span class="pill" data-delay="480">im_client 参考库</span>
+      <span class="pill" data-delay="520">loadtest 压测</span>
+      <span class="pill" data-delay="560">im-console Web 控制台</span>
+    </div>
+    <div class="card-grid" style="margin-top:2rem" data-stagger>
+      <div class="card" data-delay="0">
+        <div class="card-icon c1">📜</div>
+        <h3>协议规范</h3>
+        <p>11 个 proto 文件，CI proto-check 防漂移。</p>
+      </div>
+      <div class="card" data-delay="80">
+        <div class="card-icon c2">📚</div>
+        <h3>完整文档</h3>
+        <p>设计 + 实现 + 决策索引 + E2E 时序自动生成。</p>
+      </div>
+      <div class="card" data-delay="160">
+        <div class="card-icon c3">🧪</div>
+        <h3>验收工具链</h3>
+        <p>release-smoke、messaging 冒烟、fault-drill 故障演练。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Scene 10: CTA ═══ -->
+<section class="scene" id="s10" data-title="开始">
+  <div class="scene-inner cta-section">
+    <div class="scene-label">10 · 开始使用</div>
+    <h2 class="scene-title">清晰协议 · 私有化部署 · 共建实现</h2>
+    <p class="scene-desc" style="margin:0 auto 1rem">
+      适合需要私有化 IM 蓝图、基于清晰协议共建实现的团队。
+      本地 30 分钟可完成 Release + K8s 验收。
+    </p>
+    <div class="cta-links">
+      <a class="cta-btn primary" href="/login" target="_parent">🚀 登录 Console 联调</a>
+      <a class="cta-btn secondary" href="/coverage" target="_parent">📊 能力矩阵 Coverage</a>
+      <a class="cta-btn secondary" href="/chat" target="_parent">💬 进入消息页</a>
+    </div>
+    <p style="margin-top:3rem;font-size:0.75rem;color:var(--muted);font-family:var(--mono)">
+      Apache License 2.0 · WebSocket + Protobuf · Phase 0–13 Complete
+    </p>
+  </div>
+</section>
+
+<script>
+(() => {
+  const scenes = [...document.querySelectorAll('.scene')];
+  const nav = document.getElementById('progressNav');
+  const isCapture = new URLSearchParams(location.search).has('capture');
+  let currentIdx = 0;
+  let autoPlay = !isCapture;
+  let autoTimer = null;
+  const AUTO_INTERVAL = 8000;
+
+  // Build progress nav
+  scenes.forEach((s, i) => {
+    const a = document.createElement('a');
+    a.href = `#${s.id}`;
+    a.title = s.dataset.title || `第 ${i + 1} 屏`;
+    a.addEventListener('click', e => { e.preventDefault(); goTo(i); });
+    nav.appendChild(a);
+  });
+
+  // Particles
+  const pc = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (8 + Math.random() * 12) + 's';
+    p.style.animationDelay = Math.random() * 10 + 's';
+    pc.appendChild(p);
+  }
+
+  function goTo(idx) {
+    currentIdx = Math.max(0, Math.min(idx, scenes.length - 1));
+    scenes[currentIdx].scrollIntoView({ behavior: 'smooth' });
+    updateNav();
+    animateScene(scenes[currentIdx]);
+    resetAutoPlay();
+  }
+
+  function updateNav() {
+    nav.querySelectorAll('a').forEach((a, i) => {
+      a.classList.toggle('active', i === currentIdx);
+    });
+  }
+
+  function animateScene(scene) {
+    // Cards
+    scene.querySelectorAll('.card[data-delay]').forEach(el => {
+      el.classList.remove('visible');
+      const delay = +el.dataset.delay || 0;
+      setTimeout(() => el.classList.add('visible'), delay);
+    });
+
+    // Mode cards
+    scene.querySelectorAll('.mode-card[data-delay]').forEach(el => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), +el.dataset.delay || 0);
+    });
+
+    // Timeline
+    scene.querySelectorAll('.tl-item[data-delay]').forEach(el => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), +el.dataset.delay || 0);
+    });
+
+    // Kafka topics
+    scene.querySelectorAll('.kafka-topic[data-delay]').forEach(el => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), +el.dataset.delay || 0);
+    });
+
+    // Pills
+    scene.querySelectorAll('.pill[data-delay]').forEach(el => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), +el.dataset.delay || 0);
+    });
+
+    // Arch nodes
+    scene.querySelectorAll('.arch-node[data-delay], .arch-arrow[data-delay]').forEach(el => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), +el.dataset.delay || 0);
+    });
+  }
+
+  // Intersection observer for scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+        const idx = scenes.indexOf(entry.target);
+        if (idx >= 0) {
+          currentIdx = idx;
+          updateNav();
+          animateScene(entry.target);
+        }
+      }
+    });
+  }, { threshold: 0.5 });
+
+  scenes.forEach(s => observer.observe(s));
+
+  // Auto play
+  function resetAutoPlay() {
+    clearInterval(autoTimer);
+    if (autoPlay) {
+      autoTimer = setInterval(() => {
+        if (currentIdx < scenes.length - 1) goTo(currentIdx + 1);
+        else { clearInterval(autoTimer); autoPlay = false; document.getElementById('btnAuto').classList.remove('active'); }
+      }, AUTO_INTERVAL);
+    }
+  }
+
+  document.getElementById('btnAuto').addEventListener('click', () => {
+    autoPlay = !autoPlay;
+    document.getElementById('btnAuto').classList.toggle('active', autoPlay);
+    document.getElementById('btnAuto').textContent = autoPlay ? '▶ 自动播放' : '⏸ 已暂停';
+    resetAutoPlay();
+  });
+
+  document.getElementById('btnPrev').addEventListener('click', () => goTo(currentIdx - 1));
+  document.getElementById('btnNext').addEventListener('click', () => goTo(currentIdx + 1));
+
+  // Keyboard nav
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goTo(currentIdx + 1); }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goTo(currentIdx - 1); }
+  });
+
+  // Init
+  updateNav();
+  animateScene(scenes[0]);
+  resetAutoPlay();
+})();
+</script>
+</body>
+</html>

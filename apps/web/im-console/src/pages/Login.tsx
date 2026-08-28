@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createSession } from "../api/client";
 import { authenticate, connect } from "../ws/imSocket";
 import { resolveWsUrl } from "../ws/resolveUrl";
@@ -81,6 +81,9 @@ export function LoginPage() {
         </label>
         {error ? <div className="error">{error}</div> : null}
         <button disabled={busy}>{busy ? "连接中…" : "登录并鉴权"}</button>
+        <p className="login-intro-link">
+          <Link to="/intro">查看系统功能介绍 →</Link>
+        </p>
       </form>
     </div>
   );

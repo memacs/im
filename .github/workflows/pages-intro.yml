@@ -1,0 +1,39 @@
+# 将 im-console 功能介绍动画部署到 GitHub Pages
+# 访问：https://memacs.github.io/im/intro/
+# 首次须在仓库 Settings → Pages → Build and deployment → Source: GitHub Actions
+name: Deploy intro (GitHub Pages)
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "apps/web/im-console/public/intro/**"
+      - ".github/workflows/pages-intro.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-intro
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/im-console/public
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

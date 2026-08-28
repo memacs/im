@@ -9,6 +9,12 @@ Release → K8s 黄金路径、压测与 Web 控制台可运行。
 
 **第三方交付**：[交付手册](docs/DELIVERY.md) · [已知限制](docs/KNOWN-LIMITATIONS.md) · [生产 K8s 模板](deploy/elixir/im/k8s/overlays/prod/) · [CHANGELOG](CHANGELOG.md) · [LICENSE](LICENSE)
 
+**功能介绍动画**：[在线观看 ↗](https://memacs.github.io/im/intro/) · [GIF 预览](apps/web/im-console/public/intro/intro.gif) · [本地 `/intro`](http://localhost:5173/intro)（`mise run web:dev`）
+
+![IM 系统功能介绍动画](apps/web/im-console/public/intro/intro.gif)
+
+> GIF 由 `mise run web:intro-gif` 生成（11 屏 × 2s）。GitHub Pages 首次须在仓库 **Settings → Pages → Source** 选 **GitHub Actions**。
+
 ---
 
 ## 文档
@@ -17,6 +23,7 @@ Release → K8s 黄金路径、压测与 Web 控制台可运行。
 
 | 文档 | 说明 |
 |------|------|
+| [**功能介绍动画**](https://memacs.github.io/im/intro/) | [在线 ↗](https://memacs.github.io/im/intro/) · [GIF](apps/web/im-console/public/intro/intro.gif) · [本地 `/intro`](http://localhost:5173/intro) |
 | [docs/product-overview.md](docs/product-overview.md) | **产品介绍**（能力、优势、典型场景） |
 | [docs/DELIVERY.md](docs/DELIVERY.md) | **第三方交付手册** |
 | [docs/KNOWN-LIMITATIONS.md](docs/KNOWN-LIMITATIONS.md) | **已知限制清单** |
@@ -223,6 +230,17 @@ mise run k8s-port-forward
 mise run release-smoke
 ```
 
+### 4. Web 控制台与功能介绍
+
+- **GitHub 在线观看**：[功能介绍动画 ↗](https://memacs.github.io/im/intro/)
+- **本地开发**：
+
+```bash
+mise run web:dev             # http://localhost:5173/intro
+```
+
+详见 [apps/web/im-console/README.md](apps/web/im-console/README.md)。
+
 进度与下一项任务见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)。
 
 各应用 **启动 / 配置 / 线上部署** 见 [apps/README.md](apps/README.md) 及各子目录 README。
@@ -231,6 +249,8 @@ mise run release-smoke
 
 ## 相关链接
 
+- [**功能介绍动画（在线）**](https://memacs.github.io/im/intro/) · [本地 `/intro`](http://localhost:5173/intro)
+- [Web 演示控制台](apps/web/im-console/)
 - [交付手册](docs/DELIVERY.md)
 - [已知限制](docs/KNOWN-LIMITATIONS.md)
 - [部署总览](deploy/README.md)

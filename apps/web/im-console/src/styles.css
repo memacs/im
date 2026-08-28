@@ -266,6 +266,46 @@ button:disabled {
   font-size: 0.85rem;
 }
 
+.login-intro-link {
+  margin: 0;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.intro-page {
+  position: fixed;
+  inset: 0;
+  background: #06080f;
+  z-index: 50;
+}
+
+.intro-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.intro-back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 60;
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: rgba(14, 20, 36, 0.88);
+  color: var(--muted);
+  font-size: 0.82rem;
+  backdrop-filter: blur(8px);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.intro-back:hover {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+
 @media (max-width: 860px) {
   .app-shell {
     grid-template-columns: 1fr;

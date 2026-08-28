@@ -5,6 +5,7 @@
 | 项 | 说明 |
 | --- | --- |
 | 技术栈 | TypeScript + Vite + React + protobufjs |
+| **功能介绍动画** | [在线 ↗](https://memacs.github.io/im/intro/) · [GIF](public/intro/intro.gif) · [本地 `/intro`](http://localhost:5173/intro) |
 | 设计 | [web-console.md](../../../docs/design/web-console.md)（DD-037，§3 能力矩阵） |
 | 实现说明 | [web-console.md](../../../docs/implementation/web/web-console.md) |
 | Kiro Spec | [phase-12-web-console](../../../docs/specs-index.md#phase-013主路线图) |
@@ -136,3 +137,5 @@ GitHub Actions `web-console` job：`npm ci` → `vitest` → `vite build`（与 
 - [im_client README](../../elixir/im_client/README.md)（无头自动化，与 Console 分工见设计 §5）
 - [apps 总览](../../README.md)
 - Coverage 页：本地打开 `/coverage` 对照协议能力矩阵
+- **功能介绍动画**：[在线 ↗](https://memacs.github.io/im/intro/) · [GIF](public/intro/intro.gif) · 本地 `/intro`
+- **重新生成 GIF**：`mise run web:intro-gif`（Playwright 截 11 屏，每帧 2s）

@@ -420,3 +420,7 @@ run = "cd apps/web/im-console && npm test"
 [tasks."web:build"]
 description = "构建 im-console 静态资源"
 run = "cd apps/web/im-console && npm run build"
+
+[tasks."web:intro-gif"]
+description = "生成 intro 动画 GIF（11 屏 × 2s）→ public/intro/intro.gif"
+run = "cd apps/web/im-console && npx playwright install chromium && npm run intro:gif"

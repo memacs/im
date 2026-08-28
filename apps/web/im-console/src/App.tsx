@@ -9,6 +9,7 @@ import { DebugPage } from "./pages/Debug";
 import { DevicesPage } from "./pages/Devices";
 import { FriendsPage } from "./pages/Friends";
 import { GroupsPage } from "./pages/Groups";
+import { IntroPage } from "./pages/Intro";
 import { LoginPage } from "./pages/Login";
 import { RoomsPage } from "./pages/Rooms";
 import { connectionStore } from "./stores/connection";
@@ -106,6 +107,7 @@ function Shell() {
         >
           Debug
         </NavLink>
+        <NavLink to="/intro">介绍</NavLink>
         <div style={{ flex: 1 }} />
         <span className={`badge ${snap.status === "authenticated" ? "ok" : "warn"}`}>
           {snap.status}
@@ -134,6 +136,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/intro" element={<IntroPage />} />
       <Route element={<Shell />}>
         <Route path="/" element={<Navigate to="/chat" replace />} />
         <Route path="/chat" element={<ChatPage />} />
