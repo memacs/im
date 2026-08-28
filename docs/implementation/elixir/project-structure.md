@@ -90,12 +90,18 @@ apps/elixir/im/
 
 在 **`apps/elixir/im/`** 下：
 
-- [ ] `mix new im --sup`（P0-01）后 `lib/im/application.ex` 启动 Endpoint、Telemetry
+- [x] `lib/im/application.ex` 启动 `IM.Repo`、`Phoenix.PubSub`、`IMWeb.Endpoint`（P0-01）
+- [x] `lib/im_web/router.ex` 注册 `GET /health/live`、`/health/ready`、`/health`（见下）
+- [x] `test/im_web/controllers/health_controller_test.exs` 覆盖成功与 503 路径
 - [ ] `lib/im/protocol/*.ex` 空模块占位
 - [ ] `lib/im/application/dispatch.ex` 空 `execute/3` → `{:error, :not_implemented}`（含 `@moduledoc`、`@doc`、`@spec`）
 - [ ] `services/`、`delivery/`、`ingress/`、`websocket/commands/` 目录存在
-- [ ] `lib/im_web/router.ex` 注册 `GET /health` → 200
-- [ ] `test/im_web/health_test.exs` 断言 `/health`
+
+**健康检查为何拆两个端点**：`/health/live` 不查库，失败会重启容器；`/health/ready`
+查主库，失败只摘流量。合成一个端点时，浅检查会掩盖故障，深检查会在数据库抖动时
+把整个集群一起重启。`/health` 保留为等同 liveness 的兼容入口（`mise run release-smoke`）。
+实现见 `IM.Health` 与 `IMWeb.HealthController`，语义见
+[`release-deploy-test.md`](release-deploy-test.md) §健康检查。
 
 ---
 

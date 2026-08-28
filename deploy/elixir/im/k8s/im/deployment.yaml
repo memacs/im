@@ -40,18 +40,25 @@ spec:
             # Phase 9 多副本：取消下行注释，覆盖 ConfigMap 中的 RELEASE_NODE
             # - name: RELEASE_NODE
             #   value: "im@$(POD_IP)"   # 需启动脚本展开；或 runtime.exs 读 POD_IP 拼接
+          # 启动窗口：BEAM 冷启动期间不让 liveness 误杀
+          startupProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            periodSeconds: 5
+            failureThreshold: 30
+          # 就绪查主库；失败只摘流量，不重启
           readinessProbe:
             httpGet:
-              path: /health
+              path: /health/ready
               port: http
-            initialDelaySeconds: 15
             periodSeconds: 10
             failureThreshold: 6
+          # 存活不查库；数据库抖动不应重启整个集群
           livenessProbe:
             httpGet:
-              path: /health
+              path: /health/live
               port: http
-            initialDelaySeconds: 30
             periodSeconds: 20
           resources:
             requests:

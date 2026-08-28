@@ -90,6 +90,9 @@ IM Pod 通过 `deploy/elixir/im/k8s/im/configmap.yaml` 与 `secret.yaml` 注入�
 | --- | --- | --- |
 | `DATABASE_URL` | ConfigMap | 指向集群内 `postgres` Service |
 | `REDIS_URL` | ConfigMap | 指向集群内 `redis` Service |
+| `PHX_HOST` | ConfigMap | URL 生成用主机名；`runtime.exs` 以 `fetch_env!` 读取，缺失即启动失败 |
+| `PHX_SERVER` | ConfigMap | `true` 时才启动 HTTP 监听 |
+| `LOG_LEVEL` | 可选 | 默认 `warning`（见 observability.md §2.6）；排障可临时设 `info` / `debug` |
 | `SECRET_KEY_BASE` | Secret | 本地占位；生产走外部 Secret |
 | `RELEASE_COOKIE` | Secret | 多节点集群必需（Phase 9） |
 | `RELEASE_DISTRIBUTION` / `RELEASE_NODE` | ConfigMap（单副本默认） | 单副本：`name` + `im@127.0.0.1`；多副本每 Pod 唯一节点名，见 [k8s/README.md](../../../deploy/elixir/im/k8s/README.md) §分布式 Erlang |
@@ -106,7 +109,7 @@ IM Pod 通过 `deploy/elixir/im/k8s/im/configmap.yaml` 与 `secret.yaml` 注入�
 | **L1 单元** | 每次改代码 | `mix test` |
 | **L2 Release 构建** | 每次合入前 | `docker build -f deploy/elixir/im/Dockerfile -t im:local .` |
 | **L3 K8s 部署** | 功能任务验收 | `./deploy/elixir/im/scripts/release-deploy-local.sh` |
-| **L4 冒烟** | L3 之后 | `curl http://localhost:4000/health`（port-forward 后） |
+| **L4 冒烟** | L3 之后 | `curl http://localhost:4000/health/live` 与 `/health/ready`（port-forward 后） |
 | **L5 协议集成** | Phase 2+ | WebSocket 客户端对 `im` Service 发 `CMD_AUTH_REQ` 等 |
 | **L6 多副本** | Phase 5+ / 9 | `kubectl scale deployment/im --replicas=2` 后重复 L5 |
 
@@ -116,12 +119,33 @@ IM Pod 通过 `deploy/elixir/im/k8s/im/configmap.yaml` 与 `secret.yaml` 注入�
 
 ## 健康检查
 
-`deploy/elixir/im/k8s/im/deployment.yaml` 使用 HTTP `GET /health`。Elixir 项目脚手架时 **必须** 实现该路由（Phase 0/2），否则 Pod 无法 Ready。
+存活与就绪 **分离**（见 `IM.Health`、`IMWeb.HealthController`）：
+
+| 端点 | 探针 | 是否查库 | 失败后果 |
+| --- | --- | --- | --- |
+| `GET /health/live` | `livenessProbe` / `startupProbe` | 否 | 重启容器 |
+| `GET /health/ready` | `readinessProbe` | 是（`SELECT 1`） | 摘除流量，**不**重启 |
+| `GET /health` | 冒烟脚本兼容入口 | 否 | — |
+
+存活探针不查库是刻意设计：数据库短暂抖动若触发 liveness 失败，会导致整个集群同时重启，
+恰好在数据库最需要降载时雪上加霜。
 
 ```bash
 kubectl -n im-dev port-forward svc/im 4000:4000
-curl -sf http://localhost:4000/health
+curl -sf http://localhost:4000/health/live    # {"status":"ok"}
+curl -sf http://localhost:4000/health/ready   # {"status":"ok","database":"connected"}
 ```
+
+## 数据库迁移
+
+生产 Release 内没有 Mix，`mix ecto.migrate` 不可用：
+
+```bash
+kubectl -n im-dev exec deployment/im -- /app/bin/migrate
+# 等价于 bin/im eval "IM.Release.migrate()"
+```
+
+脚本来自 `apps/elixir/im/rel/overlays/bin/migrate`，由 Dockerfile 的 `COPY apps/elixir/im/rel rel` 带入 Release。
 
 ---
 

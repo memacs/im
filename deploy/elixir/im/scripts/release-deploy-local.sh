@@ -52,9 +52,10 @@ log "Cluster status ($NAMESPACE):"
 kubectl -n "$NAMESPACE" get pods,svc
 
 if kubectl -n "$NAMESPACE" get deployment im &>/dev/null; then
-  log "Smoke: port-forward and hit /health (run in another terminal):"
+  log "Smoke: port-forward and hit health endpoints (run in another terminal):"
   echo "  kubectl -n $NAMESPACE port-forward svc/im 4000:4000"
-  echo "  curl -sf http://localhost:4000/health"
+  echo "  curl -sf http://localhost:4000/health/live"
+  echo "  curl -sf http://localhost:4000/health/ready"
 fi
 
 log "Done."

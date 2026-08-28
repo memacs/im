@@ -2,7 +2,8 @@
 
 基于 Elixir + Phoenix Framework 的 IM 服务端实现。
 
-> **当前状态**：`apps/elixir/im/` 尚无 Mix 项目。进度见 [PROGRESS.md](PROGRESS.md)（下一项 P0-01）。
+> **当前状态**：`apps/elixir/im/` Phoenix 骨架已就位，Release 镜像可构建、K8s 可 rollout、健康检查通过。
+> 进度见 [PROGRESS.md](PROGRESS.md)（下一项 P0-04 / P0-05）。
 
 ---
 
@@ -22,14 +23,16 @@
 
 | 组件 | 版本 | 说明 |
 |------|------|------|
-| Erlang/OTP | 28.0 | Elixir 运行时 |
+| Erlang/OTP | 28.1 | Elixir 运行时（与根 `mise.toml` 一致） |
 | Elixir | 1.19.5-otp-28 | 服务端主语言 |
-| Phoenix | 最新 | Web 框架 |
-| Phoenix.PubSub | - | 跨节点消息广播 |
-| Phoenix.Tracker | - | 用户连接定位 |
-| libcluster | - | 多节点自动发现 |
-| Redix | - | Redis 客户端 |
-| Broadway | - | Kafka 消费 |
+| Phoenix | 1.8 | Web 框架（已引入） |
+| Bandit | 1.7 | HTTP / WebSocket 服务器（已引入） |
+| Ecto SQL + Postgrex | 3.13 | PostgreSQL 持久化（已引入） |
+| Phoenix.PubSub | 2.x | 跨节点消息广播（已引入） |
+| Phoenix.Tracker | - | 用户连接定位（Phase 5 接入） |
+| libcluster | - | 多节点自动发现（Phase 9 接入） |
+| Redix | - | Redis 客户端（Phase 9 接入） |
+| Broadway | - | Kafka 消费（Phase 9 接入） |
 
 ---
 
@@ -85,8 +88,9 @@
 
 ```bash
 mise install
-mise run proto-check   # 当前可用
-# P0-01 后：mise run setup / test / ci
+mise run k8s-up        # 本地 postgres + redis（mix test 需要 postgres）
+kubectl -n im-dev port-forward svc/postgres 5432:5432   # 另开终端
+mise run ci            # proto + format + compile + test
 ```
 
 详见根 [README.md](../../../README.md)。
@@ -97,7 +101,7 @@ mise run proto-check   # 当前可用
 
 | Phase | 名称 | 状态 |
 |-------|------|------|
-| 0 | 工程脚手架 | 进行中（4/10，尚无 mix 项目） |
+| 0 | 工程脚手架 | 进行中（8/10，余 P0-04 protobuf 生成、P0-05 目录骨架） |
 | 1 | 协议适配层 | 待开始 |
 | 2 | WebSocket 接入 | 待开始（0/14） |
 | 3+ | … | 见 [roadmap.md](roadmap.md) |

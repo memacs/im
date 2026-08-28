@@ -19,7 +19,7 @@
 
 | Phase | 名称 | 进度 |
 | --- | --- | --- |
-| 0 | 工程脚手架 | 7 / 10 |
+| 0 | 工程脚手架 | 8 / 10 |
 | 1 | 协议适配层 | 0 / 5 |
 | 2 | WebSocket 与连接生命周期 | 0 / 14 |
 | 3 | 单聊消息主路径 | 0 / 12 |
@@ -62,18 +62,30 @@
 
 ## Phase 0：工程脚手架
 
+> **验收口径**：标 `done` 必须是 **可验证** 的（`mix test` 绿 / `docker build` 绿 / `kubectl rollout status` 绿），
+> 不以「文件已就位」为准。
+
 | ID | 任务 | 状态 | 备注 |
 | --- | --- | --- | --- |
-| P0-01 | 创建 mix 项目骨架 | done | `apps/elixir/im/mix.exs`；`mix compile` 通过 |
+| P0-01 | 创建 mix 项目骨架 | done | Phoenix 1.8 + Ecto + Bandit；`config/runtime.exs`、`mix.lock`、`releases` 齐备 |
 | P0-02 | mise.toml 与 proto-check | done | 见根目录 mise.toml |
-| P0-03 | deploy/elixir/im/Dockerfile Release 构建 | pending | Dockerfile 已就位；待 P0-01 后 `docker build` 验收 |
+| P0-03 | deploy/elixir/im/Dockerfile Release 构建 | done | `docker build` 通过；runtime 基础镜像改 trixie 以匹配 ERTS glibc |
 | P0-04 | protobuf 代码生成集成 | pending | |
-| P0-05 | 目录结构骨架（`project-structure.md`） | pending | `apps/elixir/im/lib/` |
-| P0-06 | ExUnit 与 CI 测试入口 | done | GHA Elixir job 已启用；`mise run ci` 通过 |
+| P0-05 | 目录结构骨架（`project-structure.md`） | pending | 已建 `lib/im_web/`、`repo.ex`、`health.ex`、`release.ex`；余 `protocol/`、`services/`、`delivery/`、`stores/` 等占位 |
+| P0-06 | ExUnit 与 CI 测试入口 | done | GHA Elixir job 含 postgres service + 依赖缓存；`mise run ci` 通过 |
 | P0-07 | README 本地开发说明 | done | 根 README 含 mise、proto、Release+K8s 路径 |
 | P0-08 | deploy/elixir/im/k8s/base 依赖栈 | done | redis + postgres |
-| P0-09 | deploy/elixir/im/k8s/im + overlays/local | done | K8s 清单已就位；待 P0-01 后 rollout 联调 |
+| P0-09 | deploy/elixir/im/k8s/im + overlays/local | done | `kubectl rollout status deployment/im` 通过；探针拆 `/health/live` 与 `/health/ready` |
 | P0-10 | release-deploy-local 脚本与文档 | done | release-deploy-test.md |
+
+**健康检查与迁移**（P0-01 / P0-09 附带交付）：
+
+| 能力 | 落位 | 验证 |
+| --- | --- | --- |
+| 存活探针 `/health/live` | `IMWeb.HealthController.live/2` | 200，不查库 |
+| 就绪探针 `/health/ready` | `IMWeb.HealthController.ready/2` + `IM.Health.RepoChecker` | 200 `database: connected`；DB 异常 503 |
+| 兼容入口 `/health` | 同 live | `mise run release-smoke` |
+| Release 迁移 | `IM.Release.migrate/0` + `rel/overlays/bin/migrate` | 容器内 `bin/migrate` 退出码 0 |
 
 ## Phase 1：协议适配层
 

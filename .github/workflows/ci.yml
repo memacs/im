@@ -31,12 +31,39 @@ jobs:
     runs-on: ubuntu-latest
     needs: proto
     if: hashFiles('apps/elixir/im/mix.exs') != ''
+
+    # mix test 需要 Postgres（Ecto Sandbox）；凭据与本地依赖栈
+    # deploy/elixir/im/k8s/base/deps/postgres.yaml 保持一致
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: im
+          POSTGRES_PASSWORD: im_dev_only
+          POSTGRES_DB: im_dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: jdx/mise-action@v2
         with:
           install: true
+
+      # 依赖与编译产物缓存，避免每次重编 Phoenix/Ecto 全量依赖
+      - uses: actions/cache@v4
+        with:
+          path: |
+            apps/elixir/im/deps
+            apps/elixir/im/_build
+          key: elixir-${{ runner.os }}-${{ hashFiles('apps/elixir/im/mix.lock') }}
+          restore-keys: elixir-${{ runner.os }}-
 
       - name: mix format --check-formatted
         run: mise run format-check

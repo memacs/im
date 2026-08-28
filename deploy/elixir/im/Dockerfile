@@ -22,13 +22,17 @@ RUN mix deps.compile
 COPY apps/elixir/im/config config
 COPY apps/elixir/im/lib lib
 COPY apps/elixir/im/priv priv
+# rel/overlays 提供 bin/migrate（Release 内执行 Ecto 迁移）
+COPY apps/elixir/im/rel rel
 COPY proto proto
 
 RUN mix compile
 RUN mix release
 
 # ---------- runtime：最小运行镜像 ----------
-FROM debian:bookworm-slim AS runtime
+# 必须与 build 阶段同一 Debian 版本：elixir:1.19.5-otp-28 基于 trixie(glibc 2.41)，
+# 打包进 Release 的 ERTS 需要 GLIBC_2.38，在 bookworm(glibc 2.36) 上会启动失败。
+FROM debian:trixie-slim AS runtime
 
 RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses6 locales ca-certificates \
     && rm -rf /var/lib/apt/lists/*

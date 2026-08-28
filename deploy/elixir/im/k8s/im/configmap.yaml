@@ -9,6 +9,9 @@ data:
   MIX_ENV: "prod"
   PHX_SERVER: "true"
   PORT: "4000"
+  # runtime.exs 用 fetch_env! 读取；缺失会在启动时直接崩溃
+  PHX_HOST: "im.im-dev.svc.cluster.local"
+  PHX_SCHEME: "http"
   # 集群内 Service DNS — 与 deps 栈一致
   DATABASE_URL: "ecto://im:im_dev_only@postgres.im-dev.svc.cluster.local:5432/im_dev"
   REDIS_URL: "redis://redis.im-dev.svc.cluster.local:6379"

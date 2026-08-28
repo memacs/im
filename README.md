@@ -2,7 +2,8 @@
 
 基于 WebSocket + Protobuf 的即时通讯系统。
 
-**当前状态**：协议与设计文档已完成；**`apps/elixir/im/` Mix 项目已创建**（P0-01 done，见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)）。当前可运行 `mise run proto-check`、`mise run im:compile`、`mise run k8s-up`；`release-deploy` 需待 P0-03/P0-04 后可用。
+**当前状态**：协议与设计文档已完成；**Phoenix 骨架 + Release 黄金路径已打通**（Phase 0 完成 8/10，见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)）。
+`mise run ci`、`mise run release-deploy`、`mise run release-smoke` 均可运行；余 P0-04（protobuf 代码生成）与 P0-05（分层目录骨架）。
 
 ---
 
@@ -81,16 +82,15 @@ mkdir -p gen/go gen/java
 
 本仓库用 [mise](https://mise.jdx.dev/) 锁定 Erlang/Elixir/protoc 版本，并将常用 `mix` / `kubectl` / `docker` 命令封装为任务。
 
-> **注意**：Mix 项目在 **`apps/elixir/im/`**（根目录无 `mix.exs`）。`mise run im:compile` / `im:test` 可用；`release-deploy` 待 P0-03/P0-04。
+> **注意**：Mix 项目在 **`apps/elixir/im/`**（根目录无 `mix.exs`）。`mix test` 需要 Postgres，先起本地依赖栈。
 
 ```bash
 mise install
 mise tasks                  # 查看全部任务
-mise run proto-check
-mise run im:compile
-mise run im:test
-# mise run check
-# mise run release-deploy
+mise run k8s-up             # 本地 postgres + redis
+kubectl -n im-dev port-forward svc/postgres 5432:5432   # 另开终端
+mise run ci                 # proto + format + compile + test
+mise run release-deploy     # 构建 Release 镜像并部署到 K8s
 ```
 
 任务定义见根目录 [`mise.toml`](mise.toml)。
@@ -110,16 +110,13 @@ Push / PR 触发 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)，与本
 
 ## 本地运行环境（Release + K8s，与线上一致）
 
-集成测试须在 **Release 镜像 + OrbStack Kubernetes** 中执行，不用 dev server 代替验收（**需 P0-01 完成后**）。
+集成测试须在 **Release 镜像 + OrbStack Kubernetes** 中执行，不用 dev server 代替验收。
 
 ```bash
-# 当前可先部署依赖栈（redis + postgres）：
-mise run k8s-up
-
-# 全链路（构建 Release 镜像 + 部署 IM）待 mix 项目就绪后：
-# mise run release-deploy
-# mise run k8s-port-forward   # 另开终端
-# mise run release-smoke
+mise run k8s-up             # 依赖栈（redis + postgres）
+mise run release-deploy     # 构建 Release 镜像 + 部署 IM
+mise run k8s-port-forward   # 另开终端
+mise run release-smoke      # /health/live + /health/ready
 ```
 
 详见 [docs/implementation/elixir/release-deploy-test.md](docs/implementation/elixir/release-deploy-test.md) 与 [deploy/elixir/im/k8s/README.md](deploy/elixir/im/k8s/README.md)。
@@ -155,11 +152,18 @@ im/
 
 ### Elixir 实现
 
-- **框架**: Phoenix Framework
-- **节点发现**: libcluster
-- **跨节点通信**: Phoenix.PubSub + Phoenix.Tracker
-- **消息队列**: Broadway (Kafka)
-- **缓存**: Redix (Redis)
+已引入：
+
+- **框架**: Phoenix 1.8 + Bandit
+- **持久化**: Ecto SQL + Postgrex (PostgreSQL)
+- **跨节点广播**: Phoenix.PubSub
+
+按 Phase 接入：
+
+- **节点发现**: libcluster（Phase 9）
+- **连接定位**: Phoenix.Tracker（Phase 5）
+- **消息队列**: Broadway (Kafka)（Phase 9）
+- **缓存**: Redix (Redis)（Phase 9）
 
 ### 部署
 
@@ -171,7 +175,7 @@ im/
 
 ## 快速开始
 
-### 1. 协议校验（当前可用）
+### 1. 协议校验
 
 ```bash
 mise run proto-check
@@ -181,11 +185,12 @@ mise run proto-check
 
 ```bash
 mise install
-mise run im:compile
+mise run k8s-up                                          # mix test 需要 postgres
+kubectl -n im-dev port-forward svc/postgres 5432:5432    # 另开终端
 mise run im:test
 ```
 
-### 3. 本地部署验收（待 P0-01 + P0-03）
+### 3. 本地部署验收
 
 ```bash
 mise run release-deploy

@@ -7,7 +7,9 @@ elixir = "1.19.5-otp-28"
 protoc = "29.3"
 
 [env]
-MIX_ENV = "dev"
+# 不在此固定 MIX_ENV：Mix 默认 dev，`mix test` 自动切 test，
+# 显式设置会让 `mix test` 误跑在 dev 环境（Endpoint 起监听、连错库）。
+# 需要 prod 的任务在自己的 env 中声明（见 im:release）。
 IM_APP_DIR = "apps/elixir/im"
 
 # ── Proto（仓库根）────────────────────────────────────────────────────────────
@@ -173,8 +175,11 @@ env = { IM_SKIP_BUILD = "1" }
 run = "./deploy/elixir/im/scripts/release-deploy-local.sh"
 
 [tasks.release-smoke]
-description = "冒烟：/health（需先 k8s-port-forward）"
-run = "curl -sf http://localhost:4000/health"
+description = "冒烟：/health/live + /health/ready（需先 k8s-port-forward）"
+run = """
+curl -sf http://localhost:4000/health/live && echo
+curl -sf http://localhost:4000/health/ready && echo
+"""
 
 [tasks.verify]
 description = "完整验收：check + Release 构建部署"

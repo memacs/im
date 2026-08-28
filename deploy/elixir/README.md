@@ -31,7 +31,7 @@ mise run release-smoke
 
 1. **镜像按应用拆分**：IM 与 loadtest 不共用 Dockerfile
 2. **配置外置**：ConfigMap / Secret
-3. **健康检查**：`GET /health`
+3. **健康检查**：存活 `GET /health/live`（不查库）与就绪 `GET /health/ready`（查主库）分离
 4. **资源限制**：requests / limits
 
 ---
