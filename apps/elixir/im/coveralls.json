@@ -1,0 +1,26 @@
+{
+  "skip_files": [
+    "test/support/",
+    "lib/im_web/endpoint.ex",
+    "lib/im_web/router.ex",
+    "lib/im/repo.ex",
+    "lib/im/release.ex",
+    "lib/im/hooks/behaviour.ex",
+    "lib/im/cache/redis.ex",
+    "lib/im/event_bus/noop.ex",
+    "lib/im/event_bus/producer/brod/",
+    "lib/im/jobs/",
+    "lib/im/workers/",
+    "lib/im/cluster/group_pusher.ex",
+    "lib/im/cluster/slow_node.ex",
+    "lib/im_web/packet_transport.ex",
+    "lib/im/application.ex",
+    "lib/im/websocket/commands/msg_ack_batch.ex",
+    "lib/im/room/member_cache.ex",
+    "lib/im/group/member_cache.ex"
+  ],
+  "coverage_options": {
+    "minimum_coverage": 80,
+    "treat_no_coverage_as_zero": true
+  }
+}

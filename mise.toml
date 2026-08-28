@@ -114,6 +114,15 @@ source deploy/elixir/im/scripts/resolve-pg-port.sh
 cd apps/elixir/im && mix test "$@"
 """
 
+[tasks."im:coveralls"]
+description = "mix coveralls（全量 test + 覆盖率 ≥80%，见 coveralls.json）"
+depends = ["im:compile"]
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix coveralls
+"""
+
 [tasks."im:test-smoke"]
 description = "Release 冒烟 ExUnit（等价 bin/smoke-messaging + smoke-auth）"
 depends = ["im:compile"]
@@ -243,7 +252,7 @@ description = "提交前：proto + IM compile + test"
 depends = ["proto-check", "im:compile", "im:test"]
 
 [tasks.ci]
-description = "CI 等价：proto + format + credo + 严格编译 + 依赖审计 + im/im_client/loadtest test"
+description = "CI 等价：proto + format + credo + 严格编译 + 依赖审计 + coveralls(≥80%) + im_client/loadtest test"
 depends = [
   "proto-check",
   "proto-gen-check",
@@ -251,7 +260,7 @@ depends = [
   "im:credo",
   "im:compile-strict",
   "im:audit",
-  "im:test",
+  "im:coveralls",
   "im_client:test",
   "loadtest:test",
 ]

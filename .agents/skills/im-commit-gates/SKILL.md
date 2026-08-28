@@ -18,7 +18,7 @@ auto_suggest: true
 合入门禁：
 - [ ] mise run format-check          # mix format --check-formatted
 - [ ] mise run im:credo              # 静态分析，零 issue
-- [ ] mise run ci                    # proto + 严格编译 + audit + 全仓 test
+- [ ] mise run ci                    # proto + 严格编译 + audit + coveralls(≥80%) + 全仓 test
 - [ ] 文档与代码一致、无矛盾（见下文）
 - [ ] 协议/cmd 变更已完成 doc-sync（若适用）
 - [ ] PROGRESS / architecture 已更新（若适用）
@@ -100,7 +100,7 @@ mise run release-deploy && mise run release-smoke
 | **Credo** | `im:credo` | 高优先级（warning+）零 issue；`mix credo --strict` 作逐步收紧 |
 | **编译** | `ci` → `im:compile-strict` | 修 warning；禁止 `-warnings-as-errors` 绕过 |
 | **依赖审计** | `ci` → `im:audit` | 升级/替换 retired hex 包 |
-| **测试** | `ci` → `im:test` 等 | 修测试或实现；禁止删断言过关 |
+| **测试** | `ci` → `im:coveralls` 等 | 全量 test + **覆盖率 ≥80%**（`coveralls.json`）；禁止删断言过关 |
 | **Proto 同步** | `proto-gen-check` | `mise run proto-gen` 后一并提交生成物 |
 
 ---

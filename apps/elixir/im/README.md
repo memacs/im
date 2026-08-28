@@ -43,8 +43,16 @@ mise run im:server           # http://localhost:4000  /ws
 | --- | --- |
 | `mise run im:compile` | 编译 |
 | `mise run im:test` | ExUnit（自动解析 PGPORT） |
+| `mise run im:coveralls` | ExUnit + **覆盖率 ≥80%**（CI 门禁，配置见 `coveralls.json`） |
 | `mise run im:release` | 本地打 Release 包（`MIX_ENV=prod`） |
 | `mise run im:docs` | 生成 ExDoc API 文档 → `doc/index.html` |
+
+### 测试覆盖率（合入门禁 ≥80%）
+
+- 命令：`mise run im:coveralls`（已纳入 `mise run ci` 与 GHA）
+- 阈值与排除项：`apps/elixir/im/coveralls.json`（`minimum_coverage: 80`）
+- **排除**（不计入分母）：`test/support/`、Phoenix 脚手架（`endpoint`/`router`/`repo`/`release`）、Redis/Brod 生产适配、Oban `jobs/`/`workers/`、多节点树状推送（`group_pusher`）、WS 传输层（`packet_transport`）等；新增排除须在 PR 说明理由
+- 日常迭代可用 `mise run im:test`（不跑覆盖率统计）
 
 ### Release + K8s 单副本（与线上一致，推荐日常验收）
 

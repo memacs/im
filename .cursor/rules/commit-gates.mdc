@@ -10,7 +10,7 @@ alwaysApply: true
 ```bash
 mise run format-check   # 不过则 mise run format
 mise run im:credo
-mise run ci             # = GHA：proto + format + compile-strict + audit + 全量 test
+mise run ci             # = GHA：proto + format + compile-strict + audit + coveralls(≥80%) + 全量 test
 ```
 
 ## 文档

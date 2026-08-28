@@ -415,7 +415,7 @@ mise run verify            # check + Release 部署（可选）
 | --- | --- |
 | `format-check` | 代码格式；不过则 `mise run format` |
 | `im:credo` | Credo 高优先级（warning+）零 issue |
-| `ci` | proto + format + credo + compile-strict + hex.audit + im/im_client/loadtest test |
+| `ci` | proto + format + credo + compile-strict + hex.audit + **im coveralls ≥80%** + im_client/loadtest test |
 | 文档 | [`doc-sync-checklist.md`](docs/design/doc-sync-checklist.md) §2 + §2.6 grep；代码与文档不得矛盾 |
 
 ```bash

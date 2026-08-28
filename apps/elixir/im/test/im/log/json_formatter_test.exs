@@ -31,4 +31,25 @@ defmodule IM.Log.JsonFormatterTest do
     assert is_binary(map["node"])
     assert map["caller_module"] =~ "MessageSend"
   end
+
+  test "元数据键、时间格式与兜底分支" do
+    event = %{
+      level: :info,
+      msg: "plain",
+      meta: [
+        event: :ws_connect,
+        trace_id: "t1",
+        time: {{2024, 1, 2}, {3, 4, 5, 123_456}}
+      ]
+    }
+
+    line = event |> JsonFormatter.format(%{}) |> IO.iodata_to_binary() |> String.trim()
+    {:ok, map} = Jason.decode(line)
+    assert map["event"] == "ws_connect"
+    assert map["trace_id"] == "t1"
+    assert String.starts_with?(map["@timestamp"], "2024-01-02")
+
+    assert JsonFormatter.format(%{level: :error, msg: {:string, "x"}, meta: %{}}, %{}) != []
+    assert JsonFormatter.format(%{oops: true}, %{}) == []
+  end
 end

@@ -103,4 +103,40 @@ defmodule IM.Application.DispatchTest do
   test "unknown cmd", %{ctx: ctx} do
     assert {:error, %{code: :not_implemented}} = Dispatch.execute(99_999, %{}, ctx)
   end
+
+  test "channel subscribe / publish", %{ctx: ctx} do
+    ch = "news:dispatch-#{System.unique_integer([:positive])}"
+
+    assert {:ok, resp} =
+             Dispatch.execute(
+               CmdType.value(:CMD_CHANNEL_SUBSCRIBE_REQ),
+               %{channel_ids: [ch]},
+               ctx
+             )
+
+    assert ch in resp.subscribed
+
+    assert {:ok, ack} =
+             Dispatch.execute(
+               CmdType.value(:CMD_CHANNEL_PUBLISH),
+               %Pb.Im.Protocol.ChannelPublish{
+                 channel_id: ch,
+                 content_type: "application/json",
+                 payload: "{}",
+                 client_event_id: "e1"
+               },
+               ctx
+             )
+
+    assert ack.accepted
+
+    assert {:ok, resp2} =
+             Dispatch.execute(
+               CmdType.value(:CMD_CHANNEL_UNSUBSCRIBE_REQ),
+               %{channel_ids: [ch]},
+               ctx
+             )
+
+    assert ch in resp2.unsubscribed
+  end
 end

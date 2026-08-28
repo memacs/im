@@ -1,4 +1,4 @@
-# 与本地 `mise run ci` 对齐：proto-check → format-check → credo → 严格编译 → 依赖审计 → test
+# 与本地 `mise run ci` 对齐：proto-check → format-check → credo → 严格编译 → 依赖审计 → coveralls(≥80%)
 # 另有 release job 验证 Dockerfile 可构建（黄金路径见 release-deploy-test.md）
 # mix.exs 位于 apps/elixir/im；见 docs/implementation/monorepo-layout.md
 name: CI
@@ -86,10 +86,10 @@ jobs:
         run: mise run im:audit
 
       # GHA postgres service 监听 5432（非 OrbStack 的 15432 pg-forward）
-      - name: mix test
+      - name: mix coveralls（≥80%）
         env:
           PGPORT: "5432"
-        run: mise run test
+        run: mise run im:coveralls
 
       - name: Release 冒烟（进程内，G-61）
         env:
