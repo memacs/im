@@ -130,6 +130,25 @@ deploy/                # 与 apps 对应的部署清单
 | **合入门禁** | 确认提交前须已跑通 format / credo / ci（见 [`im-commit-gates`](.agents/skills/im-commit-gates/SKILL.md)） |
 | **禁止 push** | 除非用户 **明确要求** push |
 
+### 核心原则（Elixir / OTP）
+
+- **进程不是代码组织工具**：无状态逻辑用纯函数
+- **函数式核心 / 命令式外壳**：纯逻辑与副作用分层
+- **Let it crash**：预期错误显式处理，意外错误交由监督树
+- **热路径**：禁阻塞 IO、禁无界队列/ETS
+- **背压**：MQ 调用需超时/重试控制
+
+写/改 `.ex` 时另读 [`elixir-essentials`](.agents/skills/elixir-essentials/SKILL.md)、[`otp-essentials`](.agents/skills/otp-essentials/SKILL.md)；Kafka/Event Bus 背压见 [kafka-event-bus.md](docs/design/kafka-event-bus.md)。
+
+### 安全红线（必须）
+
+- 禁止硬编码凭据；使用环境变量
+- 禁止 `String.to_atom/1` 处理用户输入
+- 日志脱敏，禁止输出 token/password
+- `.env*`/`config/prod.secret.exs` 等敏感文件禁止提交
+
+触达用户输入、token、日志时读 [`security-essentials`](.agents/skills/security-essentials/SKILL.md)；生产配置见 [`runtime.exs`](apps/elixir/im/config/runtime.exs)、[`deployment-gotchas`](.agents/skills/deployment-gotchas/SKILL.md)。
+
 ### 协议为准（硬约束）
 
 **所有代码开发必须以协议为唯一行为契约**；协议变更 **必须经人工确认** 后方可动手。
@@ -355,6 +374,7 @@ deploy/                # 与 apps 对应的部署清单
 | **写/改任何实现代码（协议为准）** | 先读 `proto/` + [`protocol.md`](docs/design/protocol/protocol.md)；**改协议须人工确认** |
 | Web 演示控制台（独立 SPA、协议全覆盖） | [web-console.md](docs/design/web-console.md)、[implementation/web/web-console.md](docs/implementation/web/web-console.md) |
 | 写/改 `.ex` 通用风格 | [`elixir-essentials`](.agents/skills/elixir-essentials/SKILL.md) |
+| Elixir 进程 / 监督树 / 热路径 | [`otp-essentials`](.agents/skills/otp-essentials/SKILL.md) + [`AGENTS.md`](AGENTS.md)「核心原则」 |
 | 写/修测试 | [`testing-essentials`](.agents/skills/testing-essentials/SKILL.md) |
 | GenServer、Supervisor、进程 | [`otp-essentials`](.agents/skills/otp-essentials/SKILL.md) |
 | Ecto schema、查询、迁移 | [`ecto-essentials`](.agents/skills/ecto-essentials/SKILL.md) |
@@ -364,7 +384,7 @@ deploy/                # 与 apps 对应的部署清单
 | PubSub、跨节点广播 | [`phoenix-pubsub-patterns`](.agents/skills/phoenix-pubsub-patterns/SKILL.md) |
 | REST JSON API | [`phoenix-json-api`](.agents/skills/phoenix-json-api/SKILL.md) |
 | 鉴权、授权、访问控制 | [`phoenix-auth-customization`](.agents/skills/phoenix-auth-customization/SKILL.md)、[`phoenix-authorization-patterns`](.agents/skills/phoenix-authorization-patterns/SKILL.md) |
-| 安全（输入、日志、token） | [`security-essentials`](.agents/skills/security-essentials/SKILL.md) |
+| 安全（输入、日志、token） | [`security-essentials`](.agents/skills/security-essentials/SKILL.md) + [`AGENTS.md`](AGENTS.md)「安全红线」 |
 | 指标、日志、Telemetry | [`telemetry-essentials`](.agents/skills/telemetry-essentials/SKILL.md) |
 | Release、部署配置 | [`deployment-gotchas`](.agents/skills/deployment-gotchas/SKILL.md) |
 | **K8s IM Pod 排障、trace、RPC、日志** | [`im-k8s-debug`](.agents/skills/im-k8s-debug/SKILL.md) |

@@ -39,6 +39,8 @@ auto_suggest: true
 
 **冲突处理**：协议 > AGENTS.md > roadmap。发现不一致时先对齐文档与 proto，再写代码。
 
+**核心原则与安全**：见 [`AGENTS.md`](../../AGENTS.md)「核心原则（Elixir / OTP）」「安全红线（必须）」。
+
 ---
 
 ## 每轮工作流（总览）
