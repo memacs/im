@@ -139,8 +139,7 @@ if config_env() != :test do
   if crontab != [] do
     prev = Application.get_env(:im, Oban, [])
 
-    config :im, Oban,
-           Keyword.merge(prev, plugins: [{Oban.Plugins.Cron, crontab: crontab}])
+    config :im, Oban, Keyword.merge(prev, plugins: [{Oban.Plugins.Cron, crontab: crontab}])
   end
 end
 
@@ -207,5 +206,3 @@ if kafka_brokers != [] or System.get_env("EVENT_BUS_ENABLED") in ~w(true 1 false
       |> Keyword.put(:brokers, kafka_brokers)
       |> Keyword.put(:client_id, client_id)
 end
-
-

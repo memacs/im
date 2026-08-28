@@ -70,8 +70,12 @@ defmodule IM.Services.MessageRead do
 
   defp other_private(self, from, to, conv_id) do
     cond do
-      to != "" and to != self -> to
-      from != "" and from != self -> from
+      to != "" and to != self ->
+        to
+
+      from != "" and from != self ->
+        from
+
       true ->
         case String.split(conv_id, ":") do
           ["p", a, b] -> if a == self, do: b, else: a

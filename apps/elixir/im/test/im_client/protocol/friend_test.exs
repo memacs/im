@@ -3,6 +3,7 @@ defmodule IM.Client.Protocol.FriendTest do
   use IM.ClientProtocolCase
 
   alias IM.Client.Connection
+
   alias Pb.Im.Protocol.{
     FriendAddResp,
     FriendAcceptResp,
@@ -21,13 +22,20 @@ defmodule IM.Client.Protocol.FriendTest do
     %{a: a, b: b} = connect_pair!()
 
     trace_as!("A")
-    {:ok, add_packet} = Connection.add_friend(a.client, %{to_user_id: b.login.user_id, message: "hi"})
+
+    {:ok, add_packet} =
+      Connection.add_friend(a.client, %{to_user_id: b.login.user_id, message: "hi"})
+
     trace!("↓ WS CMD_FRIEND_ADD_RESP", add_packet)
     add = assert_cmd_resp!(add_packet, :CMD_FRIEND_ADD_RESP, FriendAddResp)
 
     trace_as!("B")
+
     {:ok, accept_packet} =
-      Connection.accept_friend(b.client, %{request_id: add.request_id, from_user_id: a.login.user_id})
+      Connection.accept_friend(b.client, %{
+        request_id: add.request_id,
+        from_user_id: a.login.user_id
+      })
 
     trace!("↓ WS CMD_FRIEND_ACCEPT_RESP", accept_packet)
     assert_cmd_resp!(accept_packet, :CMD_FRIEND_ACCEPT_RESP, FriendAcceptResp)
@@ -67,8 +75,12 @@ defmodule IM.Client.Protocol.FriendTest do
     trace!("↓ WS CMD_FRIEND_ADD_RESP", add_packet)
 
     trace_as!("B")
+
     {:ok, rej_packet} =
-      Connection.reject_friend(b.client, %{request_id: add.request_id, from_user_id: a.login.user_id})
+      Connection.reject_friend(b.client, %{
+        request_id: add.request_id,
+        from_user_id: a.login.user_id
+      })
 
     trace!("↓ WS CMD_FRIEND_REJECT_RESP", rej_packet)
     assert_cmd_resp!(rej_packet, :CMD_FRIEND_REJECT_RESP, FriendRejectResp)
@@ -111,9 +123,13 @@ defmodule IM.Client.Protocol.FriendTest do
     trace!("↑ WS CMD_FRIEND_REQUEST_LIST_REQ", %Pb.Im.Protocol.FriendRequestListReq{limit: 20})
 
     {:ok, packet} =
-      Connection.request(b.client, :CMD_FRIEND_REQUEST_LIST_REQ, %Pb.Im.Protocol.FriendRequestListReq{
-        limit: 20
-      })
+      Connection.request(
+        b.client,
+        :CMD_FRIEND_REQUEST_LIST_REQ,
+        %Pb.Im.Protocol.FriendRequestListReq{
+          limit: 20
+        }
+      )
 
     trace!("↓ WS CMD_FRIEND_REQUEST_LIST_RESP", packet)
     resp = assert_cmd_resp!(packet, :CMD_FRIEND_REQUEST_LIST_RESP, FriendRequestListResp)

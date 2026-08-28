@@ -43,7 +43,6 @@ defmodule IM.EventBus.Producer.Brod do
     end)
   end
 
-
   @doc "brod client id（atom）。"
   @spec client_id() :: atom()
   def client_id do
@@ -79,11 +78,19 @@ defmodule IM.EventBus.Producer.Brod do
 
       case adapter().produce_sync(client, topic, partition, key, payload) do
         :ok ->
-          :telemetry.execute([:im, :event_bus, :produce], %{count: 1}, %{topic: topic, backend: :brod})
+          :telemetry.execute([:im, :event_bus, :produce], %{count: 1}, %{
+            topic: topic,
+            backend: :brod
+          })
+
           :ok
 
         {:ok, _offset} ->
-          :telemetry.execute([:im, :event_bus, :produce], %{count: 1}, %{topic: topic, backend: :brod})
+          :telemetry.execute([:im, :event_bus, :produce], %{count: 1}, %{
+            topic: topic,
+            backend: :brod
+          })
+
           :ok
 
         {:error, reason} = err ->

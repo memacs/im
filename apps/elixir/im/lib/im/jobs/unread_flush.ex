@@ -25,7 +25,9 @@ defmodule IM.Jobs.UnreadFlush do
       |> maybe_put("batch", Keyword.get(opts, :batch))
 
     case args |> IM.Workers.UnreadFlush.new() |> Oban.insert() do
-      {:ok, _} -> :ok
+      {:ok, _} ->
+        :ok
+
       {:error, _} ->
         _ = run_once(opts)
         :ok

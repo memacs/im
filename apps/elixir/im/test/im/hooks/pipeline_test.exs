@@ -17,20 +17,32 @@ defmodule IM.Hooks.PipelineTest do
     end)
 
     alice = AuthFixtures.create_user!(user_id: "hk_a_#{System.unique_integer([:positive])}")
-    bob = AuthFixtures.create_user!(app_key: alice.app_key, user_id: "hk_b_#{System.unique_integer([:positive])}")
+
+    bob =
+      AuthFixtures.create_user!(
+        app_key: alice.app_key,
+        user_id: "hk_b_#{System.unique_integer([:positive])}"
+      )
+
     ctx = ctx(alice, "d")
     %{alice: alice, bob: bob, ctx: ctx}
   end
 
   test "reject 拦截发送", %{bob: bob, ctx: ctx} do
-    Application.put_env(:im, :hooks, pre_send: [__MODULE__.RejectHook], on_exception: :fail_closed)
+    Application.put_env(:im, :hooks,
+      pre_send: [__MODULE__.RejectHook],
+      on_exception: :fail_closed
+    )
 
     assert {:error, %{code: :msg_invalid}} =
              Message.send(text_msg(bob.user_id, "x"), ctx)
   end
 
   test "可改写 content", %{bob: bob, ctx: ctx} do
-    Application.put_env(:im, :hooks, pre_send: [__MODULE__.RewriteHook], on_exception: :fail_closed)
+    Application.put_env(:im, :hooks,
+      pre_send: [__MODULE__.RewriteHook],
+      on_exception: :fail_closed
+    )
 
     assert {:ok, result} = Message.send(text_msg(bob.user_id, "raw"), ctx)
     assert result.message.content == "rewritten"

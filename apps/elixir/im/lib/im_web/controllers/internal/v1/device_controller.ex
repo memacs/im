@@ -3,7 +3,7 @@ defmodule IMWeb.Internal.V1.DeviceController do
 
   use IMWeb, :controller
 
-  action_fallback IMWeb.FallbackController
+  action_fallback(IMWeb.FallbackController)
 
   alias IM.Domain.Error
   alias IM.Services.{DeviceBan, Kick}

@@ -17,7 +17,10 @@ defmodule IM.WebSocket.Commands.RoomUpdate do
              route_key: result.room_id
            ),
          {:ok, bin} <- Codec.encode(broadcast),
-         :ok <- RoomPubSub.broadcast(ctx.app_key, result.room_id, bin, %{exclude_device_id: ctx.device_id}),
+         :ok <-
+           RoomPubSub.broadcast(ctx.app_key, result.room_id, bin, %{
+             exclude_device_id: ctx.device_id
+           }),
          {:ok, ack} <- Reply.ok(packet, result.push_cmd, result.push),
          {:ok, ack_bin} <- Codec.encode(ack) do
       {:reply, ack_bin, ConnectionState.touch(state)}

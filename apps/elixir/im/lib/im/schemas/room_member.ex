@@ -5,10 +5,10 @@ defmodule IM.Schemas.RoomMember do
   import Ecto.Changeset
 
   schema "room_members" do
-    field :app_key, :string
-    field :room_id, :string
-    field :user_id, :string
-    field :joined_at, :utc_datetime_usec
+    field(:app_key, :string)
+    field(:room_id, :string)
+    field(:user_id, :string)
+    field(:joined_at, :utc_datetime_usec)
   end
 
   def changeset(member, attrs) do

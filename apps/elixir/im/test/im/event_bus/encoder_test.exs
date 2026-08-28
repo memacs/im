@@ -38,7 +38,9 @@ defmodule IM.EventBus.EncoderTest do
     )
 
     on_exit(fn ->
-      if prev, do: Application.put_env(:im, :event_bus_kafka, prev), else: Application.delete_env(:im, :event_bus_kafka)
+      if prev,
+        do: Application.put_env(:im, :event_bus_kafka, prev),
+        else: Application.delete_env(:im, :event_bus_kafka)
     end)
 
     bin = Encoder.encode(:upstream, %{msg_id: "j-1"})

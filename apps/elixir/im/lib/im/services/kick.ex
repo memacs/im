@@ -49,7 +49,8 @@ defmodule IM.Services.Kick do
       timestamp: System.system_time(:millisecond)
     }
 
-    with {:ok, packet} <- Push.build(:CMD_KICK, notify, trace_id: Keyword.get(opts, :trace_id, "")) do
+    with {:ok, packet} <-
+           Push.build(:CMD_KICK, notify, trace_id: Keyword.get(opts, :trace_id, "")) do
       case Registry.send_device(app_key, user_id, device_id, {:im_kick, packet}) do
         :ok -> :ok
         :error -> :ok

@@ -30,6 +30,7 @@ defmodule IM.Cluster.GroupPusherTest do
   test "FanoutPolicy 阈值判定" do
     assert FanoutPolicy.use_tree_push?(3)
     refute FanoutPolicy.use_tree_push?(2)
+
     assert FanoutPolicy.storage_mode(%{member_count: 10, storage_mode: "write_fanout"}) ==
              :write_fanout
   end

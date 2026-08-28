@@ -5,12 +5,12 @@ defmodule IM.Schemas.GroupMember do
   import Ecto.Changeset
 
   schema "group_members" do
-    field :app_key, :string
-    field :group_id, :string
-    field :user_id, :string
-    field :role, :integer, default: 0
-    field :muted_until, :integer, default: 0
-    field :joined_at, :utc_datetime_usec
+    field(:app_key, :string)
+    field(:group_id, :string)
+    field(:user_id, :string)
+    field(:role, :integer, default: 0)
+    field(:muted_until, :integer, default: 0)
+    field(:joined_at, :utc_datetime_usec)
   end
 
   def changeset(member, attrs) do

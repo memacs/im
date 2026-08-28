@@ -3,11 +3,12 @@ defmodule IMWeb.Api.V1.RoomController do
 
   use IMWeb, :controller
 
-  action_fallback IMWeb.FallbackController
+  action_fallback(IMWeb.FallbackController)
 
   alias IM.Application.Dispatch
   alias IM.Domain.Error
   alias IMWeb.Api.V1.Json
+
   alias Pb.Im.Protocol.{
     ChatMessage,
     CmdType,

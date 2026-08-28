@@ -162,8 +162,7 @@ defmodule IM.Stores.MessageStore do
   @spec list_expired_msg_ids(String.t(), DateTime.t(), pos_integer()) :: [String.t()]
   def list_expired_msg_ids(app_key, cutoff, limit) do
     from(b in MessageBody,
-      where:
-        b.app_key == ^app_key and b.inserted_at < ^cutoff and b.chat_type in [1, 2],
+      where: b.app_key == ^app_key and b.inserted_at < ^cutoff and b.chat_type in [1, 2],
       select: b.msg_id,
       limit: ^limit
     )
@@ -173,7 +172,10 @@ defmodule IM.Stores.MessageStore do
   @doc """
   删除给定 msg_id 的 inbox 与 bodies。
   """
-  @spec delete_messages(String.t(), [String.t()]) :: %{inbox: non_neg_integer(), bodies: non_neg_integer()}
+  @spec delete_messages(String.t(), [String.t()]) :: %{
+          inbox: non_neg_integer(),
+          bodies: non_neg_integer()
+        }
   def delete_messages(app_key, msg_ids) when is_list(msg_ids) do
     {inbox, _} =
       from(i in UserInbox, where: i.app_key == ^app_key and i.msg_id in ^msg_ids)

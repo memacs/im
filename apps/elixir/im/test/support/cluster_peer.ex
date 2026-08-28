@@ -142,12 +142,18 @@ defmodule IM.ClusterPeer do
 
     :ok = :rpc.call(peer_node, :code, :add_paths, [:code.get_path()])
 
-    case :rpc.call(peer_node, IM.ClusterPeerBoot, :boot, [
-           main_node,
+    case :rpc.call(
            peer_node,
-           port,
-           Application.fetch_env!(:im, IM.Repo)
-         ], 120_000) do
+           IM.ClusterPeerBoot,
+           :boot,
+           [
+             main_node,
+             peer_node,
+             port,
+             Application.fetch_env!(:im, IM.Repo)
+           ],
+           120_000
+         ) do
       :ok -> {:ok, pid, peer_node}
       other -> flunk("peer boot failed: #{inspect(other)}")
     end
@@ -166,8 +172,12 @@ defmodule IM.ClusterPeer do
 
   defp wait_until(fun, attempts \\ 50) do
     cond do
-      fun.() -> true
-      attempts <= 0 -> false
+      fun.() ->
+        true
+
+      attempts <= 0 ->
+        false
+
       true ->
         Process.sleep(50)
         wait_until(fun, attempts - 1)

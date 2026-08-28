@@ -3,8 +3,14 @@ defmodule IM.ProtocolTraceRegistry do
 
   @agent IM.ProtocolTraceRegistry
 
-  @json_path Path.expand("../../../../../docs/implementation/elixir/protocol-e2e-traces.json", __DIR__)
-  @md_path Path.expand("../../../../../docs/implementation/elixir/protocol-e2e-message-sequences.md", __DIR__)
+  @json_path Path.expand(
+               "../../../../../docs/implementation/elixir/protocol-e2e-traces.json",
+               __DIR__
+             )
+  @md_path Path.expand(
+             "../../../../../docs/implementation/elixir/protocol-e2e-message-sequences.md",
+             __DIR__
+           )
 
   def enabled?, do: System.get_env("TRACE_EXPORT") == "1"
 

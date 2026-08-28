@@ -234,7 +234,15 @@ defmodule IM.ClientProtocolCase do
   end
 
   @doc "发送一块 MSG_STREAM 并返回 ACK 的 msg_id。"
-  @spec send_stream_chunk!(pid(), String.t(), String.t(), String.t(), atom(), non_neg_integer(), String.t()) ::
+  @spec send_stream_chunk!(
+          pid(),
+          String.t(),
+          String.t(),
+          String.t(),
+          atom(),
+          non_neg_integer(),
+          String.t()
+        ) ::
           String.t()
   def send_stream_chunk!(client, from, to, stream_id, status, sequence, chunk) do
     body =
@@ -286,7 +294,11 @@ defmodule IM.ClientProtocolCase do
 
     assert {:ok, %Req.Response{status: 200, body: body}} =
              Req.post(url,
-               json: %{"app_key" => app_key, "payload" => payload, "content_type" => "application/json"},
+               json: %{
+                 "app_key" => app_key,
+                 "payload" => payload,
+                 "content_type" => "application/json"
+               },
                headers: [
                  {"x-trace-id", unique_id("tr")},
                  {"x-im-caller-service", "protocol-e2e"}
@@ -314,7 +326,9 @@ defmodule IM.ClientProtocolCase do
   @spec trace!(String.t(), Pb.Im.Protocol.Packet.t() | struct()) :: :ok
   def trace!(direction, %Pb.Im.Protocol.Packet{} = packet) do
     if IM.ProtocolTraceRegistry.enabled?() do
-      IM.ProtocolTraceRegistry.record(build_trace_entry!(direction, %{"packet" => IM.ProtocolTrace.to_map(packet)}))
+      IM.ProtocolTraceRegistry.record(
+        build_trace_entry!(direction, %{"packet" => IM.ProtocolTrace.to_map(packet)})
+      )
     end
 
     :ok
@@ -335,7 +349,10 @@ defmodule IM.ClientProtocolCase do
     if IM.ProtocolTraceRegistry.enabled?() do
       IM.ProtocolTraceRegistry.record(
         build_trace_entry!(direction, %{
-          "http" => %{"request" => stringify_keys(request), "response" => stringify_keys(response)}
+          "http" => %{
+            "request" => stringify_keys(request),
+            "response" => stringify_keys(response)
+          }
         })
       )
     end
@@ -347,7 +364,9 @@ defmodule IM.ClientProtocolCase do
   @spec trace_event!(String.t(), map()) :: :ok
   def trace_event!(direction, event) when is_map(event) do
     if IM.ProtocolTraceRegistry.enabled?() do
-      IM.ProtocolTraceRegistry.record(build_trace_entry!(direction, %{"event" => stringify_keys(event)}))
+      IM.ProtocolTraceRegistry.record(
+        build_trace_entry!(direction, %{"event" => stringify_keys(event)})
+      )
     end
 
     :ok

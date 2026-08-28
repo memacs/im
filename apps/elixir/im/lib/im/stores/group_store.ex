@@ -277,7 +277,8 @@ defmodule IM.Stores.GroupStore do
   """
   @spec set_role(String.t(), String.t(), String.t(), non_neg_integer()) ::
           {:ok, GroupMember.t()} | {:error, :not_found}
-  def set_role(app_key, group_id, user_id, role) when role in [@role_member, @role_admin, @role_owner] do
+  def set_role(app_key, group_id, user_id, role)
+      when role in [@role_member, @role_admin, @role_owner] do
     with {:ok, m} <- get_member(app_key, group_id, user_id) do
       m
       |> GroupMember.changeset(%{role: role})
@@ -317,7 +318,8 @@ defmodule IM.Stores.GroupStore do
   @doc """
   更新群元数据。
   """
-  @spec update_meta(String.t(), String.t(), map()) :: {:ok, Group.t()} | {:error, :not_found | Error.t()}
+  @spec update_meta(String.t(), String.t(), map()) ::
+          {:ok, Group.t()} | {:error, :not_found | Error.t()}
   def update_meta(app_key, group_id, attrs) when is_map(attrs) do
     with {:ok, group} <- get(app_key, group_id) do
       group

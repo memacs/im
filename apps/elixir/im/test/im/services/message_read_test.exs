@@ -3,8 +3,8 @@ defmodule IM.Services.MessageReadTest do
 
   alias IM.AuthFixtures
   alias IM.Domain.MessageContext
-    alias IM.Services.{Message, MessageRead}
-    alias IM.Stores.ConversationStore
+  alias IM.Services.{Message, MessageRead}
+  alias IM.Stores.ConversationStore
   alias IM.Stores.ConversationStore
   alias Pb.Im.Protocol.{ChatMessage, MsgRead}
 

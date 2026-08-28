@@ -12,7 +12,13 @@ defmodule IM.Permission.BlockCacheTest do
     Memory.reset!()
     L1.reset!()
     a = AuthFixtures.create_user!(user_id: "bc_a_#{System.unique_integer([:positive])}")
-    b = AuthFixtures.create_user!(app_key: a.app_key, user_id: "bc_b_#{System.unique_integer([:positive])}")
+
+    b =
+      AuthFixtures.create_user!(
+        app_key: a.app_key,
+        user_id: "bc_b_#{System.unique_integer([:positive])}"
+      )
+
     %{a: a, b: b}
   end
 

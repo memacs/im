@@ -6,6 +6,7 @@ defmodule IM.Services.Group do
   alias IM.Group.FanoutPolicy
   alias IM.Schemas.Group
   alias IM.Stores.GroupStore
+
   alias Pb.Im.Protocol.{
     GroupAdminPush,
     GroupAdminReq,
@@ -339,6 +340,7 @@ defmodule IM.Services.Group do
              ) do
           {:ok, g} ->
             :ok = MetaCache.put(g)
+
             push = %GroupTransferPush{
               group_id: group.group_id,
               conv_id: conv_id(group.group_id),
@@ -377,6 +379,7 @@ defmodule IM.Services.Group do
       case GroupStore.update_meta(ctx.app_key, group.group_id, attrs) do
         {:ok, g} ->
           :ok = MetaCache.put(g)
+
           push = %GroupUpdatePush{
             group_id: g.group_id,
             conv_id: conv_id(g.group_id),
@@ -558,7 +561,9 @@ defmodule IM.Services.Group do
   defp maybe_put(map, _k, v) when v in [nil, ""], do: map
   defp maybe_put(map, k, v), do: Map.put(map, k, v)
 
-  defp maybe_put_max(map, n) when is_integer(n) and n > 0, do: Map.put(map, :max_members, min(n, 10_000))
+  defp maybe_put_max(map, n) when is_integer(n) and n > 0,
+    do: Map.put(map, :max_members, min(n, 10_000))
+
   defp maybe_put_max(map, _), do: map
 
   defp str(params, key, default \\ "") do

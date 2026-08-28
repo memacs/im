@@ -13,6 +13,7 @@ defmodule IM.Client.Protocol.GroupTest do
     group_id = unique_id("g")
 
     trace_as!("owner")
+
     {:ok, create_packet} =
       Connection.create_group(owner.client, %{
         group_id: group_id,
@@ -29,8 +30,12 @@ defmodule IM.Client.Protocol.GroupTest do
     trace!("↓ WS CMD_GROUP_JOIN_PUSH", join_packet)
 
     trace_as!("owner")
+
     {:ok, admin_packet} =
-      Connection.set_group_admin(owner.client, %{group_id: group_id, member_uid: member.login.user_id})
+      Connection.set_group_admin(owner.client, %{
+        group_id: group_id,
+        member_uid: member.login.user_id
+      })
 
     trace!("↓ WS CMD_GROUP_SET_ADMIN_PUSH", admin_packet)
 
@@ -67,6 +72,7 @@ defmodule IM.Client.Protocol.GroupTest do
     trace!("↓ WS CMD_GROUP_LEAVE_PUSH", leave_packet)
 
     trace_as!("owner")
+
     {:ok, transfer_packet} =
       Connection.request(owner.client, :CMD_GROUP_TRANSFER_REQ, %GroupTransferReq{
         group_id: group_id,
@@ -76,6 +82,7 @@ defmodule IM.Client.Protocol.GroupTest do
     trace!("↓ WS CMD_GROUP_TRANSFER_PUSH", transfer_packet)
 
     trace_as!("member")
+
     {:ok, update_packet} =
       Connection.request(member.client, :CMD_GROUP_UPDATE_REQ, %GroupUpdateReq{
         group_id: group_id,

@@ -3,7 +3,7 @@ defmodule IMWeb.Api.V1.ConversationController do
 
   use IMWeb, :controller
 
-  action_fallback IMWeb.FallbackController
+  action_fallback(IMWeb.FallbackController)
 
   alias IM.Services.Conversation
   alias IMWeb.Api.V1.Json

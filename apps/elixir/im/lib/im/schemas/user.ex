@@ -8,13 +8,13 @@ defmodule IM.Schemas.User do
 
   @primary_key {:id, :id, autogenerate: true}
   schema "users" do
-    field :app_key, :string
-    field :user_id, :string
-    field :nickname, :string
-    field :avatar_url, :string
-    field :password_hash, :string
-    field :muted, :boolean, default: false
-    field :disabled_at, :utc_datetime_usec
+    field(:app_key, :string)
+    field(:user_id, :string)
+    field(:nickname, :string)
+    field(:avatar_url, :string)
+    field(:password_hash, :string)
+    field(:muted, :boolean, default: false)
+    field(:disabled_at, :utc_datetime_usec)
 
     timestamps(type: :utc_datetime_usec)
   end

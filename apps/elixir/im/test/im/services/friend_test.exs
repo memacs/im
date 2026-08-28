@@ -5,6 +5,7 @@ defmodule IM.Services.FriendTest do
   alias IM.Domain.MessageContext
   alias IM.Services.{Friend, Message}
   alias IM.Stores.FriendStore
+
   alias Pb.Im.Protocol.{
     ChatMessage,
     FriendAcceptReq,
@@ -16,7 +17,13 @@ defmodule IM.Services.FriendTest do
 
   setup do
     a = AuthFixtures.create_user!(user_id: "fa_#{System.unique_integer([:positive])}")
-    b = AuthFixtures.create_user!(app_key: a.app_key, user_id: "fb_#{System.unique_integer([:positive])}")
+
+    b =
+      AuthFixtures.create_user!(
+        app_key: a.app_key,
+        user_id: "fb_#{System.unique_integer([:positive])}"
+      )
+
     %{a: a, b: b, a_ctx: ctx(a, "da"), b_ctx: ctx(b, "db")}
   end
 

@@ -5,11 +5,11 @@ defmodule IM.Schemas.Friendship do
   import Ecto.Changeset
 
   schema "friendships" do
-    field :app_key, :string
-    field :user_id, :string
-    field :friend_user_id, :string
-    field :status, :string
-    field :remark, :string
+    field(:app_key, :string)
+    field(:user_id, :string)
+    field(:friend_user_id, :string)
+    field(:status, :string)
+    field(:remark, :string)
 
     timestamps(type: :utc_datetime_usec)
   end

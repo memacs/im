@@ -12,7 +12,12 @@ defmodule IM.Permission.MuteCacheTest do
     Memory.reset!()
     L1.reset!()
     owner = AuthFixtures.create_user!(user_id: "mute_o_#{System.unique_integer([:positive])}")
-    member = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "mute_m_#{System.unique_integer([:positive])}")
+
+    member =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "mute_m_#{System.unique_integer([:positive])}"
+      )
 
     ctx = %MessageContext{
       app_key: owner.app_key,

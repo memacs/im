@@ -44,7 +44,9 @@ defmodule IM.Services.MessageEdit do
   end
 
   defp authorize(body, user_id) do
-    if body.from_uid == user_id, do: :ok, else: {:error, Error.new(:msg_edit_denied, "not sender")}
+    if body.from_uid == user_id,
+      do: :ok,
+      else: {:error, Error.new(:msg_edit_denied, "not sender")}
   end
 
   defp check_window(body, window) do

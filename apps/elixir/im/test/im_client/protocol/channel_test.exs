@@ -3,6 +3,7 @@ defmodule IM.Client.Protocol.ChannelTest do
   use IM.ClientProtocolCase
 
   alias IM.Client.{Assertions, Connection}
+
   alias Pb.Im.Protocol.{
     ChannelPublish,
     ChannelPublishAck,
@@ -22,7 +23,10 @@ defmodule IM.Client.Protocol.ChannelTest do
     sub = assert_cmd_resp!(sub_packet, :CMD_CHANNEL_SUBSCRIBE_RESP, ChannelSubscribeResp)
     assert channel_id in sub.subscribed
 
-    trace_http!("↑ HTTP POST /internal/v1/channels/.../publish", %{channel: channel_id}, %{status: 200})
+    trace_http!("↑ HTTP POST /internal/v1/channels/.../publish", %{channel: channel_id}, %{
+      status: 200
+    })
+
     internal_channel_publish!("news", "alerts", app_key: login.app_key, payload: %{"n" => 1})
 
     {:ok, push_packet} = Assertions.await_cmd(client, CmdType.value(:CMD_CHANNEL_PUSH), 5_000)

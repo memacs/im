@@ -9,7 +9,13 @@ defmodule IM.Services.RoomManageTest do
 
   setup do
     owner = AuthFixtures.create_user!(user_id: "ro_#{System.unique_integer([:positive])}")
-    peer = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "rp_#{System.unique_integer([:positive])}")
+
+    peer =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "rp_#{System.unique_integer([:positive])}"
+      )
+
     %{owner: owner, peer: peer, ctx: ctx(owner, "d"), peer_ctx: ctx(peer, "dp")}
   end
 

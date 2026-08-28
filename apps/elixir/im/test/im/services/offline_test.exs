@@ -8,7 +8,12 @@ defmodule IM.Services.OfflineTest do
 
   setup do
     alice = AuthFixtures.create_user!(user_id: "oa_#{System.unique_integer([:positive])}")
-    bob = AuthFixtures.create_user!(app_key: alice.app_key, user_id: "ob_#{System.unique_integer([:positive])}")
+
+    bob =
+      AuthFixtures.create_user!(
+        app_key: alice.app_key,
+        user_id: "ob_#{System.unique_integer([:positive])}"
+      )
 
     ctx = %MessageContext{
       app_key: alice.app_key,

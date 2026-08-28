@@ -43,7 +43,15 @@ defmodule IM.Services.SessionTest do
 
     test "设备封禁返回 device_banned" do
       %{app_key: app_key, user_id: user_id, password: password} = AuthFixtures.create_user!()
-      {:ok, _} = UserDeviceStore.upsert(%{app_key: app_key, user_id: user_id, device_id: "d1", platform: "ios"})
+
+      {:ok, _} =
+        UserDeviceStore.upsert(%{
+          app_key: app_key,
+          user_id: user_id,
+          device_id: "d1",
+          platform: "ios"
+        })
+
       :ok = DeviceBan.ban(app_key, user_id, "d1", "admin")
 
       assert {:error, %Error{msg: "device_banned"}} =

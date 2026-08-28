@@ -113,7 +113,10 @@ defmodule IM.Stores.ConversationStore do
 
   返回 `%{flushed: n, skipped: m}`。
   """
-  @spec flush_pending(String.t(), keyword()) :: %{flushed: non_neg_integer(), skipped: non_neg_integer()}
+  @spec flush_pending(String.t(), keyword()) :: %{
+          flushed: non_neg_integer(),
+          skipped: non_neg_integer()
+        }
   def flush_pending(app_key, opts \\ []) when is_binary(app_key) do
     batch = Keyword.get(opts, :batch, 500)
 

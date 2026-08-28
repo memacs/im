@@ -10,7 +10,10 @@ defmodule IM.Client.Protocol.ExtensionsTest do
       :ok
     else
       %{a: a, b: b} = connect_pair!()
-      {msg_id, conv_id} = send_private!(a.client, a.login.user_id, b.login.user_id, content: "editable")
+
+      {msg_id, conv_id} =
+        send_private!(a.client, a.login.user_id, b.login.user_id, content: "editable")
+
       push = await_push_message!(b.client)
       {:ok, a: a, b: b, msg_id: msg_id, conv_id: conv_id, push: push}
     end
@@ -19,6 +22,7 @@ defmodule IM.Client.Protocol.ExtensionsTest do
   @tag trace_case: "extensions_test/已读回执"
   test "已读回执", %{a: a, b: b, msg_id: msg_id, conv_id: conv_id, push: push} do
     trace_as!("B")
+
     trace!("↑ WS CMD_MSG_READ", %MsgRead{
       chat_type: :CHAT_PRIVATE,
       from: b.login.user_id,
@@ -48,6 +52,7 @@ defmodule IM.Client.Protocol.ExtensionsTest do
   @tag trace_case: "extensions_test/编辑消息"
   test "编辑消息", %{a: a, msg_id: msg_id, conv_id: conv_id} do
     trace_as!("A")
+
     {:ok, packet} =
       Connection.edit_message(a.client, %{msg_id: msg_id, conv_id: conv_id, content: "edited"})
 
@@ -59,6 +64,7 @@ defmodule IM.Client.Protocol.ExtensionsTest do
   @tag trace_case: "extensions_test/撤回消息"
   test "撤回消息", %{a: a, b: b, msg_id: msg_id, conv_id: conv_id} do
     trace_as!("A")
+
     {:ok, packet} =
       Connection.recall_message(a.client, %{msg_id: msg_id, conv_id: conv_id, reason: "mistake"})
 
@@ -81,6 +87,7 @@ defmodule IM.Client.Protocol.ExtensionsTest do
   @tag trace_case: "extensions_test/透传指令"
   test "透传指令", %{a: a, b: b} do
     trace_as!("A")
+
     trace!("↑ WS CMD_PASSTHROUGH", %Passthrough{
       chat_type: :CHAT_PRIVATE,
       from: a.login.user_id,
@@ -112,6 +119,7 @@ defmodule IM.Client.Protocol.ExtensionsTest do
     %{a: a, b: b} = connect_pair!()
 
     trace_as!("A")
+
     {:ok, packet} =
       Connection.send_message(a.client, %{
         from: a.login.user_id,

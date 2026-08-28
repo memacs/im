@@ -18,7 +18,13 @@ defmodule IM.EventBusTest do
     end)
 
     alice = AuthFixtures.create_user!(user_id: "eb_a_#{System.unique_integer([:positive])}")
-    bob = AuthFixtures.create_user!(app_key: alice.app_key, user_id: "eb_b_#{System.unique_integer([:positive])}")
+
+    bob =
+      AuthFixtures.create_user!(
+        app_key: alice.app_key,
+        user_id: "eb_b_#{System.unique_integer([:positive])}"
+      )
+
     %{alice: alice, bob: bob, ctx: ctx(alice, "d")}
   end
 
@@ -57,8 +63,12 @@ defmodule IM.EventBusTest do
 
   defp wait_until(fun, n \\ 40) do
     cond do
-      fun.() -> true
-      n <= 0 -> false
+      fun.() ->
+        true
+
+      n <= 0 ->
+        false
+
       true ->
         Process.sleep(10)
         wait_until(fun, n - 1)

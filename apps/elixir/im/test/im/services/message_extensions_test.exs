@@ -13,7 +13,12 @@ defmodule IM.Services.MessageExtensionsTest do
 
   setup do
     alice = AuthFixtures.create_user!(user_id: "ea_#{System.unique_integer([:positive])}")
-    bob = AuthFixtures.create_user!(app_key: alice.app_key, user_id: "eb_#{System.unique_integer([:positive])}")
+
+    bob =
+      AuthFixtures.create_user!(
+        app_key: alice.app_key,
+        user_id: "eb_#{System.unique_integer([:positive])}"
+      )
 
     alice_ctx = ctx(alice, "d-a")
     bob_ctx = ctx(bob, "d-b")
@@ -64,7 +69,10 @@ defmodule IM.Services.MessageExtensionsTest do
 
   test "群管理员可撤回成员消息", %{alice: alice, bob: bob, alice_ctx: alice_ctx} do
     charlie =
-      AuthFixtures.create_user!(app_key: alice.app_key, user_id: "ec_#{System.unique_integer([:positive])}")
+      AuthFixtures.create_user!(
+        app_key: alice.app_key,
+        user_id: "ec_#{System.unique_integer([:positive])}"
+      )
 
     bob_ctx = ctx(bob, "d-b-recall")
     charlie_ctx = ctx(charlie, "d-c-recall")
@@ -183,7 +191,9 @@ defmodule IM.Services.MessageExtensionsTest do
     assert {:ok, sent} = send_text(alice_ctx, bob.user_id, "old")
 
     {:ok, body} = MessageStore.get_by_msg_id(alice_ctx.app_key, sent.message.msg_id)
-    old = DateTime.utc_now() |> DateTime.add(-10 * 86_400, :second) |> DateTime.truncate(:microsecond)
+
+    old =
+      DateTime.utc_now() |> DateTime.add(-10 * 86_400, :second) |> DateTime.truncate(:microsecond)
 
     body
     |> IM.Schemas.MessageBody.changeset(%{})
@@ -192,7 +202,9 @@ defmodule IM.Services.MessageExtensionsTest do
 
     result = TtlPurge.run_once(app_key: alice_ctx.app_key, msg_ttl_days: 7, batch: 100)
     assert result.chat.bodies >= 1
-    assert {:error, :not_found} = MessageStore.get_by_msg_id(alice_ctx.app_key, sent.message.msg_id)
+
+    assert {:error, :not_found} =
+             MessageStore.get_by_msg_id(alice_ctx.app_key, sent.message.msg_id)
   end
 
   defp send_text(ctx, to, content) do
@@ -218,5 +230,4 @@ defmodule IM.Services.MessageExtensionsTest do
       node: node()
     }
   end
-
 end

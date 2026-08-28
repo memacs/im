@@ -10,7 +10,9 @@ defmodule IM.EventBus.FanoutPolicyTest do
     prev = Application.get_env(:im, :event_bus_kafka)
 
     on_exit(fn ->
-      if prev, do: Application.put_env(:im, :event_bus_kafka, prev), else: Application.delete_env(:im, :event_bus_kafka)
+      if prev,
+        do: Application.put_env(:im, :event_bus_kafka, prev),
+        else: Application.delete_env(:im, :event_bus_kafka)
     end)
 
     :ok
@@ -21,6 +23,7 @@ defmodule IM.EventBus.FanoutPolicyTest do
     assert {:room_aggregated, nil} = FanoutPolicy.resolve(%{chat_type: :CHAT_ROOM}, [])
 
     owner = AuthFixtures.create_user!(user_id: "fp_#{System.unique_integer([:positive])}")
+
     ctx = %MessageContext{
       app_key: owner.app_key,
       user_id: owner.user_id,

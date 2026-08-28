@@ -28,7 +28,8 @@ defmodule IM.Services.Auth do
              platform: req.platform || "unknown",
              sdk_ver: req.sdk_ver
            }),
-         {:ok, limit_result} <- DeviceLimit.enforce(claims.app_key, claims.user_id, claims.device_id, device.platform) do
+         {:ok, limit_result} <-
+           DeviceLimit.enforce(claims.app_key, claims.user_id, claims.device_id, device.platform) do
       session_id = Ecto.UUID.generate()
 
       ctx =

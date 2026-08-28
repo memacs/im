@@ -123,7 +123,8 @@ defmodule IM.Delivery.Router do
     push_message(message, app, user, Map.to_list(opts))
   end
 
-  def deliver(_message, _ctx), do: {:error, Error.new(:msg_invalid, "unsupported deliver payload")}
+  def deliver(_message, _ctx),
+    do: {:error, Error.new(:msg_invalid, "unsupported deliver payload")}
 
   defp push_meta(%ChatMessage{} = message) do
     %{

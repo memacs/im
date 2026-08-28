@@ -40,7 +40,9 @@ defmodule IM.EventBus.Buffer do
 
   @impl true
   def init(opts) do
-    max = Keyword.get(opts, :max_len, Application.get_env(:im, :event_bus_buffer_max, @max_default))
+    max =
+      Keyword.get(opts, :max_len, Application.get_env(:im, :event_bus_buffer_max, @max_default))
+
     {:ok, %{q: :queue.new(), len: 0, max: max}}
   end
 

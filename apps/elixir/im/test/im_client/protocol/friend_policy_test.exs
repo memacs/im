@@ -14,9 +14,7 @@ defmodule IM.Client.Protocol.FriendPolicyTest do
     assert {:ok, _} = AppConfigStore.put(app_key, "friend", "require_friend_to_send", true)
 
     a =
-      connect_authenticated!(
-        AuthFixtures.login!(Map.take(user, [:app_key, :user_id, :password]))
-      )
+      connect_authenticated!(AuthFixtures.login!(Map.take(user, [:app_key, :user_id, :password])))
 
     b =
       connect_authenticated!(
@@ -27,6 +25,7 @@ defmodule IM.Client.Protocol.FriendPolicyTest do
       )
 
     trace_as!("A")
+
     {:ok, denied} =
       Connection.send_message(a.client, %{
         from: a.login.user_id,
@@ -45,6 +44,7 @@ defmodule IM.Client.Protocol.FriendPolicyTest do
     trace!("↓ WS CMD_FRIEND_ADD_RESP", add_packet)
 
     trace_as!("B")
+
     trace!("↑ WS CMD_FRIEND_ACCEPT_REQ", %FriendAcceptReq{
       request_id: add.request_id,
       from_user_id: a.login.user_id

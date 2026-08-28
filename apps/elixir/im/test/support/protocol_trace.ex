@@ -197,14 +197,22 @@ defmodule IM.ProtocolTrace do
   def payload_cmd(%Pb.Im.Protocol.MsgAckBatchUp{}), do: CmdType.value(:CMD_MSG_ACK_BATCH_UP)
   def payload_cmd(%Pb.Im.Protocol.OfflinePullReq{}), do: CmdType.value(:CMD_OFFLINE_PULL_REQ)
   def payload_cmd(%Pb.Im.Protocol.MsgRead{}), do: CmdType.value(:CMD_MSG_READ)
-  def payload_cmd(%Pb.Im.Protocol.FriendSetRemarkReq{}), do: CmdType.value(:CMD_FRIEND_SET_REMARK_REQ)
-  def payload_cmd(%Pb.Im.Protocol.FriendRequestListReq{}), do: CmdType.value(:CMD_FRIEND_REQUEST_LIST_REQ)
+
+  def payload_cmd(%Pb.Im.Protocol.FriendSetRemarkReq{}),
+    do: CmdType.value(:CMD_FRIEND_SET_REMARK_REQ)
+
+  def payload_cmd(%Pb.Im.Protocol.FriendRequestListReq{}),
+    do: CmdType.value(:CMD_FRIEND_REQUEST_LIST_REQ)
+
   def payload_cmd(%Pb.Im.Protocol.GroupTransferReq{}), do: CmdType.value(:CMD_GROUP_TRANSFER_REQ)
   def payload_cmd(%Pb.Im.Protocol.GroupUpdateReq{}), do: CmdType.value(:CMD_GROUP_UPDATE_REQ)
   def payload_cmd(%Pb.Im.Protocol.RoomUpdateReq{}), do: CmdType.value(:CMD_ROOM_UPDATE_REQ)
   def payload_cmd(%Pb.Im.Protocol.RoomKickReq{}), do: CmdType.value(:CMD_ROOM_KICK_REQ)
   def payload_cmd(%Pb.Im.Protocol.RoomOperateReq{}), do: CmdType.value(:CMD_ROOM_DISMISS_REQ)
-  def payload_cmd(%Pb.Im.Protocol.ChannelUnsubscribeReq{}), do: CmdType.value(:CMD_CHANNEL_UNSUBSCRIBE_REQ)
+
+  def payload_cmd(%Pb.Im.Protocol.ChannelUnsubscribeReq{}),
+    do: CmdType.value(:CMD_CHANNEL_UNSUBSCRIBE_REQ)
+
   def payload_cmd(%Pb.Im.Protocol.ChannelPublish{}), do: CmdType.value(:CMD_CHANNEL_PUBLISH)
   def payload_cmd(_), do: 0
 
@@ -237,7 +245,9 @@ defmodule IM.ProtocolTrace do
     end
   end
 
-  defp maybe_expand_stream_content(%Pb.Im.Protocol.ChatMessage{msg_type: :MSG_STREAM, content: bin} = msg)
+  defp maybe_expand_stream_content(
+         %Pb.Im.Protocol.ChatMessage{msg_type: :MSG_STREAM, content: bin} = msg
+       )
        when is_binary(bin) do
     case Pb.Im.Protocol.StreamContent.decode(bin) do
       %Pb.Im.Protocol.StreamContent{} = sc ->

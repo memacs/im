@@ -4,6 +4,7 @@ defmodule IM.Application.DispatchTest do
   alias IM.Application.Dispatch
   alias IM.AuthFixtures
   alias IM.Domain.MessageContext
+
   alias Pb.Im.Protocol.{
     ChatMessage,
     CmdType,

@@ -32,7 +32,10 @@ defmodule IM.Cluster.GroupPusher do
     force_tree? = Keyword.get(opts, :force_tree, false)
 
     by_node = collect_by_node(app_key, user_ids, exclude)
-    online_users = by_node |> Map.values() |> List.flatten() |> Enum.map(& &1.user_id) |> Enum.uniq()
+
+    online_users =
+      by_node |> Map.values() |> List.flatten() |> Enum.map(& &1.user_id) |> Enum.uniq()
+
     online_set = MapSet.new(online_users)
     nodes = Map.keys(by_node) |> Enum.reject(&SlowNode.isolated?/1)
 
@@ -55,7 +58,10 @@ defmodule IM.Cluster.GroupPusher do
 
     Enum.each(user_ids, fn uid ->
       unless MapSet.member?(online_set, uid) do
-        MobilePush.maybe_enqueue(app_key, uid, packet_binary,
+        MobilePush.maybe_enqueue(
+          app_key,
+          uid,
+          packet_binary,
           Keyword.merge(push_opts, online?: false)
         )
       end
@@ -124,7 +130,9 @@ defmodule IM.Cluster.GroupPusher do
     parallelism = FanoutConfig.get(:coordinator_parallelism)
     timeout = FanoutConfig.get(:rpc_timeout_ms)
 
-    {depth, miss} = fanout_nodes(nodes, by_node, packet_binary, branching, parallelism, timeout, 1)
+    {depth, miss} =
+      fanout_nodes(nodes, by_node, packet_binary, branching, parallelism, timeout, 1)
+
     %{depth: depth, miss: miss}
   end
 
@@ -193,7 +201,7 @@ defmodule IM.Cluster.GroupPusher do
     {:ok, direct_push(subset_by_node, bin).miss}
   end
 
-  defp rpc_deliver(n, targets, bin) when n == node() or n == :"nonode@nohost" do
+  defp rpc_deliver(n, targets, bin) when n == node() or n == :nonode@nohost do
     local_deliver(targets, bin)
   end
 

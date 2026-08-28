@@ -44,10 +44,18 @@ defmodule IM.WebSocket.Handler do
             {:stop, ConnectionState.closing(state)}
 
           {:error, :already_authenticated} ->
-            error_close(packet, state, Error.new(:unauthorized, "already_authenticated", ref_cmd: packet.cmd))
+            error_close(
+              packet,
+              state,
+              Error.new(:unauthorized, "already_authenticated", ref_cmd: packet.cmd)
+            )
 
           {:error, :invalid_cmd} ->
-            error_close(packet, state, Error.new(:msg_invalid, "invalid_cmd_in_state", ref_cmd: packet.cmd))
+            error_close(
+              packet,
+              state,
+              Error.new(:msg_invalid, "invalid_cmd_in_state", ref_cmd: packet.cmd)
+            )
         end
       rescue
         e ->

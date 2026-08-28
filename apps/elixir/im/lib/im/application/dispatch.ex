@@ -289,6 +289,7 @@ defmodule IM.Application.Dispatch do
 
   def execute(:channel_publish_down, attrs, %MessageContext{} = ctx) when is_map(attrs) do
     channel_id = Map.get(attrs, :channel_id) || Map.get(attrs, "channel_id")
+
     caller =
       Map.get(attrs, :caller_service) || Map.get(attrs, "caller_service") ||
         ctx.caller_service || "unknown"

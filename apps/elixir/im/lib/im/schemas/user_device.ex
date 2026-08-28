@@ -5,17 +5,17 @@ defmodule IM.Schemas.UserDevice do
   import Ecto.Changeset
 
   schema "user_devices" do
-    field :app_key, :string
-    field :user_id, :string
-    field :device_id, :string
-    field :platform, :string
-    field :push_token, :string
-    field :sdk_ver, :string
-    field :online, :boolean, default: false
-    field :last_active_at, :utc_datetime_usec
-    field :banned_at, :utc_datetime_usec
-    field :ban_reason, :string
-    field :clear_local_data_pending, :boolean, default: false
+    field(:app_key, :string)
+    field(:user_id, :string)
+    field(:device_id, :string)
+    field(:platform, :string)
+    field(:push_token, :string)
+    field(:sdk_ver, :string)
+    field(:online, :boolean, default: false)
+    field(:last_active_at, :utc_datetime_usec)
+    field(:banned_at, :utc_datetime_usec)
+    field(:ban_reason, :string)
+    field(:clear_local_data_pending, :boolean, default: false)
 
     timestamps(type: :utc_datetime_usec)
   end

@@ -68,6 +68,7 @@ defmodule IMWeb.PacketTransport do
         IM.Log.error(:packet_decode_error,
           reason: "decode_failed size=#{byte_size(data)}: #{inspect(reason)}"
         )
+
         {:stop, :normal, %{state | conn: ConnectionState.closing(state.conn)}}
     end
   end
@@ -141,6 +142,7 @@ defmodule IMWeb.PacketTransport do
         unsubscribe_channels(ctx.app_key, state.conn.channels)
 
         _ = IM.EventBus.Session.logout(ctx, "ws_disconnect")
+
         IM.Audit.record(:auth_logout,
           app_key: a,
           user_id: u,
@@ -215,7 +217,9 @@ defmodule IMWeb.PacketTransport do
 
   defp refresh_idle(state), do: state
 
-  defp maybe_schedule_token_expiry(%{conn: %ConnectionState{status: :authenticated, token_expires_at: exp}} = state)
+  defp maybe_schedule_token_expiry(
+         %{conn: %ConnectionState{status: :authenticated, token_expires_at: exp}} = state
+       )
        when not is_nil(exp) do
     {state, _ref} = TokenExpiry.schedule(state, state.conn)
     state

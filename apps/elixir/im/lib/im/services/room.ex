@@ -4,6 +4,7 @@ defmodule IM.Services.Room do
   alias IM.Domain.{Error, MessageContext}
   alias IM.Room.{MemberCache, MetaCache}
   alias IM.Stores.RoomStore
+
   alias Pb.Im.Protocol.{
     RoomCreateReq,
     RoomCreateResp,
@@ -190,7 +191,8 @@ defmodule IM.Services.Room do
     }
   end
 
-  defp fetch(_app, id) when id in [nil, ""], do: {:error, Error.new(:msg_invalid, "room_id required")}
+  defp fetch(_app, id) when id in [nil, ""],
+    do: {:error, Error.new(:msg_invalid, "room_id required")}
 
   defp fetch(app_key, room_id) do
     case MetaCache.get(app_key, room_id) do

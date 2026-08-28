@@ -5,12 +5,12 @@ defmodule IM.Schemas.AppConfig do
   import Ecto.Changeset
 
   schema "app_configs" do
-    field :app_key, :string
-    field :category, :string
-    field :config_key, :string
-    field :config_value, :string
-    field :value_type, :string, default: "string"
-    field :description, :string
+    field(:app_key, :string)
+    field(:category, :string)
+    field(:config_key, :string)
+    field(:config_value, :string)
+    field(:value_type, :string, default: "string")
+    field(:description, :string)
 
     timestamps(type: :utc_datetime_usec)
   end

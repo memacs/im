@@ -135,4 +135,3 @@ defmodule IM.Delivery.OutboundQueueTest do
     })
   end
 end
-

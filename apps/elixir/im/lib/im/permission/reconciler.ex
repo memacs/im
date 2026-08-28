@@ -36,7 +36,13 @@ defmodule IM.Permission.Reconciler do
     Telemetry.emit_drift(:group_member, group_member)
     Telemetry.emit_drift(:friendship, friendship)
 
-    %{block: block, mute: mute, device_ban: device, group_member: group_member, friendship: friendship}
+    %{
+      block: block,
+      mute: mute,
+      device_ban: device,
+      group_member: group_member,
+      friendship: friendship
+    }
   end
 
   defp reconcile_blocks(app_key, sample) do

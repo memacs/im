@@ -17,7 +17,9 @@ defmodule IM.Services.Conversation do
 
     preview_fallback =
       rows
-      |> Enum.filter(fn r -> r.last_msg_id not in [nil, ""] and r.last_msg_preview in [nil, ""] end)
+      |> Enum.filter(fn r ->
+        r.last_msg_id not in [nil, ""] and r.last_msg_preview in [nil, ""]
+      end)
       |> Enum.map(& &1.last_msg_id)
       |> then(&MessageStore.previews_by_msg_ids(ctx.app_key, &1))
 

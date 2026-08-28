@@ -19,6 +19,7 @@ defmodule IM.Client.Protocol.ClusterTest do
     )
 
     trace_as!("A")
+
     {msg_id, _} =
       send_private!(a.client, a.login.user_id, b.login.user_id, content: "cross-node-push")
 
@@ -49,6 +50,7 @@ defmodule IM.Client.Protocol.ClusterTest do
     ClusterPeer.wait_device_tracked!(a.login.app_key, b_login.user_id, b_login.device_id, peer)
 
     trace_as!("A")
+
     {:ok, packet} =
       Connection.send_message(a.client, %{
         from: a.login.user_id,

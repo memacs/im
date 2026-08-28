@@ -97,8 +97,7 @@ defmodule IM.Stores.FriendStore do
   @spec list_blocked_user_ids(String.t(), String.t()) :: [String.t()]
   def list_blocked_user_ids(app_key, blocker_user_id) do
     from(f in Friendship,
-      where:
-        f.app_key == ^app_key and f.user_id == ^blocker_user_id and f.status == "blocked",
+      where: f.app_key == ^app_key and f.user_id == ^blocker_user_id and f.status == "blocked",
       select: f.friend_user_id
     )
     |> Repo.all()

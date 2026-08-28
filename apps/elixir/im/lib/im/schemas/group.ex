@@ -5,16 +5,16 @@ defmodule IM.Schemas.Group do
   import Ecto.Changeset
 
   schema "groups" do
-    field :app_key, :string
-    field :group_id, :string
-    field :name, :string
-    field :owner_uid, :string
-    field :announcement, :string
-    field :max_members, :integer, default: 5000
-    field :member_count, :integer, default: 0
-    field :persist_msg, :boolean, default: true
-    field :storage_mode, :string, default: "write_fanout"
-    field :storage_mode_override, :string
+    field(:app_key, :string)
+    field(:group_id, :string)
+    field(:name, :string)
+    field(:owner_uid, :string)
+    field(:announcement, :string)
+    field(:max_members, :integer, default: 5000)
+    field(:member_count, :integer, default: 0)
+    field(:persist_msg, :boolean, default: true)
+    field(:storage_mode, :string, default: "write_fanout")
+    field(:storage_mode_override, :string)
 
     timestamps(type: :utc_datetime_usec)
   end

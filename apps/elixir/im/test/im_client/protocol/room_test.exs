@@ -11,6 +11,7 @@ defmodule IM.Client.Protocol.RoomTest do
     room_id = unique_id("room")
 
     trace_as!("owner")
+
     {:ok, create_packet} =
       Connection.create_room(owner.client, %{room_id: room_id, name: "lobby"})
 
@@ -52,6 +53,7 @@ defmodule IM.Client.Protocol.RoomTest do
     assert push.content == "room-msg"
 
     trace_as!("owner")
+
     trace!("↑ WS CMD_ROOM_KICK_REQ", %RoomKickReq{
       room_id: room_id,
       member_uids: [guest.login.user_id],

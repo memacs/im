@@ -114,11 +114,22 @@ defmodule IM.Services.Message do
             conv_seq: ack.conv_seq || body.conv_seq
           }
 
-          MsgTelemetry.ack_latency(:ack_up_processing, start, body.msg_type || :none, body.chat_type)
+          MsgTelemetry.ack_latency(
+            :ack_up_processing,
+            start,
+            body.msg_type || :none,
+            body.chat_type
+          )
 
           if is_integer(body.server_time) and body.server_time > 0 do
             elapsed = max(System.system_time(:millisecond) - body.server_time, 0)
-            MsgTelemetry.ack_latency_ms(:send_to_client_ack, elapsed, body.msg_type || :none, body.chat_type)
+
+            MsgTelemetry.ack_latency_ms(
+              :send_to_client_ack,
+              elapsed,
+              body.msg_type || :none,
+              body.chat_type
+            )
           end
 
           {:ok, %{ack_down: down, sender_user_id: body.from_uid, ack_from: ctx.user_id}}
@@ -568,7 +579,10 @@ defmodule IM.Services.Message do
 
   defp targeted_list(nil), do: []
   defp targeted_list([]), do: []
-  defp targeted_list(list) when is_list(list), do: Enum.map(list, &to_string/1) |> Enum.reject(&(&1 == ""))
+
+  defp targeted_list(list) when is_list(list),
+    do: Enum.map(list, &to_string/1) |> Enum.reject(&(&1 == ""))
+
   defp targeted_list(_), do: []
 
   defp empty_targets_to_nil(targets) do

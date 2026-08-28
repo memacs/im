@@ -1,6 +1,1727 @@
 [
   {
     "actor": "client",
+    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
+    "direction": "↑ HTTP POST /api/v1/sessions",
+    "http": {
+      "request": {
+        "app_key": "app_demo",
+        "device_id": "d-4775",
+        "user_id": "user_2946"
+      },
+      "response": {
+        "body": {
+          "access_token": "du8StgBNsoQXEKknPAhuPnbYlKwD02YUelBiy3jX7SU",
+          "clear_local_data": false,
+          "config": {
+            "burn_after_read_enabled": true,
+            "burn_ttl_sec_default": 0,
+            "burn_ttl_sec_max": 3600,
+            "edit_window_sec": 86400,
+            "heartbeat_interval_sec": 30,
+            "offline_pull_limit": 200,
+            "payload_compression": "none",
+            "push_batch_max": 50,
+            "recall_window_sec": 120
+          },
+          "connection": {
+            "preferred_index": 0,
+            "websocket_urls": [
+              "ws://127.0.0.1:4002/ws"
+            ]
+          },
+          "expires_at": 1785996286215,
+          "user_id": "user_2946"
+        },
+        "status": 200
+      }
+    },
+    "note": "↑ HTTP POST /api/v1/sessions",
+    "step": 1
+  },
+  {
+    "actor": "client",
+    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
+    "direction": "↑ WS CMD_AUTH_REQ",
+    "note": "↑ WS CMD_AUTH_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 1,
+      "cmd_name": "CMD_AUTH_REQ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "app_key": "app_demo",
+        "compression_offered": [],
+        "device_id": "d-4775",
+        "device_model": "",
+        "device_name": "",
+        "network": "",
+        "os": "",
+        "platform": "ios",
+        "sdk_ver": "0.1.0",
+        "token": "du8StgBNsoQXEKknPAhuPnbYlKwD02YUelBiy3jX7SU",
+        "user_id": "user_2946"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886236,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "client",
+    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
+    "direction": "↓ WS CMD_AUTH_RESP",
+    "note": "↓ WS CMD_AUTH_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 2,
+      "cmd_name": "CMD_AUTH_RESP",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read_enabled": "true",
+        "burn_ttl_sec_default": 0,
+        "burn_ttl_sec_max": 3600,
+        "clear_local_data": "false",
+        "device": {
+          "client_ip": "",
+          "connected_at": 1785909886253,
+          "device_id": "d-4775",
+          "device_model": "",
+          "device_name": "",
+          "network": "",
+          "os": "",
+          "platform": "loadtest",
+          "sdk_ver": "0.1.0",
+          "session_id": "7eb3c005-c6a7-4297-9c80-7257c4f7ba9b"
+        },
+        "edit_window_sec": 86400,
+        "heartbeat_interval_sec": 30,
+        "offline_pull_limit": 200,
+        "payload_compression": "PAYLOAD_COMPRESSION_NONE",
+        "push_batch_max": 50,
+        "recall_window_sec": 120,
+        "server_time": 1785909886253,
+        "user_id": "user_2946"
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886258,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "client",
+    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
+    "direction": "↑ WS CMD_HEARTBEAT_REQ",
+    "note": "↑ WS CMD_HEARTBEAT_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 3,
+      "cmd_name": "CMD_HEARTBEAT_REQ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_time": 1785909886271
+      },
+      "route_key": "",
+      "seq": 5,
+      "trace_id": "",
+      "ts": 1785909886271,
+      "ver": 1
+    },
+    "step": 6
+  },
+  {
+    "actor": "client",
+    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
+    "direction": "↓ WS CMD_HEARTBEAT_RESP",
+    "note": "↓ WS CMD_HEARTBEAT_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 4,
+      "cmd_name": "CMD_HEARTBEAT_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "server_time": 1785909886269
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886270,
+      "ver": 1
+    },
+    "step": 7
+  },
+  {
+    "actor": "client",
+    "case": "connection_test/GET metrics",
+    "direction": "↑ HTTP GET /metrics",
+    "http": {
+      "request": {},
+      "response": {
+        "body": "# HELP im_permission_check_count \n# TYPE im_permission_check_count counter\nim_permission_check_count{layer=\"l1\",result=\"allow\",type=\"device_ban\"} 1\nim_permission_check_count{layer=\"pg\",result=\"allow\",…",
+        "status": 200
+      }
+    },
+    "note": "↑ HTTP GET /metrics",
+    "step": 1
+  },
+  {
+    "actor": "client",
+    "case": "connection_test/登出 DELETE sessions",
+    "direction": "↑ WS 已鉴权（见 connect_authenticated!）",
+    "http": {
+      "request": {
+        "user_id": "user_267"
+      },
+      "response": {
+        "status": "authenticated"
+      }
+    },
+    "note": "↑ WS 已鉴权（见 connect_authenticated!）",
+    "step": 1
+  },
+  {
+    "actor": "client",
+    "case": "connection_test/登出 DELETE sessions",
+    "direction": "↑ HTTP DELETE /api/v1/sessions/current",
+    "http": {
+      "request": {
+        "token": "Bearer …"
+      },
+      "response": {
+        "status": 204
+      }
+    },
+    "note": "↑ HTTP DELETE /api/v1/sessions/current",
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "friend_policy_test/require_friend_to_send",
+    "direction": "↓ WS CMD_ERROR (非好友)",
+    "note": "↓ WS CMD_ERROR (非好友)",
+    "packet": {
+      "cid": "",
+      "cmd": 6,
+      "cmd_name": "CMD_ERROR",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "code": "CODE_FRIEND_NOT_FRIEND",
+        "msg": "friendship required",
+        "ref_cid": "",
+        "ref_cmd": 100
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886332,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "A",
+    "case": "friend_policy_test/require_friend_to_send",
+    "direction": "↓ WS CMD_FRIEND_ADD_RESP",
+    "note": "↓ WS CMD_FRIEND_ADD_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 801,
+      "cmd_name": "CMD_FRIEND_ADD_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "request_id": "fr872",
+        "status": "FRIEND_STATUS_PENDING"
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886341,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "B",
+    "case": "friend_policy_test/require_friend_to_send",
+    "direction": "↑ WS CMD_FRIEND_ACCEPT_REQ",
+    "note": "↑ WS CMD_FRIEND_ACCEPT_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 0,
+      "cmd_name": "CMD_0",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 17,
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886343,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "B",
+    "case": "friend_policy_test/require_friend_to_send",
+    "direction": "↓ WS CMD_FRIEND_ACCEPT_RESP",
+    "note": "↓ WS CMD_FRIEND_ACCEPT_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 804,
+      "cmd_name": "CMD_FRIEND_ACCEPT_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "friend_user_id": "user_264",
+        "status": "FRIEND_STATUS_ACCEPTED"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886347,
+      "ver": 1
+    },
+    "step": 5
+  },
+  {
+    "actor": "client",
+    "case": "session_test/内部 kick 在线设备收到 CMD_KICK",
+    "direction": "↑ HTTP POST /internal/v1/users/:id/kick",
+    "http": {
+      "request": {
+        "user_id": "user_5351"
+      },
+      "response": {
+        "status": 200
+      }
+    },
+    "note": "↑ HTTP POST /internal/v1/users/:id/kick",
+    "step": 1
+  },
+  {
+    "actor": "client",
+    "case": "session_test/内部 kick 在线设备收到 CMD_KICK",
+    "direction": "↓ WS CMD_KICK",
+    "note": "↓ WS CMD_KICK",
+    "packet": {
+      "cid": "",
+      "cmd": 5,
+      "cmd_name": "CMD_KICK",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "clear_local_data": "false",
+        "kicker": null,
+        "reason": "e2e",
+        "reason_code": "KICK_REASON_ADMIN_KICK",
+        "timestamp": 1785909886384
+      },
+      "route_key": "",
+      "seq": 0,
+      "trace_id": "tr-1064",
+      "ts": 1785909886385,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "client",
+    "case": "session_test/同平台超限 kick_oldest 踢掉旧设备",
+    "direction": "↑ WS CMD_AUTH_REQ (新设备)",
+    "note": "↑ WS CMD_AUTH_REQ (新设备)",
+    "packet": {
+      "cid": "",
+      "cmd": 1,
+      "cmd_name": "CMD_AUTH_REQ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "app_key": "app_demo",
+        "compression_offered": [],
+        "device_id": "d2-5831",
+        "device_model": "",
+        "device_name": "",
+        "network": "",
+        "os": "",
+        "platform": "ios",
+        "sdk_ver": "0.1.0",
+        "token": "VthCNufIA1Z5mTQafF8SHtNBS9PeljP_OdwwZyWQYtY",
+        "user_id": "user_5607"
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886397,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "client",
+    "case": "session_test/同平台超限 kick_oldest 踢掉旧设备",
+    "direction": "↓ WS CMD_KICK (旧设备)",
+    "note": "↓ WS CMD_KICK (旧设备)",
+    "packet": {
+      "cid": "",
+      "cmd": 5,
+      "cmd_name": "CMD_KICK",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "clear_local_data": "false",
+        "kicker": null,
+        "reason": "device_limit",
+        "reason_code": "KICK_REASON_DEVICE_LIMIT",
+        "timestamp": 1785909886399
+      },
+      "route_key": "",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886399,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "client",
+    "case": "session_test/同平台超限 reject 鉴权失败",
+    "direction": "↑ WS CMD_AUTH_REQ (第2设备)",
+    "note": "↑ WS CMD_AUTH_REQ (第2设备)",
+    "packet": {
+      "cid": "",
+      "cmd": 1,
+      "cmd_name": "CMD_AUTH_REQ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "app_key": "app_demo",
+        "compression_offered": [],
+        "device_id": "d2-1096",
+        "device_model": "",
+        "device_name": "",
+        "network": "",
+        "os": "",
+        "platform": "ios",
+        "sdk_ver": "0.1.0",
+        "token": "SizzdjcBZnK5vn2u9J8RASv_tF7vzTfC7ZTCb-F3E7M",
+        "user_id": "user_422"
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886411,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "client",
+    "case": "session_test/同平台超限 reject 鉴权失败",
+    "direction": "↓ WS CMD_ERROR (设备数超限 reject)",
+    "note": "↓ WS CMD_ERROR (设备数超限 reject)",
+    "packet": {
+      "cid": "",
+      "cmd": 6,
+      "cmd_name": "CMD_ERROR",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "code": "CODE_DEVICE_LIMIT_EXCEEDED",
+        "msg": "device limit exceeded",
+        "ref_cid": "",
+        "ref_cmd": 1
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886413,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_ROOM_CREATE_RESP",
+    "note": "↓ WS CMD_ROOM_CREATE_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 701,
+      "cmd_name": "CMD_ROOM_CREATE_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "r:room-1192",
+        "created_at": 1785909886443,
+        "name": "lobby",
+        "room_id": "room-1192"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886448,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "guest",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_ROOM_JOIN_PUSH",
+    "note": "↓ WS CMD_ROOM_JOIN_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 705,
+      "cmd_name": "CMD_ROOM_JOIN_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "r:room-1192",
+        "member_uids": [
+          "user_614"
+        ],
+        "operator_uid": "user_614",
+        "room_id": "room-1192",
+        "timestamp": 1785909886452
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886453,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↑ WS CMD_ROOM_UPDATE_REQ",
+    "note": "↑ WS CMD_ROOM_UPDATE_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 710,
+      "cmd_name": "CMD_710",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 20,
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886453,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_ROOM_UPDATE_PUSH",
+    "note": "↓ WS CMD_ROOM_UPDATE_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 711,
+      "cmd_name": "CMD_ROOM_UPDATE_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "r:room-1192",
+        "name": "lobby-2",
+        "operator_uid": "user_454",
+        "room_id": "room-1192",
+        "timestamp": 1785909886454
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886455,
+      "ver": 1
+    },
+    "step": 5
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN",
+    "note": "↓ WS CMD_MSG_ACK_DOWN",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "53e7f77ab719cfb5",
+        "conv_seq": 1,
+        "msg_id": "343273107168952320",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "room-1192",
+      "seq": 4,
+      "trace_id": "",
+      "ts": 1785909886456,
+      "ver": 1
+    },
+    "step": 6
+  },
+  {
+    "actor": "guest",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_MSG_PUSH",
+    "note": "↓ WS CMD_MSG_PUSH",
+    "packet": {
+      "cid": "53e7f77ab719cfb5",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "false",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_ROOM",
+        "client_msg_id": "53e7f77ab719cfb5",
+        "content": "room-msg",
+        "conv_id": "r:room-1192",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_454",
+        "inbox_seq": 0,
+        "msg_id": "343273107168952320",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909886456,
+        "target_users": [],
+        "to": "room-1192"
+      },
+      "route_key": "r:room-1192",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886456,
+      "ver": 1
+    },
+    "step": 7
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↑ WS CMD_ROOM_KICK_REQ",
+    "note": "↑ WS CMD_ROOM_KICK_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 708,
+      "cmd_name": "CMD_708",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 27,
+      "route_key": "",
+      "seq": 8,
+      "trace_id": "",
+      "ts": 1785909886456,
+      "ver": 1
+    },
+    "step": 9
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_ROOM_KICK_PUSH",
+    "note": "↓ WS CMD_ROOM_KICK_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 709,
+      "cmd_name": "CMD_ROOM_KICK_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "r:room-1192",
+        "member_uids": [
+          "user_614"
+        ],
+        "operator_uid": "user_454",
+        "room_id": "room-1192",
+        "timestamp": 1785909886459
+      },
+      "route_key": "",
+      "seq": 5,
+      "trace_id": "",
+      "ts": 1785909886459,
+      "ver": 1
+    },
+    "step": 10
+  },
+  {
+    "actor": "guest",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_ROOM_JOIN_PUSH (rejoin)",
+    "note": "↓ WS CMD_ROOM_JOIN_PUSH (rejoin)",
+    "packet": {
+      "cid": "",
+      "cmd": 705,
+      "cmd_name": "CMD_ROOM_JOIN_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "r:room-1192",
+        "member_uids": [
+          "user_614"
+        ],
+        "operator_uid": "user_614",
+        "room_id": "room-1192",
+        "timestamp": 1785909886460
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886460,
+      "ver": 1
+    },
+    "step": 11
+  },
+  {
+    "actor": "guest",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_ROOM_LEAVE_PUSH",
+    "note": "↓ WS CMD_ROOM_LEAVE_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 707,
+      "cmd_name": "CMD_ROOM_LEAVE_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "r:room-1192",
+        "member_uids": [
+          "user_614"
+        ],
+        "operator_uid": "user_614",
+        "room_id": "room-1192",
+        "timestamp": 1785909886462
+      },
+      "route_key": "",
+      "seq": 4,
+      "trace_id": "",
+      "ts": 1785909886462,
+      "ver": 1
+    },
+    "step": 12
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↑ WS CMD_ROOM_DISMISS_REQ",
+    "note": "↑ WS CMD_ROOM_DISMISS_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 702,
+      "cmd_name": "CMD_702",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 11,
+      "route_key": "",
+      "seq": 13,
+      "trace_id": "",
+      "ts": 1785909886463,
+      "ver": 1
+    },
+    "step": 14
+  },
+  {
+    "actor": "owner",
+    "case": "room_test/聊天室生命周期与广播",
+    "direction": "↓ WS CMD_ROOM_DISMISS_PUSH",
+    "note": "↓ WS CMD_ROOM_DISMISS_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 703,
+      "cmd_name": "CMD_ROOM_DISMISS_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "r:room-1192",
+        "operator_uid": "user_454",
+        "reason": "",
+        "room_id": "room-1192",
+        "timestamp": 1785909886465
+      },
+      "route_key": "",
+      "seq": 6,
+      "trace_id": "",
+      "ts": 1785909886466,
+      "ver": 1
+    },
+    "step": 15
+  },
+  {
+    "actor": "B",
+    "case": "friend_test/好友请求列表",
+    "direction": "↑ WS CMD_FRIEND_REQUEST_LIST_REQ",
+    "note": "↑ WS CMD_FRIEND_REQUEST_LIST_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 821,
+      "cmd_name": "CMD_821",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 2,
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886485,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "B",
+    "case": "friend_test/好友请求列表",
+    "direction": "↓ WS CMD_FRIEND_REQUEST_LIST_RESP",
+    "note": "↓ WS CMD_FRIEND_REQUEST_LIST_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 822,
+      "cmd_name": "CMD_FRIEND_REQUEST_LIST_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "has_more": "false",
+        "next_cursor": "",
+        "requests": [
+          {
+            "from_avatar": "",
+            "from_nickname": "",
+            "from_user_id": "user_1224",
+            "message": "",
+            "request_id": "fr1318",
+            "status": "FRIEND_REQUEST_STATUS_PENDING",
+            "timestamp": 1785909886482,
+            "to_avatar": "",
+            "to_nickname": "",
+            "to_user_id": "user_1158"
+          }
+        ]
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886488,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/添加-接受-列表-备注-删除",
+    "direction": "↓ WS CMD_FRIEND_ADD_RESP",
+    "note": "↓ WS CMD_FRIEND_ADD_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 801,
+      "cmd_name": "CMD_FRIEND_ADD_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "request_id": "fr6663",
+        "status": "FRIEND_STATUS_PENDING"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886505,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "B",
+    "case": "friend_test/添加-接受-列表-备注-删除",
+    "direction": "↓ WS CMD_FRIEND_ACCEPT_RESP",
+    "note": "↓ WS CMD_FRIEND_ACCEPT_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 804,
+      "cmd_name": "CMD_FRIEND_ACCEPT_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "friend_user_id": "user_709",
+        "status": "FRIEND_STATUS_ACCEPTED"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886508,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/添加-接受-列表-备注-删除",
+    "direction": "↓ WS CMD_FRIEND_LIST_RESP",
+    "note": "↓ WS CMD_FRIEND_LIST_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 820,
+      "cmd_name": "CMD_FRIEND_LIST_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "friends": [
+          {
+            "avatar": "",
+            "created_at": 1785909886504,
+            "ext": "",
+            "nickname": "",
+            "remark": "",
+            "status": "FRIEND_STATUS_ACCEPTED",
+            "user_id": "user_1256"
+          }
+        ],
+        "has_more": "false",
+        "next_cursor": ""
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886511,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/添加-接受-列表-备注-删除",
+    "direction": "↑ WS CMD_FRIEND_SET_REMARK_REQ",
+    "note": "↑ WS CMD_FRIEND_SET_REMARK_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 817,
+      "cmd_name": "CMD_817",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 18,
+      "route_key": "",
+      "seq": 4,
+      "trace_id": "",
+      "ts": 1785909886511,
+      "ver": 1
+    },
+    "step": 5
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/添加-接受-列表-备注-删除",
+    "direction": "↓ WS CMD_FRIEND_SET_REMARK_RESP",
+    "note": "↓ WS CMD_FRIEND_SET_REMARK_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 818,
+      "cmd_name": "CMD_FRIEND_SET_REMARK_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "friend_user_id": "user_1256",
+        "remark": "buddy"
+      },
+      "route_key": "",
+      "seq": 4,
+      "trace_id": "",
+      "ts": 1785909886514,
+      "ver": 1
+    },
+    "step": 6
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/添加-接受-列表-备注-删除",
+    "direction": "↓ WS CMD_FRIEND_DELETE_RESP",
+    "note": "↓ WS CMD_FRIEND_DELETE_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 810,
+      "cmd_name": "CMD_FRIEND_DELETE_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "friend_user_id": "user_1256"
+      },
+      "route_key": "",
+      "seq": 5,
+      "trace_id": "",
+      "ts": 1785909886517,
+      "ver": 1
+    },
+    "step": 7
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/拉黑与取消拉黑",
+    "direction": "↓ WS CMD_FRIEND_BLOCK_RESP",
+    "note": "↓ WS CMD_FRIEND_BLOCK_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 813,
+      "cmd_name": "CMD_FRIEND_BLOCK_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "user_id": "user_1288"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886537,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/拉黑与取消拉黑",
+    "direction": "↓ WS CMD_ERROR (拉黑后发消息)",
+    "note": "↓ WS CMD_ERROR (拉黑后发消息)",
+    "packet": {
+      "cid": "",
+      "cmd": 6,
+      "cmd_name": "CMD_ERROR",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "code": "CODE_FRIEND_BLOCKED",
+        "msg": "you blocked peer",
+        "ref_cid": "",
+        "ref_cmd": 100
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886538,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/拉黑与取消拉黑",
+    "direction": "↓ WS CMD_FRIEND_UNBLOCK_RESP",
+    "note": "↓ WS CMD_FRIEND_UNBLOCK_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 816,
+      "cmd_name": "CMD_FRIEND_UNBLOCK_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "user_id": "user_1288"
+      },
+      "route_key": "",
+      "seq": 4,
+      "trace_id": "",
+      "ts": 1785909886541,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "A",
+    "case": "friend_test/拒绝好友请求",
+    "direction": "↓ WS CMD_FRIEND_ADD_RESP",
+    "note": "↓ WS CMD_FRIEND_ADD_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 801,
+      "cmd_name": "CMD_FRIEND_ADD_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "request_id": "fr997",
+        "status": "FRIEND_STATUS_PENDING"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886567,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "B",
+    "case": "friend_test/拒绝好友请求",
+    "direction": "↓ WS CMD_FRIEND_REJECT_RESP",
+    "note": "↓ WS CMD_FRIEND_REJECT_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 807,
+      "cmd_name": "CMD_FRIEND_REJECT_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "friend_user_id": "user_1446"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886571,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN",
+    "note": "↓ WS CMD_MSG_ACK_DOWN",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "94bb6161a93d79d1",
+        "conv_seq": 1,
+        "msg_id": "343273107730989056",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886595,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "B",
+    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
+    "direction": "↓ WS CMD_MSG_PUSH",
+    "note": "↓ WS CMD_MSG_PUSH",
+    "packet": {
+      "cid": "94bb6161a93d79d1",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "true",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_PRIVATE",
+        "client_msg_id": "94bb6161a93d79d1",
+        "content": "secret",
+        "conv_id": "p:user_1029:user_3266",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_1029",
+        "inbox_seq": 0,
+        "msg_id": "343273107730989056",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909886590,
+        "target_users": [],
+        "to": "user_3266"
+      },
+      "route_key": "p:user_1029:user_3266",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886595,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "B",
+    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
+    "direction": "↑ WS CMD_MSG_READ",
+    "note": "↑ WS CMD_MSG_READ",
+    "packet": {
+      "cid": "",
+      "cmd": 202,
+      "cmd_name": "CMD_MSG_READ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1029:user_3266",
+        "conv_seq": 1,
+        "from": "user_3266",
+        "msg_id": "343273107730989056",
+        "timestamp": 0,
+        "to": "user_1029",
+        "unread_count": null
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886596,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "A",
+    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
+    "direction": "↓ WS CMD_MSG_BURN_PUSH",
+    "note": "↓ WS CMD_MSG_BURN_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 404,
+      "cmd_name": "CMD_MSG_BURN_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_ttl_sec": 0,
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1029:user_3266",
+        "from": "user_1029",
+        "msg_id": "343273107730989056",
+        "timestamp": 1785909886611,
+        "to": "user_3266"
+      },
+      "route_key": "p:user_1029:user_3266",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886612,
+      "ver": 1
+    },
+    "step": 5
+  },
+  {
+    "actor": "A",
+    "case": "extensions_test/透传指令",
+    "direction": "↑ WS CMD_PASSTHROUGH",
+    "note": "↑ WS CMD_PASSTHROUGH",
+    "packet": {
+      "cid": "",
+      "cmd": 0,
+      "cmd_name": "CMD_0",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 49,
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886637,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "B",
+    "case": "extensions_test/透传指令",
+    "direction": "↓ WS CMD_PASSTHROUGH",
+    "note": "↓ WS CMD_PASSTHROUGH",
+    "packet": {
+      "cid": "",
+      "cmd": 500,
+      "cmd_name": "CMD_PASSTHROUGH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "action": "typing",
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "",
+        "data": "{\"typing\":true}",
+        "from": "user_1352",
+        "persist": "false",
+        "to": "user_1189",
+        "ttl_sec": 0
+      },
+      "route_key": "",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886639,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "B",
+    "case": "extensions_test/已读回执",
+    "direction": "↑ WS CMD_MSG_READ",
+    "note": "↑ WS CMD_MSG_READ",
+    "packet": {
+      "cid": "",
+      "cmd": 202,
+      "cmd_name": "CMD_MSG_READ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1416:user_7239",
+        "conv_seq": 1,
+        "from": "user_1416",
+        "msg_id": "343273108003618816",
+        "timestamp": 0,
+        "to": "user_7239",
+        "unread_count": null
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886662,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "extensions_test/已读回执",
+    "direction": "↓ WS CMD_MSG_READ (对端已读)",
+    "note": "↓ WS CMD_MSG_READ (对端已读)",
+    "packet": {
+      "cid": "",
+      "cmd": 202,
+      "cmd_name": "CMD_MSG_READ",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1416:user_7239",
+        "conv_seq": 1,
+        "from": "user_1416",
+        "msg_id": "343273108003618816",
+        "timestamp": 1785909886663,
+        "to": "user_7239",
+        "unread_count": 0
+      },
+      "route_key": "p:user_1416:user_7239",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886664,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "A",
+    "case": "extensions_test/撤回消息",
+    "direction": "↓ WS CMD_MSG_RECALL_PUSH",
+    "note": "↓ WS CMD_MSG_RECALL_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 401,
+      "cmd_name": "CMD_MSG_RECALL_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1480:user_7303",
+        "from": "user_7303",
+        "msg_id": "343273108112670720",
+        "reason": "mistake",
+        "timestamp": 1785909886693,
+        "to": "user_1480"
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886693,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "B",
+    "case": "extensions_test/撤回消息",
+    "direction": "↓ WS CMD_MSG_RECALL_PUSH (对端)",
+    "note": "↓ WS CMD_MSG_RECALL_PUSH (对端)",
+    "packet": {
+      "cid": "",
+      "cmd": 401,
+      "cmd_name": "CMD_MSG_RECALL_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1480:user_7303",
+        "from": "user_7303",
+        "msg_id": "343273108112670720",
+        "reason": "mistake",
+        "timestamp": 1785909886693,
+        "to": "user_1480"
+      },
+      "route_key": "p:user_1480:user_7303",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886693,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "extensions_test/编辑消息",
+    "direction": "↓ WS CMD_MSG_EDIT_PUSH",
+    "note": "↓ WS CMD_MSG_EDIT_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 403,
+      "cmd_name": "CMD_MSG_EDIT_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "content": "edited",
+        "conv_id": "p:user_1704:user_3778",
+        "edit_version": 1,
+        "ext": {},
+        "from": "user_3778",
+        "msg_id": "343273108234305536",
+        "msg_type": "MSG_TEXT",
+        "timestamp": 1785909886721,
+        "to": "user_1704"
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886721,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "B",
+    "case": "offline_test/离线消息可通过 CMD_OFFLINE_PULL 拉取",
+    "direction": "↑ WS CMD_OFFLINE_PULL_REQ",
+    "note": "↑ WS CMD_OFFLINE_PULL_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 300,
+      "cmd_name": "CMD_OFFLINE_PULL_REQ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "p:user_1478:user_1638",
+        "cursor": 0,
+        "limit": 50
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886747,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "B",
+    "case": "offline_test/离线消息可通过 CMD_OFFLINE_PULL 拉取",
+    "direction": "↓ WS CMD_OFFLINE_PULL_RESP",
+    "note": "↓ WS CMD_OFFLINE_PULL_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 301,
+      "cmd_name": "CMD_OFFLINE_PULL_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "has_more": "false",
+        "messages": [
+          {
+            "burn_after_read": "false",
+            "burn_ttl_sec": 0,
+            "burned": "false",
+            "chat_type": "CHAT_PRIVATE",
+            "client_msg_id": "cm-1702",
+            "content": "offline-msg",
+            "conv_id": "p:user_1478:user_1638",
+            "conv_seq": 1,
+            "edit_version": 0,
+            "ext": {},
+            "from": "user_1478",
+            "inbox_seq": 2,
+            "msg_id": "343273108343357440",
+            "msg_type": "MSG_TEXT",
+            "priority": "MSG_PRIORITY_NORMAL",
+            "recalled": "false",
+            "server_time": 1785909886736,
+            "target_users": [],
+            "to": "user_1638"
+          }
+        ],
+        "next_cursor": 1
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886750,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "A",
+    "case": "conversation_test/REST 会话列表未读与已读同步",
+    "direction": "↑ WS CMD_MSG_SEND",
+    "note": "↑ WS CMD_MSG_SEND",
+    "packet": {
+      "cid": "",
+      "cmd": 100,
+      "cmd_name": "CMD_MSG_SEND",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "message": {
+          "burn_after_read": "false",
+          "burn_ttl_sec": 0,
+          "burned": "false",
+          "chat_type": "CHAT_PRIVATE",
+          "client_msg_id": "conv-2248",
+          "content": "list-preview",
+          "conv_id": "",
+          "conv_seq": 0,
+          "edit_version": 0,
+          "ext": {},
+          "from": "user_1928",
+          "inbox_seq": 0,
+          "msg_id": "",
+          "msg_type": "MSG_TEXT",
+          "priority": "MSG_PRIORITY_NORMAL",
+          "recalled": "false",
+          "server_time": 0,
+          "target_users": [],
+          "to": "user_2088"
+        }
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886763,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "conversation_test/REST 会话列表未读与已读同步",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN",
+    "note": "↓ WS CMD_MSG_ACK_DOWN",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "conv-2248",
+        "conv_seq": 1,
+        "msg_id": "343273108469186560",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886773,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "B",
+    "case": "conversation_test/REST 会话列表未读与已读同步",
+    "direction": "↓ WS CMD_MSG_PUSH",
+    "note": "↓ WS CMD_MSG_PUSH",
+    "packet": {
+      "cid": "conv-2248",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "false",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_PRIVATE",
+        "client_msg_id": "conv-2248",
+        "content": "list-preview",
+        "conv_id": "p:user_1928:user_2088",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_1928",
+        "inbox_seq": 0,
+        "msg_id": "343273108469186560",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909886767,
+        "target_users": [],
+        "to": "user_2088"
+      },
+      "route_key": "p:user_1928:user_2088",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886773,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "B",
+    "case": "conversation_test/REST 会话列表未读与已读同步",
+    "direction": "↑ HTTP GET /api/v1/conversations",
+    "http": {
+      "request": {
+        "limit": 20
+      },
+      "response": {
+        "body": {
+          "conversations": [
+            {
+              "chat_type": 1,
+              "conv_id": "p:user_1928:user_2088",
+              "last_msg_id": "343273108469186560",
+              "last_msg_preview": "list-preview",
+              "last_msg_seq": 1,
+              "last_msg_time": 1785909886767,
+              "last_msg_type": 1,
+              "last_read_conv_seq": 0,
+              "peer_id": "user_1928",
+              "unread_count": 1
+            }
+          ],
+          "total_unread": 1
+        },
+        "status": 200
+      }
+    },
+    "note": "↑ HTTP GET /api/v1/conversations",
+    "step": 5
+  },
+  {
+    "actor": "B",
+    "case": "conversation_test/REST 会话列表未读与已读同步",
+    "direction": "↑ WS CMD_MSG_READ",
+    "note": "↑ WS CMD_MSG_READ",
+    "packet": {
+      "cid": "",
+      "cmd": 202,
+      "cmd_name": "CMD_MSG_READ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1928:user_2088",
+        "conv_seq": 1,
+        "from": "user_2088",
+        "msg_id": "343273108469186560",
+        "timestamp": 0,
+        "to": "user_1928",
+        "unread_count": null
+      },
+      "route_key": "",
+      "seq": 6,
+      "trace_id": "",
+      "ts": 1785909886778,
+      "ver": 1
+    },
+    "step": 7
+  },
+  {
+    "actor": "A",
+    "case": "conversation_test/REST 会话列表未读与已读同步",
+    "direction": "↓ WS CMD_MSG_READ (对端已读)",
+    "note": "↓ WS CMD_MSG_READ (对端已读)",
+    "packet": {
+      "cid": "",
+      "cmd": 202,
+      "cmd_name": "CMD_MSG_READ",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "p:user_1928:user_2088",
+        "conv_seq": 1,
+        "from": "user_2088",
+        "msg_id": "343273108469186560",
+        "timestamp": 1785909886779,
+        "to": "user_1928",
+        "unread_count": 0
+      },
+      "route_key": "p:user_1928:user_2088",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909886779,
+      "ver": 1
+    },
+    "step": 8
+  },
+  {
+    "actor": "A",
+    "case": "conversation_test/REST 会话列表未读与已读同步",
+    "direction": "↑ HTTP GET /api/v1/conversations (after read)",
+    "http": {
+      "request": {
+        "limit": 20
+      },
+      "response": {
+        "body": {
+          "conversations": [
+            {
+              "chat_type": 1,
+              "conv_id": "p:user_1928:user_2088",
+              "last_msg_id": "343273108469186560",
+              "last_msg_preview": "list-preview",
+              "last_msg_seq": 1,
+              "last_msg_time": 1785909886767,
+              "last_msg_type": 1,
+              "last_read_conv_seq": 1,
+              "peer_id": "user_1928",
+              "unread_count": 0
+            }
+          ],
+          "total_unread": 0
+        },
+        "status": 200
+      }
+    },
+    "note": "↑ HTTP GET /api/v1/conversations (after read)",
+    "step": 9
+  },
+  {
+    "actor": "owner",
+    "case": "conversation_test/群聊会话列表未读",
+    "direction": "↓ WS CMD_GROUP_CREATE_RESP",
+    "note": "↓ WS CMD_GROUP_CREATE_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 601,
+      "cmd_name": "CMD_GROUP_CREATE_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:gc-4066",
+        "created_at": 1785909886805,
+        "group_id": "gc-4066",
+        "name": "conv-g"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909886807,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "owner",
+    "case": "conversation_test/群聊会话列表未读",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN",
+    "note": "↓ WS CMD_MSG_ACK_DOWN",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "gcm-2312",
+        "conv_seq": 1,
+        "msg_id": "343273108653735936",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909886816,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "owner",
+    "case": "conversation_test/群聊会话列表未读",
+    "direction": "↑ HTTP GET /api/v1/conversations (group)",
+    "http": {
+      "request": {
+        "limit": 20
+      },
+      "response": {
+        "body": {
+          "conversations": [
+            {
+              "chat_type": 2,
+              "conv_id": "g:gc-4066",
+              "last_msg_id": "343273108653735936",
+              "last_msg_preview": "group-unread",
+              "last_msg_seq": 1,
+              "last_msg_time": 1785909886810,
+              "last_msg_type": 1,
+              "last_read_conv_seq": 0,
+              "peer_id": "gc-4066",
+              "unread_count": 1
+            }
+          ],
+          "total_unread": 1
+        },
+        "status": 200
+      }
+    },
+    "note": "↑ HTTP GET /api/v1/conversations (group)",
+    "step": 3
+  },
+  {
+    "actor": "client",
     "case": "channel_test/订阅与 publish",
     "direction": "↓ WS CMD_CHANNEL_SUBSCRIBE_RESP",
     "note": "↓ WS CMD_CHANNEL_SUBSCRIBE_RESP",
@@ -18,7 +1739,7 @@
       "route_key": "",
       "seq": 2,
       "trace_id": "",
-      "ts": 1785827565139,
+      "ts": 1785909886830,
       "ver": 1
     },
     "step": 1
@@ -52,14 +1773,14 @@
         "caller_service": "protocol-e2e",
         "channel_id": "news:alerts",
         "content_type": "application/json",
-        "event_id": "87821fab-678a-42a3-b9eb-f6681e18c884",
+        "event_id": "46cb2fc1-d010-4499-8c84-c323c8093d72",
         "payload": "{\"n\":1}",
-        "server_time": 1785827565158
+        "server_time": 1785909886831
       },
       "route_key": "news:alerts",
       "seq": 0,
-      "trace_id": "tr-514",
-      "ts": 1785827565159,
+      "trace_id": "tr-2376",
+      "ts": 1785909886832,
       "ver": 1
     },
     "step": 3
@@ -78,7 +1799,7 @@
       "route_key": "",
       "seq": 4,
       "trace_id": "",
-      "ts": 1785827565161,
+      "ts": 1785909886832,
       "ver": 1
     },
     "step": 5
@@ -101,7 +1822,7 @@
       "route_key": "",
       "seq": 3,
       "trace_id": "",
-      "ts": 1785827565162,
+      "ts": 1785909886834,
       "ver": 1
     },
     "step": 6
@@ -125,7 +1846,7 @@
       "route_key": "",
       "seq": 7,
       "trace_id": "",
-      "ts": 1785827565163,
+      "ts": 1785909886834,
       "ver": 1
     },
     "step": 8
@@ -143,667 +1864,19 @@
       "payload": {
         "accepted": "true",
         "channel_id": "news:alerts",
-        "event_id": "10b60306-1733-41b6-bc01-638d8e178b2c"
+        "event_id": "1a7ae425-60d9-4818-bcf9-9f61758a4ee3"
       },
       "route_key": "",
       "seq": 4,
       "trace_id": "",
-      "ts": 1785827565164,
+      "ts": 1785909886836,
       "ver": 1
     },
     "step": 9
   },
   {
-    "actor": "B",
-    "case": "offline_test/离线消息可通过 CMD_OFFLINE_PULL 拉取",
-    "direction": "↑ WS CMD_OFFLINE_PULL_REQ",
-    "note": "↑ WS CMD_OFFLINE_PULL_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 300,
-      "cmd_name": "CMD_OFFLINE_PULL_REQ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "p:user_260:user_518",
-        "cursor": 0,
-        "limit": 50
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827565227,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "B",
-    "case": "offline_test/离线消息可通过 CMD_OFFLINE_PULL 拉取",
-    "direction": "↓ WS CMD_OFFLINE_PULL_RESP",
-    "note": "↓ WS CMD_OFFLINE_PULL_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 301,
-      "cmd_name": "CMD_OFFLINE_PULL_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "has_more": "false",
-        "messages": [
-          {
-            "burn_after_read": "false",
-            "burn_ttl_sec": 0,
-            "burned": "false",
-            "chat_type": "CHAT_PRIVATE",
-            "client_msg_id": "cm-582",
-            "content": "offline-msg",
-            "conv_id": "p:user_260:user_518",
-            "conv_seq": 1,
-            "edit_version": 0,
-            "ext": {},
-            "from": "user_260",
-            "inbox_seq": 1,
-            "msg_id": "342927826799820800",
-            "msg_type": "MSG_TEXT",
-            "priority": "MSG_PRIORITY_NORMAL",
-            "recalled": "false",
-            "server_time": 1785827565202,
-            "target_users": [],
-            "to": "user_518"
-          }
-        ],
-        "next_cursor": 1
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827565230,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "A",
-    "case": "friend_policy_test/require_friend_to_send",
-    "direction": "↓ WS CMD_ERROR (非好友)",
-    "note": "↓ WS CMD_ERROR (非好友)",
-    "packet": {
-      "cid": "",
-      "cmd": 6,
-      "cmd_name": "CMD_ERROR",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "code": "CODE_FRIEND_NOT_FRIEND",
-        "msg": "friendship required",
-        "ref_cid": "",
-        "ref_cmd": 100
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827565257,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "A",
-    "case": "friend_policy_test/require_friend_to_send",
-    "direction": "↓ WS CMD_FRIEND_ADD_RESP",
-    "note": "↓ WS CMD_FRIEND_ADD_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 801,
-      "cmd_name": "CMD_FRIEND_ADD_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "request_id": "fr932",
-        "status": "FRIEND_STATUS_PENDING"
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827565263,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "B",
-    "case": "friend_policy_test/require_friend_to_send",
-    "direction": "↑ WS CMD_FRIEND_ACCEPT_REQ",
-    "note": "↑ WS CMD_FRIEND_ACCEPT_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 0,
-      "cmd_name": "CMD_0",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 17,
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827565264,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "B",
-    "case": "friend_policy_test/require_friend_to_send",
-    "direction": "↓ WS CMD_FRIEND_ACCEPT_RESP",
-    "note": "↓ WS CMD_FRIEND_ACCEPT_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 804,
-      "cmd_name": "CMD_FRIEND_ACCEPT_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "friend_user_id": "user_356",
-        "status": "FRIEND_STATUS_ACCEPTED"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827565268,
-      "ver": 1
-    },
-    "step": 5
-  },
-  {
     "actor": "client",
-    "case": "session_test/内部 kick 在线设备收到 CMD_KICK",
-    "direction": "↑ HTTP POST /internal/v1/users/:id/kick",
-    "http": {
-      "request": {
-        "user_id": "user_1028"
-      },
-      "response": {
-        "status": 200
-      }
-    },
-    "note": "↑ HTTP POST /internal/v1/users/:id/kick",
-    "step": 1
-  },
-  {
-    "actor": "client",
-    "case": "session_test/内部 kick 在线设备收到 CMD_KICK",
-    "direction": "↓ WS CMD_KICK",
-    "note": "↓ WS CMD_KICK",
-    "packet": {
-      "cid": "",
-      "cmd": 5,
-      "cmd_name": "CMD_KICK",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "clear_local_data": "false",
-        "kicker": null,
-        "reason": "e2e",
-        "reason_code": "KICK_REASON_ADMIN_KICK",
-        "timestamp": 1785827565289
-      },
-      "route_key": "",
-      "seq": 0,
-      "trace_id": "tr-1188",
-      "ts": 1785827565290,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "client",
-    "case": "session_test/同平台超限 reject 鉴权失败",
-    "direction": "↑ WS CMD_AUTH_REQ (第2设备)",
-    "note": "↑ WS CMD_AUTH_REQ (第2设备)",
-    "packet": {
-      "cid": "",
-      "cmd": 1,
-      "cmd_name": "CMD_AUTH_REQ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "app_key": "app_demo",
-        "compression_offered": [],
-        "device_id": "d2-770",
-        "device_model": "",
-        "device_name": "",
-        "network": "",
-        "os": "",
-        "platform": "ios",
-        "sdk_ver": "0.1.0",
-        "token": "JGB5sGuy1vy1i7gPey7Z5VNpVNCQ1hENZvnIKq7n3uM",
-        "user_id": "user_546"
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827565301,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "client",
-    "case": "session_test/同平台超限 reject 鉴权失败",
-    "direction": "↓ WS CMD_ERROR (设备数超限 reject)",
-    "note": "↓ WS CMD_ERROR (设备数超限 reject)",
-    "packet": {
-      "cid": "",
-      "cmd": 6,
-      "cmd_name": "CMD_ERROR",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "code": "CODE_DEVICE_LIMIT_EXCEEDED",
-        "msg": "device limit exceeded",
-        "ref_cid": "",
-        "ref_cmd": 1
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827565304,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "client",
-    "case": "session_test/同平台超限 kick_oldest 踢掉旧设备",
-    "direction": "↑ WS CMD_AUTH_REQ (新设备)",
-    "note": "↑ WS CMD_AUTH_REQ (新设备)",
-    "packet": {
-      "cid": "",
-      "cmd": 1,
-      "cmd_name": "CMD_AUTH_REQ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "app_key": "app_demo",
-        "compression_offered": [],
-        "device_id": "d2-1380",
-        "device_model": "",
-        "device_name": "",
-        "network": "",
-        "os": "",
-        "platform": "ios",
-        "sdk_ver": "0.1.0",
-        "token": "Ibr-sUeCVoCnDAo_7wMzhH4uRWNgMLaMypqfTubFtjU",
-        "user_id": "user_648"
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827565316,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "client",
-    "case": "session_test/同平台超限 kick_oldest 踢掉旧设备",
-    "direction": "↓ WS CMD_KICK (旧设备)",
-    "note": "↓ WS CMD_KICK (旧设备)",
-    "packet": {
-      "cid": "",
-      "cmd": 5,
-      "cmd_name": "CMD_KICK",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "clear_local_data": "false",
-        "kicker": null,
-        "reason": "device_limit",
-        "reason_code": "KICK_REASON_DEVICE_LIMIT",
-        "timestamp": 1785827565317
-      },
-      "route_key": "",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827565317,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_ROOM_CREATE_RESP",
-    "note": "↓ WS CMD_ROOM_CREATE_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 701,
-      "cmd_name": "CMD_ROOM_CREATE_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "r:room-3589",
-        "created_at": 1785827565335,
-        "name": "lobby",
-        "room_id": "room-3589"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827565340,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "guest",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_ROOM_JOIN_PUSH",
-    "note": "↓ WS CMD_ROOM_JOIN_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 705,
-      "cmd_name": "CMD_ROOM_JOIN_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "r:room-3589",
-        "member_uids": [
-          "user_3429"
-        ],
-        "operator_uid": "user_3429",
-        "room_id": "room-3589",
-        "timestamp": 1785827565343
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827565344,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↑ WS CMD_ROOM_UPDATE_REQ",
-    "note": "↑ WS CMD_ROOM_UPDATE_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 710,
-      "cmd_name": "CMD_710",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 20,
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827565344,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_ROOM_UPDATE_PUSH",
-    "note": "↓ WS CMD_ROOM_UPDATE_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 711,
-      "cmd_name": "CMD_ROOM_UPDATE_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "r:room-3589",
-        "name": "lobby-2",
-        "operator_uid": "user_1030",
-        "room_id": "room-3589",
-        "timestamp": 1785827565346
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827565347,
-      "ver": 1
-    },
-    "step": 5
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN",
-    "note": "↓ WS CMD_MSG_ACK_DOWN",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "a6a401a1657faea4",
-        "conv_seq": 1,
-        "msg_id": "342927827416383488",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "room-3589",
-      "seq": 4,
-      "trace_id": "",
-      "ts": 1785827565348,
-      "ver": 1
-    },
-    "step": 6
-  },
-  {
-    "actor": "guest",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_MSG_PUSH",
-    "note": "↓ WS CMD_MSG_PUSH",
-    "packet": {
-      "cid": "a6a401a1657faea4",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read": "false",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_ROOM",
-        "client_msg_id": "a6a401a1657faea4",
-        "content": "room-msg",
-        "conv_id": "r:room-3589",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_1030",
-        "inbox_seq": 0,
-        "msg_id": "342927827416383488",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827565348,
-        "target_users": [],
-        "to": "room-3589"
-      },
-      "route_key": "r:room-3589",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827565348,
-      "ver": 1
-    },
-    "step": 7
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↑ WS CMD_ROOM_KICK_REQ",
-    "note": "↑ WS CMD_ROOM_KICK_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 708,
-      "cmd_name": "CMD_708",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 28,
-      "route_key": "",
-      "seq": 8,
-      "trace_id": "",
-      "ts": 1785827565348,
-      "ver": 1
-    },
-    "step": 9
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_ROOM_KICK_PUSH",
-    "note": "↓ WS CMD_ROOM_KICK_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 709,
-      "cmd_name": "CMD_ROOM_KICK_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "r:room-3589",
-        "member_uids": [
-          "user_3429"
-        ],
-        "operator_uid": "user_1030",
-        "room_id": "room-3589",
-        "timestamp": 1785827565352
-      },
-      "route_key": "",
-      "seq": 5,
-      "trace_id": "",
-      "ts": 1785827565352,
-      "ver": 1
-    },
-    "step": 10
-  },
-  {
-    "actor": "guest",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_ROOM_JOIN_PUSH (rejoin)",
-    "note": "↓ WS CMD_ROOM_JOIN_PUSH (rejoin)",
-    "packet": {
-      "cid": "",
-      "cmd": 705,
-      "cmd_name": "CMD_ROOM_JOIN_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "r:room-3589",
-        "member_uids": [
-          "user_3429"
-        ],
-        "operator_uid": "user_3429",
-        "room_id": "room-3589",
-        "timestamp": 1785827565354
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827565354,
-      "ver": 1
-    },
-    "step": 11
-  },
-  {
-    "actor": "guest",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_ROOM_LEAVE_PUSH",
-    "note": "↓ WS CMD_ROOM_LEAVE_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 707,
-      "cmd_name": "CMD_ROOM_LEAVE_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "r:room-3589",
-        "member_uids": [
-          "user_3429"
-        ],
-        "operator_uid": "user_3429",
-        "room_id": "room-3589",
-        "timestamp": 1785827565380
-      },
-      "route_key": "",
-      "seq": 4,
-      "trace_id": "",
-      "ts": 1785827565380,
-      "ver": 1
-    },
-    "step": 12
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↑ WS CMD_ROOM_DISMISS_REQ",
-    "note": "↑ WS CMD_ROOM_DISMISS_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 702,
-      "cmd_name": "CMD_702",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 11,
-      "route_key": "",
-      "seq": 13,
-      "trace_id": "",
-      "ts": 1785827565388,
-      "ver": 1
-    },
-    "step": 14
-  },
-  {
-    "actor": "owner",
-    "case": "room_test/聊天室生命周期与广播",
-    "direction": "↓ WS CMD_ROOM_DISMISS_PUSH",
-    "note": "↓ WS CMD_ROOM_DISMISS_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 703,
-      "cmd_name": "CMD_ROOM_DISMISS_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "r:room-3589",
-        "operator_uid": "user_1030",
-        "reason": "",
-        "room_id": "room-3589",
-        "timestamp": 1785827565402
-      },
-      "route_key": "",
-      "seq": 6,
-      "trace_id": "",
-      "ts": 1785827565405,
-      "ver": 1
-    },
-    "step": 15
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
-    "direction": "↑ HTTP POST /api/v1/sessions",
-    "http": {
-      "request": {
-        "app_key": "app_demo",
-        "device_id": "d-3877",
-        "user_id": "user_3845"
-      },
-      "response": {
-        "body": {
-          "access_token": "hvvDwznLh5WA4-hpYRE6dB4B8_LuJcpPSYnLHJ4dCgM",
-          "clear_local_data": false,
-          "config": {
-            "burn_after_read_enabled": true,
-            "burn_ttl_sec_default": 0,
-            "burn_ttl_sec_max": 3600,
-            "edit_window_sec": 86400,
-            "heartbeat_interval_sec": 30,
-            "offline_pull_limit": 200,
-            "payload_compression": "none",
-            "push_batch_max": 50,
-            "recall_window_sec": 120
-          },
-          "connection": {
-            "preferred_index": 0,
-            "websocket_urls": [
-              "ws://127.0.0.1:4002/ws"
-            ]
-          },
-          "expires_at": 1785913965443,
-          "user_id": "user_3845"
-        },
-        "status": 200
-      }
-    },
-    "note": "↑ HTTP POST /api/v1/sessions",
-    "step": 1
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
+    "case": "auth_guard_test/token 与 device_id 不匹配",
     "direction": "↑ WS CMD_AUTH_REQ",
     "note": "↑ WS CMD_AUTH_REQ",
     "packet": {
@@ -814,188 +1887,27 @@
       "payload": {
         "app_key": "app_demo",
         "compression_offered": [],
-        "device_id": "d-3877",
+        "device_id": "wrong-device-2408",
         "device_model": "",
         "device_name": "",
         "network": "",
         "os": "",
         "platform": "ios",
         "sdk_ver": "0.1.0",
-        "token": "hvvDwznLh5WA4-hpYRE6dB4B8_LuJcpPSYnLHJ4dCgM",
-        "user_id": "user_3845"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827565448,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
-    "direction": "↓ WS CMD_AUTH_RESP",
-    "note": "↓ WS CMD_AUTH_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 2,
-      "cmd_name": "CMD_AUTH_RESP",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read_enabled": "true",
-        "burn_ttl_sec_default": 0,
-        "burn_ttl_sec_max": 3600,
-        "clear_local_data": "false",
-        "device": {
-          "client_ip": "",
-          "connected_at": 1785827565464,
-          "device_id": "d-3877",
-          "device_model": "",
-          "device_name": "",
-          "network": "",
-          "os": "",
-          "platform": "loadtest",
-          "sdk_ver": "0.1.0",
-          "session_id": "b5f30d8c-aaef-4d8b-aa5f-809ab8413c96"
-        },
-        "edit_window_sec": 86400,
-        "heartbeat_interval_sec": 30,
-        "offline_pull_limit": 200,
-        "payload_compression": "PAYLOAD_COMPRESSION_NONE",
-        "push_batch_max": 50,
-        "recall_window_sec": 120,
-        "server_time": 1785827565464,
-        "user_id": "user_3845"
+        "token": "flyecjuRhk_Ee1VT3pNhmk8RrLYAuznkDbN25Hg8t2w",
+        "user_id": "user_8167"
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827565468,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
-    "direction": "↑ WS CMD_HEARTBEAT_REQ",
-    "note": "↑ WS CMD_HEARTBEAT_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 3,
-      "cmd_name": "CMD_HEARTBEAT_REQ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_time": 1785827565478
-      },
-      "route_key": "",
-      "seq": 5,
-      "trace_id": "",
-      "ts": 1785827565478,
-      "ver": 1
-    },
-    "step": 6
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/REST 登录 + WS AUTH + 心跳",
-    "direction": "↓ WS CMD_HEARTBEAT_RESP",
-    "note": "↓ WS CMD_HEARTBEAT_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 4,
-      "cmd_name": "CMD_HEARTBEAT_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "server_time": 1785827565474
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827565477,
-      "ver": 1
-    },
-    "step": 7
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/登出 DELETE sessions",
-    "direction": "↑ WS 已鉴权（见 connect_authenticated!）",
-    "http": {
-      "request": {
-        "user_id": "user_4707"
-      },
-      "response": {
-        "status": "authenticated"
-      }
-    },
-    "note": "↑ WS 已鉴权（见 connect_authenticated!）",
-    "step": 1
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/登出 DELETE sessions",
-    "direction": "↑ HTTP DELETE /api/v1/sessions/current",
-    "http": {
-      "request": {
-        "token": "Bearer …"
-      },
-      "response": {
-        "status": 204
-      }
-    },
-    "note": "↑ HTTP DELETE /api/v1/sessions/current",
-    "step": 2
-  },
-  {
-    "actor": "client",
-    "case": "connection_test/GET metrics",
-    "direction": "↑ HTTP GET /metrics",
-    "http": {
-      "request": {},
-      "response": {
-        "body": "# HELP im_permission_check_count \n# TYPE im_permission_check_count counter\nim_permission_check_count{layer=\"pg\",result=\"allow\",type=\"device_ban\"} 15\nim_permission_check_count{layer=\"l1\",result=\"allow\"…",
-        "status": 200
-      }
-    },
-    "note": "↑ HTTP GET /metrics",
-    "step": 1
-  },
-  {
-    "actor": "client",
-    "case": "auth_guard_test/封禁设备 AUTH",
-    "direction": "↑ WS CMD_AUTH_REQ",
-    "note": "↑ WS CMD_AUTH_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 1,
-      "cmd_name": "CMD_AUTH_REQ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "app_key": "app_demo",
-        "compression_offered": [],
-        "device_id": "device_898",
-        "device_model": "",
-        "device_name": "",
-        "network": "",
-        "os": "",
-        "platform": "ios",
-        "sdk_ver": "0.1.0",
-        "token": "LO7uwNPVRnWlu4gtEAkOoAsJxAXjfS7qbkE_TofPmAk",
-        "user_id": "user_4867"
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827565548,
+      "ts": 1785909886841,
       "ver": 1
     },
     "step": 2
   },
   {
     "actor": "client",
-    "case": "auth_guard_test/封禁设备 AUTH",
+    "case": "auth_guard_test/token 与 device_id 不匹配",
     "direction": "↓ WS CMD_ERROR",
     "note": "↓ WS CMD_ERROR",
     "packet": {
@@ -1005,14 +1917,14 @@
       "compression": "PAYLOAD_COMPRESSION_NONE",
       "payload": {
         "code": "CODE_UNAUTHORIZED",
-        "msg": "device_banned",
+        "msg": "device_id mismatch",
         "ref_cid": "",
         "ref_cmd": 1
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827565550,
+      "ts": 1785909886844,
       "ver": 1
     },
     "step": 3
@@ -1030,7 +1942,7 @@
       "payload": {
         "app_key": "app_demo",
         "compression_offered": [],
-        "device_id": "d-1572",
+        "device_id": "d-331",
         "device_model": "",
         "device_name": "",
         "network": "",
@@ -1038,12 +1950,12 @@
         "platform": "ios",
         "sdk_ver": "0.1.0",
         "token": "not-a-valid-token",
-        "user_id": "user_4133"
+        "user_id": "user_299"
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827565554,
+      "ts": 1785909886845,
       "ver": 1
     },
     "step": 2
@@ -1067,146 +1979,7 @@
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827565557,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "client",
-    "case": "auth_guard_test/未鉴权发心跳静默关闭",
-    "direction": "↑ WS CMD_HEARTBEAT_REQ (未鉴权)",
-    "note": "↑ WS CMD_HEARTBEAT_REQ (未鉴权)",
-    "packet": {
-      "cid": "",
-      "cmd": 3,
-      "cmd_name": "CMD_HEARTBEAT_REQ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_time": 1
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827565559,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "client",
-    "case": "auth_guard_test/未鉴权发心跳静默关闭",
-    "direction": "↓ WS 连接静默关闭",
-    "event": {
-      "detail": "未鉴权发心跳，无 CMD_ERROR",
-      "event": "silent_close"
-    },
-    "note": "↓ WS 连接静默关闭",
-    "step": 3
-  },
-  {
-    "actor": "client",
-    "case": "auth_guard_test/未鉴权发 MSG_SEND 静默关闭",
-    "direction": "↑ WS CMD_MSG_SEND (未鉴权)",
-    "note": "↑ WS CMD_MSG_SEND (未鉴权)",
-    "packet": {
-      "cid": "",
-      "cmd": 100,
-      "cmd_name": "CMD_MSG_SEND",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "message": {
-          "burn_after_read": "false",
-          "burn_ttl_sec": 0,
-          "burned": "false",
-          "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "cm-930",
-          "content": "illegal",
-          "conv_id": "",
-          "conv_seq": 0,
-          "edit_version": 0,
-          "ext": {},
-          "from": "u1",
-          "inbox_seq": 0,
-          "msg_id": "",
-          "msg_type": "MSG_TEXT",
-          "priority": "MSG_PRIORITY_NORMAL",
-          "recalled": "false",
-          "server_time": 0,
-          "target_users": [],
-          "to": "u2"
-        }
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827565862,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "client",
-    "case": "auth_guard_test/未鉴权发 MSG_SEND 静默关闭",
-    "direction": "↓ WS 连接静默关闭",
-    "event": {
-      "detail": "未鉴权发 MSG_SEND",
-      "event": "silent_close"
-    },
-    "note": "↓ WS 连接静默关闭",
-    "step": 3
-  },
-  {
-    "actor": "client",
-    "case": "auth_guard_test/已吊销 token",
-    "direction": "↑ WS CMD_AUTH_REQ",
-    "note": "↑ WS CMD_AUTH_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 1,
-      "cmd_name": "CMD_AUTH_REQ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "app_key": "app_demo",
-        "compression_offered": [],
-        "device_id": "device_1636",
-        "device_model": "",
-        "device_name": "",
-        "network": "",
-        "os": "",
-        "platform": "ios",
-        "sdk_ver": "0.1.0",
-        "token": "bUjxB0hu23fcWZ6fmKHal5JiZ6nWg64tvJ5pQc1UV8s",
-        "user_id": "user_1604"
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827566190,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "client",
-    "case": "auth_guard_test/已吊销 token",
-    "direction": "↓ WS CMD_ERROR",
-    "note": "↓ WS CMD_ERROR",
-    "packet": {
-      "cid": "",
-      "cmd": 6,
-      "cmd_name": "CMD_ERROR",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "code": "CODE_UNAUTHORIZED",
-        "msg": "token revoked",
-        "ref_cid": "",
-        "ref_cmd": 1
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827566193,
+      "ts": 1785909886846,
       "ver": 1
     },
     "step": 3
@@ -1224,20 +1997,20 @@
       "payload": {
         "app_key": "app_demo",
         "compression_offered": [],
-        "device_id": "device_1700",
+        "device_id": "device_2472",
         "device_model": "",
         "device_name": "",
         "network": "",
         "os": "",
         "platform": "ios",
         "sdk_ver": "0.1.0",
-        "token": "8AjPIf4rOq29vFzuF8NH1STfrUF9GXSbMGcbhhF7jWQ",
-        "user_id": "wrong-user-1732"
+        "token": "dmJQ3JQddQ2PG-uOTQpuyYo6X13gmP1xHPnhYfbLS1U",
+        "user_id": "wrong-user-2504"
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827566212,
+      "ts": 1785909886849,
       "ver": 1
     },
     "step": 2
@@ -1261,7 +2034,7 @@
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827566223,
+      "ts": 1785909886851,
       "ver": 1
     },
     "step": 3
@@ -1279,20 +2052,20 @@
       "payload": {
         "app_key": "app_demo",
         "compression_offered": [],
-        "device_id": "device_4931",
+        "device_id": "device_8295",
         "device_model": "",
         "device_name": "",
         "network": "",
         "os": "",
         "platform": "ios",
         "sdk_ver": "1.0.0",
-        "token": "TSfaUJaKFcEjzS12gaUnGRrOcUMao3VPnLGZD3PPEZI",
-        "user_id": "user_4899"
+        "token": "BD7Mv3q2PZeajnmiB6Q7VqVAqHui2qp1PqsWwbUSLp4",
+        "user_id": "user_420"
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827566248,
+      "ts": 1785909886856,
       "ver": 1
     },
     "step": 2
@@ -1316,9 +2089,96 @@
       "route_key": "",
       "seq": 2,
       "trace_id": "",
-      "ts": 1785827566249,
+      "ts": 1785909886856,
       "ver": 1
     },
+    "step": 3
+  },
+  {
+    "actor": "client",
+    "case": "auth_guard_test/已吊销 token",
+    "direction": "↑ WS CMD_AUTH_REQ",
+    "note": "↑ WS CMD_AUTH_REQ",
+    "packet": {
+      "cid": "",
+      "cmd": 1,
+      "cmd_name": "CMD_AUTH_REQ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "app_key": "app_demo",
+        "compression_offered": [],
+        "device_id": "device_8455",
+        "device_model": "",
+        "device_name": "",
+        "network": "",
+        "os": "",
+        "platform": "ios",
+        "sdk_ver": "0.1.0",
+        "token": "FG4pZ3i9BWtaXxWIaoxU2dq2rB8DftPEWdylqpBkqWs",
+        "user_id": "user_8423"
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886861,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "client",
+    "case": "auth_guard_test/已吊销 token",
+    "direction": "↓ WS CMD_ERROR",
+    "note": "↓ WS CMD_ERROR",
+    "packet": {
+      "cid": "",
+      "cmd": 6,
+      "cmd_name": "CMD_ERROR",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "code": "CODE_UNAUTHORIZED",
+        "msg": "token revoked",
+        "ref_cid": "",
+        "ref_cmd": 1
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886862,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "client",
+    "case": "auth_guard_test/未鉴权发心跳静默关闭",
+    "direction": "↑ WS CMD_HEARTBEAT_REQ (未鉴权)",
+    "note": "↑ WS CMD_HEARTBEAT_REQ (未鉴权)",
+    "packet": {
+      "cid": "",
+      "cmd": 3,
+      "cmd_name": "CMD_HEARTBEAT_REQ",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_time": 1
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909886863,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "client",
+    "case": "auth_guard_test/未鉴权发心跳静默关闭",
+    "direction": "↓ WS 连接静默关闭",
+    "event": {
+      "detail": "未鉴权发心跳，无 CMD_ERROR",
+      "event": "silent_close"
+    },
+    "note": "↓ WS 连接静默关闭",
     "step": 3
   },
   {
@@ -1345,20 +2205,20 @@
       "payload": {
         "app_key": "app_demo",
         "compression_offered": [],
-        "device_id": "device_5091",
+        "device_id": "device_1926",
         "device_model": "",
         "device_name": "",
         "network": "",
         "os": "",
         "platform": "ios",
         "sdk_ver": "0.1.0",
-        "token": "5NiEWURJnAN-7hmfu6yERET4uUzUr3YCa--Q1S89lLM",
-        "user_id": "user_5059"
+        "token": "nF-wQi9-3Ex9enSQD_bk7zGk-ucRQgIox-G2GWu8G5s",
+        "user_id": "user_363"
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827566876,
+      "ts": 1785909887786,
       "ver": 1
     },
     "step": 2
@@ -1382,14 +2242,14 @@
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827566882,
+      "ts": 1785909887791,
       "ver": 1
     },
     "step": 3
   },
   {
     "actor": "client",
-    "case": "auth_guard_test/token 与 device_id 不匹配",
+    "case": "auth_guard_test/封禁设备 AUTH",
     "direction": "↑ WS CMD_AUTH_REQ",
     "note": "↑ WS CMD_AUTH_REQ",
     "packet": {
@@ -1400,27 +2260,27 @@
       "payload": {
         "app_key": "app_demo",
         "compression_offered": [],
-        "device_id": "wrong-device-5155",
+        "device_id": "device_8647",
         "device_model": "",
         "device_name": "",
         "network": "",
         "os": "",
         "platform": "ios",
         "sdk_ver": "0.1.0",
-        "token": "JR2JIS1WazRhYpsH4nExrmMOecAfbntPoCRGyLyfAQc",
-        "user_id": "user_4261"
+        "token": "n7kUX9mw42CJavXG_YDePWUAS_Pp3YIFb_Co04Sba3I",
+        "user_id": "user_395"
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827566905,
+      "ts": 1785909887805,
       "ver": 1
     },
     "step": 2
   },
   {
     "actor": "client",
-    "case": "auth_guard_test/token 与 device_id 不匹配",
+    "case": "auth_guard_test/封禁设备 AUTH",
     "direction": "↓ WS CMD_ERROR",
     "note": "↓ WS CMD_ERROR",
     "packet": {
@@ -1430,125 +2290,23 @@
       "compression": "PAYLOAD_COMPRESSION_NONE",
       "payload": {
         "code": "CODE_UNAUTHORIZED",
-        "msg": "device_id mismatch",
+        "msg": "device_banned",
         "ref_cid": "",
         "ref_cmd": 1
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827566910,
+      "ts": 1785909887812,
       "ver": 1
     },
     "step": 3
   },
   {
-    "actor": "B",
-    "case": "cluster_test/跨节点 PUSH 单聊",
-    "direction": "↓ WS CMD_MSG_PUSH (peer 节点)",
-    "note": "↓ WS CMD_MSG_PUSH (peer 节点)",
-    "packet": {
-      "cid": "cm-4357",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read": "false",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "cm-4357",
-        "content": "cross-node-push",
-        "conv_id": "p:user_1924:user_4325",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_4325",
-        "inbox_seq": 0,
-        "msg_id": "342927838057332736",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827567887,
-        "target_users": [],
-        "to": "user_1924"
-      },
-      "route_key": "p:user_1924:user_4325",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827567912,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "A",
-    "case": "cluster_test/跨节点 erpc 转发",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN",
-    "note": "↓ WS CMD_MSG_ACK_DOWN",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "cm-1378",
-        "conv_seq": 1,
-        "msg_id": "342927842662678528",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "cluster-rk-1",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569015,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "B",
-    "case": "cluster_test/跨节点 erpc 转发",
-    "direction": "↓ WS CMD_MSG_PUSH (peer)",
-    "note": "↓ WS CMD_MSG_PUSH (peer)",
-    "packet": {
-      "cid": "cm-1378",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read": "false",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "cm-1378",
-        "content": "cross-node-erpc",
-        "conv_id": "p:user_4389:user_5219",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_5219",
-        "inbox_seq": 0,
-        "msg_id": "342927842662678528",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827568986,
-        "target_users": [],
-        "to": "user_4389"
-      },
-      "route_key": "p:user_4389:user_5219",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569015,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "A",
-    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
-    "direction": "↑ WS CMD_MSG_SEND",
-    "note": "↑ WS CMD_MSG_SEND",
+    "actor": "client",
+    "case": "auth_guard_test/未鉴权发 MSG_SEND 静默关闭",
+    "direction": "↑ WS CMD_MSG_SEND (未鉴权)",
+    "note": "↑ WS CMD_MSG_SEND (未鉴权)",
     "packet": {
       "cid": "",
       "cmd": 100,
@@ -1560,13 +2318,13 @@
           "burn_ttl_sec": 0,
           "burned": "false",
           "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "cm-4421",
-          "content": "hi-b",
+          "client_msg_id": "cm-2536",
+          "content": "illegal",
           "conv_id": "",
           "conv_seq": 0,
           "edit_version": 0,
           "ext": {},
-          "from": "user_1988",
+          "from": "u1",
           "inbox_seq": 0,
           "msg_id": "",
           "msg_type": "MSG_TEXT",
@@ -1574,1216 +2332,52 @@
           "recalled": "false",
           "server_time": 0,
           "target_users": [],
-          "to": "user_5315"
+          "to": "u2"
         }
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827569246,
+      "ts": 1785909887815,
       "ver": 1
     },
     "step": 2
   },
   {
-    "actor": "A",
-    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN",
-    "note": "↓ WS CMD_MSG_ACK_DOWN",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "cm-4421",
-        "conv_seq": 1,
-        "msg_id": "342927843811917824",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569275,
-      "ver": 1
+    "actor": "client",
+    "case": "auth_guard_test/未鉴权发 MSG_SEND 静默关闭",
+    "direction": "↓ WS 连接静默关闭",
+    "event": {
+      "detail": "未鉴权发 MSG_SEND",
+      "event": "silent_close"
     },
+    "note": "↓ WS 连接静默关闭",
     "step": 3
   },
   {
-    "actor": "B",
-    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
-    "direction": "↓ WS CMD_MSG_PUSH",
-    "note": "↓ WS CMD_MSG_PUSH",
+    "actor": "client",
+    "case": "auth_guard_test/连接中 token 过期 CMD_KICK",
+    "direction": "↓ WS CMD_KICK (token_expired)",
+    "note": "↓ WS CMD_KICK (token_expired)",
     "packet": {
-      "cid": "cm-4421",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
+      "cid": "",
+      "cmd": 5,
+      "cmd_name": "CMD_KICK",
       "compression": "PAYLOAD_COMPRESSION_NONE",
       "payload": {
-        "burn_after_read": "false",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "cm-4421",
-        "content": "hi-b",
-        "conv_id": "p:user_1988:user_5315",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_1988",
-        "inbox_seq": 0,
-        "msg_id": "342927843811917824",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827569258,
-        "target_users": [],
-        "to": "user_5315"
+        "clear_local_data": "false",
+        "kicker": null,
+        "reason": "token_expired",
+        "reason_code": "KICK_REASON_TOKEN_EXPIRED",
+        "timestamp": 1785909888429
       },
-      "route_key": "p:user_1988:user_5315",
+      "route_key": "",
       "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569275,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "B",
-    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
-    "direction": "↑ WS CMD_MSG_ACK_UP",
-    "note": "↑ WS CMD_MSG_ACK_UP",
-    "packet": {
-      "cid": "",
-      "cmd": 200,
-      "cmd_name": "CMD_MSG_ACK_UP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "cm-4421",
-        "conv_seq": 1,
-        "msg_id": "342927843811917824",
-        "status": "ACK_CLIENT_RECEIVED"
-      },
-      "route_key": "",
-      "seq": 5,
-      "trace_id": "",
-      "ts": 1785827569276,
-      "ver": 1
-    },
-    "step": 6
-  },
-  {
-    "actor": "B",
-    "case": "private_message_test/批量 ACK",
-    "direction": "↑ WS CMD_MSG_ACK_BATCH_UP",
-    "note": "↑ WS CMD_MSG_ACK_BATCH_UP",
-    "packet": {
-      "cid": "",
-      "cmd": 203,
-      "cmd_name": "CMD_MSG_ACK_BATCH_UP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "acks": [
-          {
-            "client_msg_id": "cm-2404",
-            "conv_seq": 1,
-            "msg_id": "342927843996467200",
-            "status": "ACK_CLIENT_RECEIVED"
-          }
-        ]
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827569307,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "A",
-    "case": "private_message_test/client_msg_id 幂等",
-    "direction": "↑ WS CMD_MSG_SEND (1st)",
-    "note": "↑ WS CMD_MSG_SEND (1st)",
-    "packet": {
-      "cid": "",
-      "cmd": 100,
-      "cmd_name": "CMD_MSG_SEND",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "message": {
-          "burn_after_read": "false",
-          "burn_ttl_sec": 0,
-          "burned": "false",
-          "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "idem-2756",
-          "content": "once",
-          "conv_id": "",
-          "conv_seq": 0,
-          "edit_version": 0,
-          "ext": {},
-          "from": "user_2436",
-          "inbox_seq": 0,
-          "msg_id": "",
-          "msg_type": "MSG_TEXT",
-          "priority": "MSG_PRIORITY_NORMAL",
-          "recalled": "false",
-          "server_time": 0,
-          "target_users": [],
-          "to": "user_4517"
-        }
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827569318,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "A",
-    "case": "private_message_test/client_msg_id 幂等",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN (1st)",
-    "note": "↓ WS CMD_MSG_ACK_DOWN (1st)",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "idem-2756",
-        "conv_seq": 1,
-        "msg_id": "342927844084547584",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569327,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "A",
-    "case": "private_message_test/client_msg_id 幂等",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN (2nd 幂等)",
-    "note": "↓ WS CMD_MSG_ACK_DOWN (2nd 幂等)",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "idem-2756",
-        "conv_seq": 1,
-        "msg_id": "342927844084547584",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569328,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "A",
-    "case": "private_message_test/REST 发消息双通道",
-    "direction": "↑ HTTP POST /api/v1/messages",
-    "http": {
-      "request": {
-        "content": "rest-path",
-        "to": "user_4613"
-      },
-      "response": {
-        "body": {
-          "client_msg_id": "10f42bf856ed31a9",
-          "conv_id": "p:user_1062:user_4613",
-          "conv_seq": 1,
-          "duplicate": false,
-          "msg_id": "342927844172627968",
-          "server_time": 1785827569343,
-          "status": "SERVER_RECEIVED"
-        },
-        "status": 200
-      }
-    },
-    "note": "↑ HTTP POST /api/v1/messages",
-    "step": 1
-  },
-  {
-    "actor": "B",
-    "case": "private_message_test/REST 发消息双通道",
-    "direction": "↓ WS CMD_MSG_PUSH",
-    "note": "↓ WS CMD_MSG_PUSH",
-    "packet": {
-      "cid": "10f42bf856ed31a9",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read": "false",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "10f42bf856ed31a9",
-        "content": "rest-path",
-        "conv_id": "p:user_1062:user_4613",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_1062",
-        "inbox_seq": 0,
-        "msg_id": "342927844172627968",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827569343,
-        "target_users": [],
-        "to": "user_4613"
-      },
-      "route_key": "p:user_1062:user_4613",
-      "seq": 0,
-      "trace_id": "lt-2c811fb810c0",
-      "ts": 1785827569349,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "A",
-    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN",
-    "note": "↓ WS CMD_MSG_ACK_DOWN",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "99fb258be8665887",
-        "conv_seq": 1,
-        "msg_id": "342927844252319744",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569368,
+      "trace_id": "a3c04e32-1f0b-4c43-b2df-52ccef0248df",
+      "ts": 1785909888430,
       "ver": 1
     },
     "step": 1
-  },
-  {
-    "actor": "B",
-    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
-    "direction": "↓ WS CMD_MSG_PUSH",
-    "note": "↓ WS CMD_MSG_PUSH",
-    "packet": {
-      "cid": "99fb258be8665887",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read": "true",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "99fb258be8665887",
-        "content": "secret",
-        "conv_id": "p:user_4645:user_999",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_999",
-        "inbox_seq": 0,
-        "msg_id": "342927844252319744",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827569362,
-        "target_users": [],
-        "to": "user_4645"
-      },
-      "route_key": "p:user_4645:user_999",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569368,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "B",
-    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
-    "direction": "↑ WS CMD_MSG_READ",
-    "note": "↑ WS CMD_MSG_READ",
-    "packet": {
-      "cid": "",
-      "cmd": 202,
-      "cmd_name": "CMD_MSG_READ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_4645:user_999",
-        "conv_seq": 1,
-        "from": "user_4645",
-        "msg_id": "342927844252319744",
-        "timestamp": 0,
-        "to": "user_999",
-        "unread_count": null
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569368,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "A",
-    "case": "extensions_test/阅后即焚：已读后双方收到 BURN_PUSH",
-    "direction": "↓ WS CMD_MSG_BURN_PUSH",
-    "note": "↓ WS CMD_MSG_BURN_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 404,
-      "cmd_name": "CMD_MSG_BURN_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_ttl_sec": 0,
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_4645:user_999",
-        "from": "user_999",
-        "msg_id": "342927844252319744",
-        "timestamp": 1785827569383,
-        "to": "user_4645"
-      },
-      "route_key": "p:user_4645:user_999",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569384,
-      "ver": 1
-    },
-    "step": 5
-  },
-  {
-    "actor": "B",
-    "case": "extensions_test/已读回执",
-    "direction": "↑ WS CMD_MSG_READ",
-    "note": "↑ WS CMD_MSG_READ",
-    "packet": {
-      "cid": "",
-      "cmd": 202,
-      "cmd_name": "CMD_MSG_READ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_1319:user_968",
-        "conv_seq": 1,
-        "from": "user_968",
-        "msg_id": "342927844399120384",
-        "timestamp": 0,
-        "to": "user_1319",
-        "unread_count": null
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827569403,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "A",
-    "case": "extensions_test/已读回执",
-    "direction": "↓ WS CMD_MSG_READ (对端已读)",
-    "note": "↓ WS CMD_MSG_READ (对端已读)",
-    "packet": {
-      "cid": "",
-      "cmd": 202,
-      "cmd_name": "CMD_MSG_READ",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_1319:user_968",
-        "conv_seq": 1,
-        "from": "user_968",
-        "msg_id": "342927844399120384",
-        "timestamp": 1785827569405,
-        "to": "user_1319",
-        "unread_count": 0
-      },
-      "route_key": "p:user_1319:user_968",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569405,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "A",
-    "case": "extensions_test/编辑消息",
-    "direction": "↓ WS CMD_MSG_EDIT_PUSH",
-    "note": "↓ WS CMD_MSG_EDIT_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 403,
-      "cmd_name": "CMD_MSG_EDIT_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "content": "edited",
-        "conv_id": "p:user_5507:user_5699",
-        "edit_version": 1,
-        "ext": {},
-        "from": "user_5507",
-        "msg_id": "342927844487200768",
-        "msg_type": "MSG_TEXT",
-        "timestamp": 1785827569427,
-        "to": "user_5699"
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569427,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "A",
-    "case": "extensions_test/透传指令",
-    "direction": "↑ WS CMD_PASSTHROUGH",
-    "note": "↑ WS CMD_PASSTHROUGH",
-    "packet": {
-      "cid": "",
-      "cmd": 0,
-      "cmd_name": "CMD_0",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 49,
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827569451,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "B",
-    "case": "extensions_test/透传指令",
-    "direction": "↓ WS CMD_PASSTHROUGH",
-    "note": "↓ WS CMD_PASSTHROUGH",
-    "packet": {
-      "cid": "",
-      "cmd": 500,
-      "cmd_name": "CMD_PASSTHROUGH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "action": "typing",
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "",
-        "data": "{\"typing\":true}",
-        "from": "user_2852",
-        "persist": "false",
-        "to": "user_4741",
-        "ttl_sec": 0
-      },
-      "route_key": "",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569453,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "A",
-    "case": "extensions_test/撤回消息",
-    "direction": "↓ WS CMD_MSG_RECALL_PUSH",
-    "note": "↓ WS CMD_MSG_RECALL_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 401,
-      "cmd_name": "CMD_MSG_RECALL_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_4805:user_6307",
-        "from": "user_4805",
-        "msg_id": "342927844701110272",
-        "reason": "mistake",
-        "timestamp": 1785827569479,
-        "to": "user_6307"
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569479,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "B",
-    "case": "extensions_test/撤回消息",
-    "direction": "↓ WS CMD_MSG_RECALL_PUSH (对端)",
-    "note": "↓ WS CMD_MSG_RECALL_PUSH (对端)",
-    "packet": {
-      "cid": "",
-      "cmd": 401,
-      "cmd_name": "CMD_MSG_RECALL_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_4805:user_6307",
-        "from": "user_4805",
-        "msg_id": "342927844701110272",
-        "reason": "mistake",
-        "timestamp": 1785827569479,
-        "to": "user_6307"
-      },
-      "route_key": "p:user_4805:user_6307",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569479,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "A",
-    "case": "conversation_test/REST 会话列表未读与已读同步",
-    "direction": "↑ WS CMD_MSG_SEND",
-    "note": "↑ WS CMD_MSG_SEND",
-    "packet": {
-      "cid": "",
-      "cmd": 100,
-      "cmd_name": "CMD_MSG_SEND",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "message": {
-          "burn_after_read": "false",
-          "burn_ttl_sec": 0,
-          "burned": "false",
-          "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "conv-5189",
-          "content": "list-preview",
-          "conv_id": "",
-          "conv_seq": 0,
-          "edit_version": 0,
-          "ext": {},
-          "from": "user_2948",
-          "inbox_seq": 0,
-          "msg_id": "",
-          "msg_type": "MSG_TEXT",
-          "priority": "MSG_PRIORITY_NORMAL",
-          "recalled": "false",
-          "server_time": 0,
-          "target_users": [],
-          "to": "user_5029"
-        }
-      },
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827569492,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "A",
-    "case": "conversation_test/REST 会话列表未读与已读同步",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN",
-    "note": "↓ WS CMD_MSG_ACK_DOWN",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "conv-5189",
-        "conv_seq": 1,
-        "msg_id": "342927844810162176",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569502,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "B",
-    "case": "conversation_test/REST 会话列表未读与已读同步",
-    "direction": "↓ WS CMD_MSG_PUSH",
-    "note": "↓ WS CMD_MSG_PUSH",
-    "packet": {
-      "cid": "conv-5189",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read": "false",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "conv-5189",
-        "content": "list-preview",
-        "conv_id": "p:user_2948:user_5029",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_2948",
-        "inbox_seq": 0,
-        "msg_id": "342927844810162176",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827569495,
-        "target_users": [],
-        "to": "user_5029"
-      },
-      "route_key": "p:user_2948:user_5029",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569502,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "B",
-    "case": "conversation_test/REST 会话列表未读与已读同步",
-    "direction": "↑ HTTP GET /api/v1/conversations",
-    "http": {
-      "request": {
-        "limit": 20
-      },
-      "response": {
-        "body": {
-          "conversations": [
-            {
-              "chat_type": 1,
-              "conv_id": "p:user_2948:user_5029",
-              "last_msg_id": "342927844810162176",
-              "last_msg_preview": "list-preview",
-              "last_msg_seq": 1,
-              "last_msg_time": 1785827569495,
-              "last_msg_type": 1,
-              "last_read_conv_seq": 0,
-              "peer_id": "user_2948",
-              "unread_count": 1
-            }
-          ],
-          "total_unread": 1
-        },
-        "status": 200
-      }
-    },
-    "note": "↑ HTTP GET /api/v1/conversations",
-    "step": 5
-  },
-  {
-    "actor": "B",
-    "case": "conversation_test/REST 会话列表未读与已读同步",
-    "direction": "↑ WS CMD_MSG_READ",
-    "note": "↑ WS CMD_MSG_READ",
-    "packet": {
-      "cid": "",
-      "cmd": 202,
-      "cmd_name": "CMD_MSG_READ",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_2948:user_5029",
-        "conv_seq": 1,
-        "from": "user_5029",
-        "msg_id": "342927844810162176",
-        "timestamp": 0,
-        "to": "user_2948",
-        "unread_count": null
-      },
-      "route_key": "",
-      "seq": 6,
-      "trace_id": "",
-      "ts": 1785827569505,
-      "ver": 1
-    },
-    "step": 7
-  },
-  {
-    "actor": "A",
-    "case": "conversation_test/REST 会话列表未读与已读同步",
-    "direction": "↓ WS CMD_MSG_READ (对端已读)",
-    "note": "↓ WS CMD_MSG_READ (对端已读)",
-    "packet": {
-      "cid": "",
-      "cmd": 202,
-      "cmd_name": "CMD_MSG_READ",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "p:user_2948:user_5029",
-        "conv_seq": 1,
-        "from": "user_5029",
-        "msg_id": "342927844810162176",
-        "timestamp": 1785827569506,
-        "to": "user_2948",
-        "unread_count": 0
-      },
-      "route_key": "p:user_2948:user_5029",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569507,
-      "ver": 1
-    },
-    "step": 8
-  },
-  {
-    "actor": "A",
-    "case": "conversation_test/REST 会话列表未读与已读同步",
-    "direction": "↑ HTTP GET /api/v1/conversations (after read)",
-    "http": {
-      "request": {
-        "limit": 20
-      },
-      "response": {
-        "body": {
-          "conversations": [
-            {
-              "chat_type": 1,
-              "conv_id": "p:user_2948:user_5029",
-              "last_msg_id": "342927844810162176",
-              "last_msg_preview": "list-preview",
-              "last_msg_seq": 1,
-              "last_msg_time": 1785827569495,
-              "last_msg_type": 1,
-              "last_read_conv_seq": 1,
-              "peer_id": "user_2948",
-              "unread_count": 0
-            }
-          ],
-          "total_unread": 0
-        },
-        "status": 200
-      }
-    },
-    "note": "↑ HTTP GET /api/v1/conversations (after read)",
-    "step": 9
-  },
-  {
-    "actor": "owner",
-    "case": "conversation_test/群聊会话列表未读",
-    "direction": "↓ WS CMD_GROUP_CREATE_RESP",
-    "note": "↓ WS CMD_GROUP_CREATE_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 601,
-      "cmd_name": "CMD_GROUP_CREATE_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:gc-6723",
-        "created_at": 1785827569527,
-        "group_id": "gc-6723",
-        "name": "conv-g"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569529,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "owner",
-    "case": "conversation_test/群聊会话列表未读",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN",
-    "note": "↓ WS CMD_MSG_ACK_DOWN",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "gcm-5317",
-        "conv_seq": 1,
-        "msg_id": "342927844965351424",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569535,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "owner",
-    "case": "conversation_test/群聊会话列表未读",
-    "direction": "↑ HTTP GET /api/v1/conversations (group)",
-    "http": {
-      "request": {
-        "limit": 20
-      },
-      "response": {
-        "body": {
-          "conversations": [
-            {
-              "chat_type": 2,
-              "conv_id": "g:gc-6723",
-              "last_msg_id": "342927844965351424",
-              "last_msg_preview": "group-unread",
-              "last_msg_seq": 1,
-              "last_msg_time": 1785827569531,
-              "last_msg_type": 1,
-              "last_read_conv_seq": 0,
-              "peer_id": "gc-6723",
-              "unread_count": 1
-            }
-          ],
-          "total_unread": 1
-        },
-        "status": 200
-      }
-    },
-    "note": "↑ HTTP GET /api/v1/conversations (group)",
-    "step": 3
-  },
-  {
-    "actor": "owner",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_CREATE_RESP",
-    "note": "↓ WS CMD_GROUP_CREATE_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 601,
-      "cmd_name": "CMD_GROUP_CREATE_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "created_at": 1785827569558,
-        "group_id": "g-5445",
-        "name": "test-group"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569558,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "extra",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_JOIN_PUSH",
-    "note": "↓ WS CMD_GROUP_JOIN_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 605,
-      "cmd_name": "CMD_GROUP_JOIN_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "member_uids": [
-          "user_7107"
-        ],
-        "operator_uid": "user_7107",
-        "timestamp": 1785827569563
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569563,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "owner",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_SET_ADMIN_PUSH",
-    "note": "↓ WS CMD_GROUP_SET_ADMIN_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 613,
-      "cmd_name": "CMD_GROUP_SET_ADMIN_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "member_uid": "user_6947",
-        "new_role": "GROUP_MEMBER_ROLE_ADMIN",
-        "operator_uid": "user_1479",
-        "timestamp": 1785827569567
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569568,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "owner",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_REMOVE_ADMIN_PUSH",
-    "note": "↓ WS CMD_GROUP_REMOVE_ADMIN_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 615,
-      "cmd_name": "CMD_GROUP_REMOVE_ADMIN_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "member_uid": "user_6947",
-        "new_role": "GROUP_MEMBER_ROLE_MEMBER",
-        "operator_uid": "user_1479",
-        "timestamp": 1785827569570
-      },
-      "route_key": "",
-      "seq": 4,
-      "trace_id": "",
-      "ts": 1785827569570,
-      "ver": 1
-    },
-    "step": 4
-  },
-  {
-    "actor": "owner",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_MSG_ACK_DOWN",
-    "note": "↓ WS CMD_MSG_ACK_DOWN",
-    "packet": {
-      "cid": "",
-      "cmd": 201,
-      "cmd_name": "CMD_MSG_ACK_DOWN",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "client_msg_id": "800f3ac2706c6ec0",
-        "conv_seq": 1,
-        "msg_id": "342927845137317888",
-        "status": "ACK_SERVER_RECEIVED"
-      },
-      "route_key": "g-5445",
-      "seq": 5,
-      "trace_id": "",
-      "ts": 1785827569579,
-      "ver": 1
-    },
-    "step": 5
-  },
-  {
-    "actor": "member",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_MSG_PUSH",
-    "note": "↓ WS CMD_MSG_PUSH",
-    "packet": {
-      "cid": "800f3ac2706c6ec0",
-      "cmd": 101,
-      "cmd_name": "CMD_MSG_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "burn_after_read": "false",
-        "burn_ttl_sec": 0,
-        "burned": "false",
-        "chat_type": "CHAT_GROUP",
-        "client_msg_id": "800f3ac2706c6ec0",
-        "content": "group-hi",
-        "conv_id": "g:g-5445",
-        "conv_seq": 1,
-        "edit_version": 0,
-        "ext": {},
-        "from": "user_1479",
-        "inbox_seq": 0,
-        "msg_id": "342927845137317888",
-        "msg_type": "MSG_TEXT",
-        "priority": "MSG_PRIORITY_NORMAL",
-        "recalled": "false",
-        "server_time": 1785827569572,
-        "target_users": [],
-        "to": "g-5445"
-      },
-      "route_key": "g:g-5445",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569579,
-      "ver": 1
-    },
-    "step": 6
-  },
-  {
-    "actor": "extra",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_LEAVE_PUSH",
-    "note": "↓ WS CMD_GROUP_LEAVE_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 607,
-      "cmd_name": "CMD_GROUP_LEAVE_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "member_uids": [
-          "user_7107"
-        ],
-        "operator_uid": "user_7107",
-        "timestamp": 1785827569583
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569583,
-      "ver": 1
-    },
-    "step": 7
-  },
-  {
-    "actor": "owner",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_TRANSFER_PUSH",
-    "note": "↓ WS CMD_GROUP_TRANSFER_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 617,
-      "cmd_name": "CMD_GROUP_TRANSFER_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "new_owner_uid": "user_6947",
-        "old_owner_uid": "user_1479",
-        "timestamp": 1785827569587
-      },
-      "route_key": "",
-      "seq": 6,
-      "trace_id": "",
-      "ts": 1785827569588,
-      "ver": 1
-    },
-    "step": 8
-  },
-  {
-    "actor": "member",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_UPDATE_PUSH",
-    "note": "↓ WS CMD_GROUP_UPDATE_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 619,
-      "cmd_name": "CMD_GROUP_UPDATE_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "announcement": "ann",
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "name": "renamed",
-        "operator_uid": "user_6947",
-        "timestamp": 1785827569589
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569590,
-      "ver": 1
-    },
-    "step": 9
-  },
-  {
-    "actor": "member",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_INVITE_PUSH",
-    "note": "↓ WS CMD_GROUP_INVITE_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 611,
-      "cmd_name": "CMD_GROUP_INVITE_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "member_uids": [
-          "user_5413"
-        ],
-        "operator_uid": "user_6947",
-        "timestamp": 1785827569593
-      },
-      "route_key": "",
-      "seq": 3,
-      "trace_id": "",
-      "ts": 1785827569593,
-      "ver": 1
-    },
-    "step": 10
-  },
-  {
-    "actor": "member",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_KICK_PUSH",
-    "note": "↓ WS CMD_GROUP_KICK_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 609,
-      "cmd_name": "CMD_GROUP_KICK_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "member_uids": [
-          "user_1479"
-        ],
-        "operator_uid": "user_6947",
-        "timestamp": 1785827569597
-      },
-      "route_key": "",
-      "seq": 4,
-      "trace_id": "",
-      "ts": 1785827569597,
-      "ver": 1
-    },
-    "step": 11
-  },
-  {
-    "actor": "member",
-    "case": "group_test/群生命周期与群消息",
-    "direction": "↓ WS CMD_GROUP_DISMISS_PUSH",
-    "note": "↓ WS CMD_GROUP_DISMISS_PUSH",
-    "packet": {
-      "cid": "",
-      "cmd": 603,
-      "cmd_name": "CMD_GROUP_DISMISS_PUSH",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "conv_id": "g:g-5445",
-        "group_id": "g-5445",
-        "operator_uid": "user_6947",
-        "reason": "",
-        "timestamp": 1785827569600
-      },
-      "route_key": "",
-      "seq": 5,
-      "trace_id": "",
-      "ts": 1785827569600,
-      "ver": 1
-    },
-    "step": 12
   },
   {
     "actor": "B",
@@ -2791,7 +2385,7 @@
     "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_START)",
     "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_START)",
     "packet": {
-      "cid": "sm-5797",
+      "cid": "sm-747",
       "cmd": 101,
       "cmd_name": "CMD_MSG_PUSH",
       "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -2800,33 +2394,33 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "sm-5797",
+        "client_msg_id": "sm-747",
         "content": {
           "chunk": "",
           "content_type": "text/plain",
           "metadata": {},
           "sequence": 1,
           "status": "STREAM_STATUS_START",
-          "stream_id": "st-5765"
+          "stream_id": "st-715"
         },
-        "conv_id": "p:user_1288:user_5637",
+        "conv_id": "p:user_555:user_8839",
         "conv_seq": 1,
         "edit_version": 0,
         "ext": {},
-        "from": "user_1288",
+        "from": "user_8839",
         "inbox_seq": 0,
-        "msg_id": "342927845317672960",
+        "msg_id": "343273115683389440",
         "msg_type": "MSG_STREAM",
         "priority": "MSG_PRIORITY_NORMAL",
         "recalled": "false",
-        "server_time": 1785827569616,
+        "server_time": 1785909888486,
         "target_users": [],
-        "to": "user_5637"
+        "to": "user_555"
       },
-      "route_key": "p:user_1288:user_5637",
+      "route_key": "p:user_555:user_8839",
       "seq": 0,
       "trace_id": "",
-      "ts": 1785827569622,
+      "ts": 1785909888502,
       "ver": 1
     },
     "step": 1
@@ -2837,7 +2431,7 @@
     "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
     "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
     "packet": {
-      "cid": "sm-5829",
+      "cid": "sm-779",
       "cmd": 101,
       "cmd_name": "CMD_MSG_PUSH",
       "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -2846,33 +2440,33 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "sm-5829",
+        "client_msg_id": "sm-779",
         "content": {
           "chunk": "Hel",
           "content_type": "text/plain",
           "metadata": {},
           "sequence": 2,
           "status": "STREAM_STATUS_ONGOING",
-          "stream_id": "st-5765"
+          "stream_id": "st-715"
         },
-        "conv_id": "p:user_1288:user_5637",
+        "conv_id": "p:user_555:user_8839",
         "conv_seq": 2,
         "edit_version": 0,
         "ext": {},
-        "from": "user_1288",
+        "from": "user_8839",
         "inbox_seq": 0,
-        "msg_id": "342927845351227392",
+        "msg_id": "343273115763081216",
         "msg_type": "MSG_STREAM",
         "priority": "MSG_PRIORITY_NORMAL",
         "recalled": "false",
-        "server_time": 1785827569623,
+        "server_time": 1785909888505,
         "target_users": [],
-        "to": "user_5637"
+        "to": "user_555"
       },
-      "route_key": "p:user_1288:user_5637",
+      "route_key": "p:user_555:user_8839",
       "seq": 0,
       "trace_id": "",
-      "ts": 1785827569627,
+      "ts": 1785909888508,
       "ver": 1
     },
     "step": 2
@@ -2883,7 +2477,7 @@
     "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
     "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
     "packet": {
-      "cid": "sm-5861",
+      "cid": "sm-811",
       "cmd": 101,
       "cmd_name": "CMD_MSG_PUSH",
       "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -2892,33 +2486,33 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "sm-5861",
+        "client_msg_id": "sm-811",
         "content": {
           "chunk": "lo",
           "content_type": "text/plain",
           "metadata": {},
           "sequence": 3,
           "status": "STREAM_STATUS_ONGOING",
-          "stream_id": "st-5765"
+          "stream_id": "st-715"
         },
-        "conv_id": "p:user_1288:user_5637",
+        "conv_id": "p:user_555:user_8839",
         "conv_seq": 3,
         "edit_version": 0,
         "ext": {},
-        "from": "user_1288",
+        "from": "user_8839",
         "inbox_seq": 0,
-        "msg_id": "342927845376393216",
+        "msg_id": "343273115788247040",
         "msg_type": "MSG_STREAM",
         "priority": "MSG_PRIORITY_NORMAL",
         "recalled": "false",
-        "server_time": 1785827569629,
+        "server_time": 1785909888510,
         "target_users": [],
-        "to": "user_5637"
+        "to": "user_555"
       },
-      "route_key": "p:user_1288:user_5637",
+      "route_key": "p:user_555:user_8839",
       "seq": 0,
       "trace_id": "",
-      "ts": 1785827569632,
+      "ts": 1785909888513,
       "ver": 1
     },
     "step": 3
@@ -2929,7 +2523,7 @@
     "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_END)",
     "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_END)",
     "packet": {
-      "cid": "sm-5893",
+      "cid": "sm-843",
       "cmd": 101,
       "cmd_name": "CMD_MSG_PUSH",
       "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -2938,177 +2532,36 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "sm-5893",
+        "client_msg_id": "sm-843",
         "content": {
           "chunk": "",
           "content_type": "text/plain",
           "metadata": {},
           "sequence": 4,
           "status": "STREAM_STATUS_END",
-          "stream_id": "st-5765"
+          "stream_id": "st-715"
         },
-        "conv_id": "p:user_1288:user_5637",
+        "conv_id": "p:user_555:user_8839",
         "conv_seq": 4,
         "edit_version": 0,
         "ext": {},
-        "from": "user_1288",
+        "from": "user_8839",
         "inbox_seq": 0,
-        "msg_id": "342927845393170432",
+        "msg_id": "343273115809218560",
         "msg_type": "MSG_STREAM",
         "priority": "MSG_PRIORITY_NORMAL",
         "recalled": "false",
-        "server_time": 1785827569634,
+        "server_time": 1785909888515,
         "target_users": [],
-        "to": "user_5637"
+        "to": "user_555"
       },
-      "route_key": "p:user_1288:user_5637",
+      "route_key": "p:user_555:user_8839",
       "seq": 0,
       "trace_id": "",
-      "ts": 1785827569637,
+      "ts": 1785909888519,
       "ver": 1
     },
     "step": 4
-  },
-  {
-    "actor": "A",
-    "case": "stream_test/流式透传 stream_start/chunk/end",
-    "direction": "↑ WS CMD_PASSTHROUGH (stream_start)",
-    "note": "↑ WS CMD_PASSTHROUGH (stream_start)",
-    "packet": {
-      "cid": "",
-      "cmd": 0,
-      "cmd_name": "CMD_0",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 63,
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827569648,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "B",
-    "case": "stream_test/流式透传 stream_start/chunk/end",
-    "direction": "↓ WS CMD_PASSTHROUGH (stream_start)",
-    "note": "↓ WS CMD_PASSTHROUGH (stream_start)",
-    "packet": {
-      "cid": "",
-      "cmd": 500,
-      "cmd_name": "CMD_PASSTHROUGH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "action": "stream_start",
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "",
-        "data": "{\"stream_id\":\"ps-5989\"}",
-        "from": "user_7523",
-        "persist": "false",
-        "to": "user_5925",
-        "ttl_sec": 0
-      },
-      "route_key": "",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569648,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "A",
-    "case": "stream_test/流式透传 stream_start/chunk/end",
-    "direction": "↑ WS CMD_PASSTHROUGH (stream_chunk)",
-    "note": "↑ WS CMD_PASSTHROUGH (stream_chunk)",
-    "packet": {
-      "cid": "",
-      "cmd": 0,
-      "cmd_name": "CMD_0",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 76,
-      "route_key": "",
-      "seq": 4,
-      "trace_id": "",
-      "ts": 1785827569648,
-      "ver": 1
-    },
-    "step": 5
-  },
-  {
-    "actor": "B",
-    "case": "stream_test/流式透传 stream_start/chunk/end",
-    "direction": "↓ WS CMD_PASSTHROUGH (stream_chunk)",
-    "note": "↓ WS CMD_PASSTHROUGH (stream_chunk)",
-    "packet": {
-      "cid": "",
-      "cmd": 500,
-      "cmd_name": "CMD_PASSTHROUGH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "action": "stream_chunk",
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "",
-        "data": "{\"chunk\":\"Hi\",\"stream_id\":\"ps-5989\"}",
-        "from": "user_7523",
-        "persist": "false",
-        "to": "user_5925",
-        "ttl_sec": 0
-      },
-      "route_key": "",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569648,
-      "ver": 1
-    },
-    "step": 6
-  },
-  {
-    "actor": "A",
-    "case": "stream_test/流式透传 stream_start/chunk/end",
-    "direction": "↑ WS CMD_PASSTHROUGH (stream_end)",
-    "note": "↑ WS CMD_PASSTHROUGH (stream_end)",
-    "packet": {
-      "cid": "",
-      "cmd": 0,
-      "cmd_name": "CMD_0",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 61,
-      "route_key": "",
-      "seq": 7,
-      "trace_id": "",
-      "ts": 1785827569649,
-      "ver": 1
-    },
-    "step": 8
-  },
-  {
-    "actor": "B",
-    "case": "stream_test/流式透传 stream_start/chunk/end",
-    "direction": "↓ WS CMD_PASSTHROUGH (stream_end)",
-    "note": "↓ WS CMD_PASSTHROUGH (stream_end)",
-    "packet": {
-      "cid": "",
-      "cmd": 500,
-      "cmd_name": "CMD_PASSTHROUGH",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "action": "stream_end",
-        "chat_type": "CHAT_PRIVATE",
-        "conv_id": "",
-        "data": "{\"stream_id\":\"ps-5989\"}",
-        "from": "user_7523",
-        "persist": "false",
-        "to": "user_5925",
-        "ttl_sec": 0
-      },
-      "route_key": "",
-      "seq": 0,
-      "trace_id": "",
-      "ts": 1785827569649,
-      "ver": 1
-    },
-    "step": 9
   },
   {
     "actor": "B",
@@ -3121,14 +2574,14 @@
       "cmd_name": "CMD_OFFLINE_PULL_REQ",
       "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
       "payload": {
-        "conv_id": "p:user_7843:user_7971",
+        "conv_id": "p:user_2022:user_548",
         "cursor": 0,
         "limit": 20
       },
       "route_key": "",
       "seq": 1,
       "trace_id": "",
-      "ts": 1785827569675,
+      "ts": 1785909888553,
       "ver": 1
     },
     "step": 2
@@ -3151,63 +2604,63 @@
             "burn_ttl_sec": 0,
             "burned": "false",
             "chat_type": "CHAT_PRIVATE",
-            "client_msg_id": "sm-8067",
-            "content": "\n\u000Bst-off-8035\u0010\u0001\u0018\u0001*\ntext/plain",
-            "conv_id": "p:user_7843:user_7971",
+            "client_msg_id": "sm-644",
+            "content": "\n\nst-off-612\u0010\u0001\u0018\u0001*\ntext/plain",
+            "conv_id": "p:user_2022:user_548",
             "conv_seq": 1,
             "edit_version": 0,
             "ext": {},
-            "from": "user_7843",
+            "from": "user_2022",
             "inbox_seq": 1,
-            "msg_id": "342927845493833728",
+            "msg_id": "343273115867938816",
             "msg_type": "MSG_STREAM",
             "priority": "MSG_PRIORITY_NORMAL",
             "recalled": "false",
-            "server_time": 1785827569657,
+            "server_time": 1785909888530,
             "target_users": [],
-            "to": "user_7971"
+            "to": "user_548"
           },
           {
             "burn_after_read": "false",
             "burn_ttl_sec": 0,
             "burned": "false",
             "chat_type": "CHAT_PRIVATE",
-            "client_msg_id": "sm-6053",
-            "content": "\n\u000Bst-off-8035\u0010\u0002\u0018\u0002\"\u0003off*\ntext/plain",
-            "conv_id": "p:user_7843:user_7971",
+            "client_msg_id": "sm-2568",
+            "content": "\n\nst-off-612\u0010\u0002\u0018\u0002\"\u0003off*\ntext/plain",
+            "conv_id": "p:user_2022:user_548",
             "conv_seq": 2,
             "edit_version": 0,
             "ext": {},
-            "from": "user_7843",
+            "from": "user_2022",
             "inbox_seq": 2,
-            "msg_id": "342927845514805248",
+            "msg_id": "343273115905687552",
             "msg_type": "MSG_STREAM",
             "priority": "MSG_PRIORITY_NORMAL",
             "recalled": "false",
-            "server_time": 1785827569663,
+            "server_time": 1785909888539,
             "target_users": [],
-            "to": "user_7971"
+            "to": "user_548"
           },
           {
             "burn_after_read": "false",
             "burn_ttl_sec": 0,
             "burned": "false",
             "chat_type": "CHAT_PRIVATE",
-            "client_msg_id": "sm-6085",
-            "content": "\n\u000Bst-off-8035\u0010\u0003\u0018\u0003*\ntext/plain",
-            "conv_id": "p:user_7843:user_7971",
+            "client_msg_id": "sm-2600",
+            "content": "\n\nst-off-612\u0010\u0003\u0018\u0003*\ntext/plain",
+            "conv_id": "p:user_2022:user_548",
             "conv_seq": 3,
             "edit_version": 0,
             "ext": {},
-            "from": "user_7843",
+            "from": "user_2022",
             "inbox_seq": 3,
-            "msg_id": "342927845535776768",
+            "msg_id": "343273115930853376",
             "msg_type": "MSG_STREAM",
             "priority": "MSG_PRIORITY_NORMAL",
             "recalled": "false",
-            "server_time": 1785827569668,
+            "server_time": 1785909888545,
             "target_users": [],
-            "to": "user_7971"
+            "to": "user_548"
           }
         ],
         "next_cursor": 3
@@ -3215,312 +2668,884 @@
       "route_key": "",
       "seq": 2,
       "trace_id": "",
-      "ts": 1785827569676,
+      "ts": 1785909888555,
       "ver": 1
     },
     "step": 3
   },
   {
     "actor": "A",
-    "case": "friend_test/添加-接受-列表-备注-删除",
-    "direction": "↓ WS CMD_FRIEND_ADD_RESP",
-    "note": "↓ WS CMD_FRIEND_ADD_RESP",
+    "case": "stream_test/流式透传 stream_start/chunk/end",
+    "direction": "↑ WS CMD_PASSTHROUGH (stream_start)",
+    "note": "↑ WS CMD_PASSTHROUGH (stream_start)",
     "packet": {
       "cid": "",
-      "cmd": 801,
-      "cmd_name": "CMD_FRIEND_ADD_RESP",
+      "cmd": 0,
+      "cmd_name": "CMD_0",
       "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "request_id": "fr1858",
-        "status": "FRIEND_STATUS_PENDING"
-      },
+      "payload_raw_bytes": 62,
       "route_key": "",
-      "seq": 2,
+      "seq": 1,
       "trace_id": "",
-      "ts": 1785827569692,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "B",
-    "case": "friend_test/添加-接受-列表-备注-删除",
-    "direction": "↓ WS CMD_FRIEND_ACCEPT_RESP",
-    "note": "↓ WS CMD_FRIEND_ACCEPT_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 804,
-      "cmd_name": "CMD_FRIEND_ACCEPT_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "friend_user_id": "user_1352",
-        "status": "FRIEND_STATUS_ACCEPTED"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569695,
+      "ts": 1785909888564,
       "ver": 1
     },
     "step": 2
   },
   {
-    "actor": "A",
-    "case": "friend_test/添加-接受-列表-备注-删除",
-    "direction": "↓ WS CMD_FRIEND_LIST_RESP",
-    "note": "↓ WS CMD_FRIEND_LIST_RESP",
+    "actor": "B",
+    "case": "stream_test/流式透传 stream_start/chunk/end",
+    "direction": "↓ WS CMD_PASSTHROUGH (stream_start)",
+    "note": "↓ WS CMD_PASSTHROUGH (stream_start)",
     "packet": {
       "cid": "",
-      "cmd": 820,
-      "cmd_name": "CMD_FRIEND_LIST_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "cmd": 500,
+      "cmd_name": "CMD_PASSTHROUGH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
       "payload": {
-        "friends": [
-          {
-            "avatar": "",
-            "created_at": 1785827569692,
-            "ext": "",
-            "nickname": "",
-            "remark": "",
-            "status": "FRIEND_STATUS_ACCEPTED",
-            "user_id": "user_1698"
-          }
-        ],
-        "has_more": "false",
-        "next_cursor": ""
+        "action": "stream_start",
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "",
+        "data": "{\"stream_id\":\"ps-2696\"}",
+        "from": "user_451",
+        "persist": "false",
+        "to": "user_2664",
+        "ttl_sec": 0
       },
       "route_key": "",
-      "seq": 3,
+      "seq": 0,
       "trace_id": "",
-      "ts": 1785827569699,
+      "ts": 1785909888564,
       "ver": 1
     },
     "step": 3
   },
   {
     "actor": "A",
-    "case": "friend_test/添加-接受-列表-备注-删除",
-    "direction": "↑ WS CMD_FRIEND_SET_REMARK_REQ",
-    "note": "↑ WS CMD_FRIEND_SET_REMARK_REQ",
+    "case": "stream_test/流式透传 stream_start/chunk/end",
+    "direction": "↑ WS CMD_PASSTHROUGH (stream_chunk)",
+    "note": "↑ WS CMD_PASSTHROUGH (stream_chunk)",
     "packet": {
       "cid": "",
-      "cmd": 817,
-      "cmd_name": "CMD_817",
+      "cmd": 0,
+      "cmd_name": "CMD_0",
       "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 18,
+      "payload_raw_bytes": 75,
       "route_key": "",
       "seq": 4,
       "trace_id": "",
-      "ts": 1785827569699,
+      "ts": 1785909888564,
       "ver": 1
     },
     "step": 5
   },
   {
-    "actor": "A",
-    "case": "friend_test/添加-接受-列表-备注-删除",
-    "direction": "↓ WS CMD_FRIEND_SET_REMARK_RESP",
-    "note": "↓ WS CMD_FRIEND_SET_REMARK_RESP",
+    "actor": "B",
+    "case": "stream_test/流式透传 stream_start/chunk/end",
+    "direction": "↓ WS CMD_PASSTHROUGH (stream_chunk)",
+    "note": "↓ WS CMD_PASSTHROUGH (stream_chunk)",
     "packet": {
       "cid": "",
-      "cmd": 818,
-      "cmd_name": "CMD_FRIEND_SET_REMARK_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "cmd": 500,
+      "cmd_name": "CMD_PASSTHROUGH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
       "payload": {
-        "friend_user_id": "user_1698",
-        "remark": "buddy"
+        "action": "stream_chunk",
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "",
+        "data": "{\"chunk\":\"Hi\",\"stream_id\":\"ps-2696\"}",
+        "from": "user_451",
+        "persist": "false",
+        "to": "user_2664",
+        "ttl_sec": 0
       },
       "route_key": "",
-      "seq": 4,
+      "seq": 0,
       "trace_id": "",
-      "ts": 1785827569701,
+      "ts": 1785909888564,
       "ver": 1
     },
     "step": 6
   },
   {
     "actor": "A",
-    "case": "friend_test/添加-接受-列表-备注-删除",
-    "direction": "↓ WS CMD_FRIEND_DELETE_RESP",
-    "note": "↓ WS CMD_FRIEND_DELETE_RESP",
+    "case": "stream_test/流式透传 stream_start/chunk/end",
+    "direction": "↑ WS CMD_PASSTHROUGH (stream_end)",
+    "note": "↑ WS CMD_PASSTHROUGH (stream_end)",
     "packet": {
       "cid": "",
-      "cmd": 810,
-      "cmd_name": "CMD_FRIEND_DELETE_RESP",
+      "cmd": 0,
+      "cmd_name": "CMD_0",
       "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload_raw_bytes": 60,
+      "route_key": "",
+      "seq": 7,
+      "trace_id": "",
+      "ts": 1785909888564,
+      "ver": 1
+    },
+    "step": 8
+  },
+  {
+    "actor": "B",
+    "case": "stream_test/流式透传 stream_start/chunk/end",
+    "direction": "↓ WS CMD_PASSTHROUGH (stream_end)",
+    "note": "↓ WS CMD_PASSTHROUGH (stream_end)",
+    "packet": {
+      "cid": "",
+      "cmd": 500,
+      "cmd_name": "CMD_PASSTHROUGH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
       "payload": {
-        "friend_user_id": "user_1698"
+        "action": "stream_end",
+        "chat_type": "CHAT_PRIVATE",
+        "conv_id": "",
+        "data": "{\"stream_id\":\"ps-2696\"}",
+        "from": "user_451",
+        "persist": "false",
+        "to": "user_2664",
+        "ttl_sec": 0
       },
       "route_key": "",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909888564,
+      "ver": 1
+    },
+    "step": 9
+  },
+  {
+    "actor": "B",
+    "case": "cluster_test/跨节点 PUSH 单聊",
+    "direction": "↓ WS CMD_MSG_PUSH (peer 节点)",
+    "note": "↓ WS CMD_MSG_PUSH (peer 节点)",
+    "packet": {
+      "cid": "cm-2728",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "false",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_PRIVATE",
+        "client_msg_id": "cm-2728",
+        "content": "cross-node-push",
+        "conv_id": "p:user_4226:user_868",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_868",
+        "inbox_seq": 0,
+        "msg_id": "343273120225820672",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909889574,
+        "target_users": [],
+        "to": "user_4226"
+      },
+      "route_key": "p:user_4226:user_868",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909889601,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "A",
+    "case": "cluster_test/跨节点 erpc 转发",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN",
+    "note": "↓ WS CMD_MSG_ACK_DOWN",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "cm-3080",
+        "conv_seq": 1,
+        "msg_id": "343273124927635456",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "cluster-rk-1",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909890718,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "B",
+    "case": "cluster_test/跨节点 erpc 转发",
+    "direction": "↓ WS CMD_MSG_PUSH (peer)",
+    "note": "↓ WS CMD_MSG_PUSH (peer)",
+    "packet": {
+      "cid": "cm-3080",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "false",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_PRIVATE",
+        "client_msg_id": "cm-3080",
+        "content": "cross-node-erpc",
+        "conv_id": "p:user_2792:user_2952",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_2792",
+        "inbox_seq": 0,
+        "msg_id": "343273124927635456",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909890693,
+        "target_users": [],
+        "to": "user_2952"
+      },
+      "route_key": "p:user_2792:user_2952",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909890718,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "owner",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_CREATE_RESP",
+    "note": "↓ WS CMD_GROUP_CREATE_RESP",
+    "packet": {
+      "cid": "",
+      "cmd": 601,
+      "cmd_name": "CMD_GROUP_CREATE_RESP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:g-3144",
+        "created_at": 1785909890974,
+        "group_id": "g-3144",
+        "name": "test-group"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909890974,
+      "ver": 1
+    },
+    "step": 1
+  },
+  {
+    "actor": "extra",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_JOIN_PUSH",
+    "note": "↓ WS CMD_GROUP_JOIN_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 605,
+      "cmd_name": "CMD_GROUP_JOIN_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "member_uids": [
+          "user_2342"
+        ],
+        "operator_uid": "user_2342",
+        "timestamp": 1785909890987
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909890987,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "owner",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_SET_ADMIN_PUSH",
+    "note": "↓ WS CMD_GROUP_SET_ADMIN_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 613,
+      "cmd_name": "CMD_GROUP_SET_ADMIN_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "member_uid": "user_2182",
+        "new_role": "GROUP_MEMBER_ROLE_ADMIN",
+        "operator_uid": "user_579",
+        "timestamp": 1785909890994
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909890996,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "owner",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_REMOVE_ADMIN_PUSH",
+    "note": "↓ WS CMD_GROUP_REMOVE_ADMIN_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 615,
+      "cmd_name": "CMD_GROUP_REMOVE_ADMIN_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "member_uid": "user_2182",
+        "new_role": "GROUP_MEMBER_ROLE_MEMBER",
+        "operator_uid": "user_579",
+        "timestamp": 1785909890999
+      },
+      "route_key": "",
+      "seq": 4,
+      "trace_id": "",
+      "ts": 1785909890999,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "owner",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN",
+    "note": "↓ WS CMD_MSG_ACK_DOWN",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "68302119686465e3",
+        "conv_seq": 1,
+        "msg_id": "343273126244646912",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "g-3144",
       "seq": 5,
       "trace_id": "",
-      "ts": 1785827569704,
+      "ts": 1785909891016,
+      "ver": 1
+    },
+    "step": 5
+  },
+  {
+    "actor": "member",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_MSG_PUSH",
+    "note": "↓ WS CMD_MSG_PUSH",
+    "packet": {
+      "cid": "68302119686465e3",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "false",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_GROUP",
+        "client_msg_id": "68302119686465e3",
+        "content": "group-hi",
+        "conv_id": "g:g-3144",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_579",
+        "inbox_seq": 0,
+        "msg_id": "343273126244646912",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909891004,
+        "target_users": [],
+        "to": "g-3144"
+      },
+      "route_key": "g:g-3144",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909891016,
+      "ver": 1
+    },
+    "step": 6
+  },
+  {
+    "actor": "extra",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_LEAVE_PUSH",
+    "note": "↓ WS CMD_GROUP_LEAVE_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 607,
+      "cmd_name": "CMD_GROUP_LEAVE_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "member_uids": [
+          "user_2342"
+        ],
+        "operator_uid": "user_2342",
+        "timestamp": 1785909891021
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909891021,
       "ver": 1
     },
     "step": 7
   },
   {
-    "actor": "A",
-    "case": "friend_test/拒绝好友请求",
-    "direction": "↓ WS CMD_FRIEND_ADD_RESP",
-    "note": "↓ WS CMD_FRIEND_ADD_RESP",
+    "actor": "owner",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_TRANSFER_PUSH",
+    "note": "↓ WS CMD_GROUP_TRANSFER_PUSH",
     "packet": {
       "cid": "",
-      "cmd": 801,
-      "cmd_name": "CMD_FRIEND_ADD_RESP",
+      "cmd": 617,
+      "cmd_name": "CMD_GROUP_TRANSFER_PUSH",
       "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
       "payload": {
-        "request_id": "fr6533",
-        "status": "FRIEND_STATUS_PENDING"
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "new_owner_uid": "user_2182",
+        "old_owner_uid": "user_579",
+        "timestamp": 1785909891026
+      },
+      "route_key": "",
+      "seq": 6,
+      "trace_id": "",
+      "ts": 1785909891026,
+      "ver": 1
+    },
+    "step": 8
+  },
+  {
+    "actor": "member",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_UPDATE_PUSH",
+    "note": "↓ WS CMD_GROUP_UPDATE_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 619,
+      "cmd_name": "CMD_GROUP_UPDATE_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "announcement": "ann",
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "name": "renamed",
+        "operator_uid": "user_2182",
+        "timestamp": 1785909891029
       },
       "route_key": "",
       "seq": 2,
       "trace_id": "",
-      "ts": 1785827569719,
+      "ts": 1785909891029,
       "ver": 1
     },
-    "step": 1
+    "step": 9
   },
   {
-    "actor": "B",
-    "case": "friend_test/拒绝好友请求",
-    "direction": "↓ WS CMD_FRIEND_REJECT_RESP",
-    "note": "↓ WS CMD_FRIEND_REJECT_RESP",
+    "actor": "member",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_INVITE_PUSH",
+    "note": "↓ WS CMD_GROUP_INVITE_PUSH",
     "packet": {
       "cid": "",
-      "cmd": 807,
-      "cmd_name": "CMD_FRIEND_REJECT_RESP",
+      "cmd": 611,
+      "cmd_name": "CMD_GROUP_INVITE_PUSH",
       "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
       "payload": {
-        "friend_user_id": "user_6213"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569723,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "B",
-    "case": "friend_test/好友请求列表",
-    "direction": "↑ WS CMD_FRIEND_REQUEST_LIST_REQ",
-    "note": "↑ WS CMD_FRIEND_REQUEST_LIST_REQ",
-    "packet": {
-      "cid": "",
-      "cmd": 821,
-      "cmd_name": "CMD_821",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload_raw_bytes": 2,
-      "route_key": "",
-      "seq": 1,
-      "trace_id": "",
-      "ts": 1785827569740,
-      "ver": 1
-    },
-    "step": 2
-  },
-  {
-    "actor": "B",
-    "case": "friend_test/好友请求列表",
-    "direction": "↓ WS CMD_FRIEND_REQUEST_LIST_RESP",
-    "note": "↓ WS CMD_FRIEND_REQUEST_LIST_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 822,
-      "cmd_name": "CMD_FRIEND_REQUEST_LIST_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "has_more": "false",
-        "next_cursor": "",
-        "requests": [
-          {
-            "from_avatar": "",
-            "from_nickname": "",
-            "from_user_id": "user_1954",
-            "message": "",
-            "request_id": "fr2274",
-            "status": "FRIEND_REQUEST_STATUS_PENDING",
-            "timestamp": 1785827569739,
-            "to_avatar": "",
-            "to_nickname": "",
-            "to_user_id": "user_2114"
-          }
-        ]
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569743,
-      "ver": 1
-    },
-    "step": 3
-  },
-  {
-    "actor": "A",
-    "case": "friend_test/拉黑与取消拉黑",
-    "direction": "↓ WS CMD_FRIEND_BLOCK_RESP",
-    "note": "↓ WS CMD_FRIEND_BLOCK_RESP",
-    "packet": {
-      "cid": "",
-      "cmd": 813,
-      "cmd_name": "CMD_FRIEND_BLOCK_RESP",
-      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-      "payload": {
-        "user_id": "user_6725"
-      },
-      "route_key": "",
-      "seq": 2,
-      "trace_id": "",
-      "ts": 1785827569758,
-      "ver": 1
-    },
-    "step": 1
-  },
-  {
-    "actor": "A",
-    "case": "friend_test/拉黑与取消拉黑",
-    "direction": "↓ WS CMD_ERROR (拉黑后发消息)",
-    "note": "↓ WS CMD_ERROR (拉黑后发消息)",
-    "packet": {
-      "cid": "",
-      "cmd": 6,
-      "cmd_name": "CMD_ERROR",
-      "compression": "PAYLOAD_COMPRESSION_NONE",
-      "payload": {
-        "code": "CODE_FRIEND_BLOCKED",
-        "msg": "you blocked peer",
-        "ref_cid": "",
-        "ref_cmd": 100
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "member_uids": [
+          "user_2502"
+        ],
+        "operator_uid": "user_2182",
+        "timestamp": 1785909891033
       },
       "route_key": "",
       "seq": 3,
       "trace_id": "",
-      "ts": 1785827569759,
+      "ts": 1785909891033,
+      "ver": 1
+    },
+    "step": 10
+  },
+  {
+    "actor": "member",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_KICK_PUSH",
+    "note": "↓ WS CMD_GROUP_KICK_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 609,
+      "cmd_name": "CMD_GROUP_KICK_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "member_uids": [
+          "user_579"
+        ],
+        "operator_uid": "user_2182",
+        "timestamp": 1785909891037
+      },
+      "route_key": "",
+      "seq": 4,
+      "trace_id": "",
+      "ts": 1785909891037,
+      "ver": 1
+    },
+    "step": 11
+  },
+  {
+    "actor": "member",
+    "case": "group_test/群生命周期与群消息",
+    "direction": "↓ WS CMD_GROUP_DISMISS_PUSH",
+    "note": "↓ WS CMD_GROUP_DISMISS_PUSH",
+    "packet": {
+      "cid": "",
+      "cmd": 603,
+      "cmd_name": "CMD_GROUP_DISMISS_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "conv_id": "g:g-3144",
+        "group_id": "g-3144",
+        "operator_uid": "user_2182",
+        "reason": "",
+        "timestamp": 1785909891040
+      },
+      "route_key": "",
+      "seq": 5,
+      "trace_id": "",
+      "ts": 1785909891040,
+      "ver": 1
+    },
+    "step": 12
+  },
+  {
+    "actor": "A",
+    "case": "private_message_test/client_msg_id 幂等",
+    "direction": "↑ WS CMD_MSG_SEND (1st)",
+    "note": "↑ WS CMD_MSG_SEND (1st)",
+    "packet": {
+      "cid": "",
+      "cmd": 100,
+      "cmd_name": "CMD_MSG_SEND",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "message": {
+          "burn_after_read": "false",
+          "burn_ttl_sec": 0,
+          "burned": "false",
+          "chat_type": "CHAT_PRIVATE",
+          "client_msg_id": "idem-3208",
+          "content": "once",
+          "conv_id": "",
+          "conv_seq": 0,
+          "edit_version": 0,
+          "ext": {},
+          "from": "user_9255",
+          "inbox_seq": 0,
+          "msg_id": "",
+          "msg_type": "MSG_TEXT",
+          "priority": "MSG_PRIORITY_NORMAL",
+          "recalled": "false",
+          "server_time": 0,
+          "target_users": [],
+          "to": "user_3176"
+        }
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909891052,
       "ver": 1
     },
     "step": 2
   },
   {
     "actor": "A",
-    "case": "friend_test/拉黑与取消拉黑",
-    "direction": "↓ WS CMD_FRIEND_UNBLOCK_RESP",
-    "note": "↓ WS CMD_FRIEND_UNBLOCK_RESP",
+    "case": "private_message_test/client_msg_id 幂等",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN (1st)",
+    "note": "↓ WS CMD_MSG_ACK_DOWN (1st)",
     "packet": {
       "cid": "",
-      "cmd": 816,
-      "cmd_name": "CMD_FRIEND_UNBLOCK_RESP",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
       "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
       "payload": {
-        "user_id": "user_6725"
+        "client_msg_id": "idem-3208",
+        "conv_seq": 1,
+        "msg_id": "343273126454362112",
+        "status": "ACK_SERVER_RECEIVED"
       },
       "route_key": "",
-      "seq": 4,
+      "seq": 2,
       "trace_id": "",
-      "ts": 1785827569762,
+      "ts": 1785909891058,
       "ver": 1
     },
     "step": 3
+  },
+  {
+    "actor": "A",
+    "case": "private_message_test/client_msg_id 幂等",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN (2nd 幂等)",
+    "note": "↓ WS CMD_MSG_ACK_DOWN (2nd 幂等)",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "idem-3208",
+        "conv_seq": 1,
+        "msg_id": "343273126454362112",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "",
+      "seq": 3,
+      "trace_id": "",
+      "ts": 1785909891059,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "A",
+    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
+    "direction": "↑ WS CMD_MSG_SEND",
+    "note": "↑ WS CMD_MSG_SEND",
+    "packet": {
+      "cid": "",
+      "cmd": 100,
+      "cmd_name": "CMD_MSG_SEND",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "message": {
+          "burn_after_read": "false",
+          "burn_ttl_sec": 0,
+          "burned": "false",
+          "chat_type": "CHAT_PRIVATE",
+          "client_msg_id": "cm-3528",
+          "content": "hi-b",
+          "conv_id": "",
+          "conv_seq": 0,
+          "edit_version": 0,
+          "ext": {},
+          "from": "user_3240",
+          "inbox_seq": 0,
+          "msg_id": "",
+          "msg_type": "MSG_TEXT",
+          "priority": "MSG_PRIORITY_NORMAL",
+          "recalled": "false",
+          "server_time": 0,
+          "target_users": [],
+          "to": "user_3368"
+        }
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909891070,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "A",
+    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
+    "direction": "↓ WS CMD_MSG_ACK_DOWN",
+    "note": "↓ WS CMD_MSG_ACK_DOWN",
+    "packet": {
+      "cid": "",
+      "cmd": 201,
+      "cmd_name": "CMD_MSG_ACK_DOWN",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "cm-3528",
+        "conv_seq": 1,
+        "msg_id": "343273126538248192",
+        "status": "ACK_SERVER_RECEIVED"
+      },
+      "route_key": "",
+      "seq": 2,
+      "trace_id": "",
+      "ts": 1785909891080,
+      "ver": 1
+    },
+    "step": 3
+  },
+  {
+    "actor": "B",
+    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
+    "direction": "↓ WS CMD_MSG_PUSH",
+    "note": "↓ WS CMD_MSG_PUSH",
+    "packet": {
+      "cid": "cm-3528",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "false",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_PRIVATE",
+        "client_msg_id": "cm-3528",
+        "content": "hi-b",
+        "conv_id": "p:user_3240:user_3368",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_3240",
+        "inbox_seq": 0,
+        "msg_id": "343273126538248192",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909891074,
+        "target_users": [],
+        "to": "user_3368"
+      },
+      "route_key": "p:user_3240:user_3368",
+      "seq": 0,
+      "trace_id": "",
+      "ts": 1785909891080,
+      "ver": 1
+    },
+    "step": 4
+  },
+  {
+    "actor": "B",
+    "case": "private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK",
+    "direction": "↑ WS CMD_MSG_ACK_UP",
+    "note": "↑ WS CMD_MSG_ACK_UP",
+    "packet": {
+      "cid": "",
+      "cmd": 200,
+      "cmd_name": "CMD_MSG_ACK_UP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "client_msg_id": "cm-3528",
+        "conv_seq": 1,
+        "msg_id": "343273126538248192",
+        "status": "ACK_CLIENT_RECEIVED"
+      },
+      "route_key": "",
+      "seq": 5,
+      "trace_id": "",
+      "ts": 1785909891082,
+      "ver": 1
+    },
+    "step": 6
+  },
+  {
+    "actor": "A",
+    "case": "private_message_test/REST 发消息双通道",
+    "direction": "↑ HTTP POST /api/v1/messages",
+    "http": {
+      "request": {
+        "content": "rest-path",
+        "to": "user_2918"
+      },
+      "response": {
+        "body": {
+          "client_msg_id": "c0c5c00195773177",
+          "conv_id": "p:user_2918:user_3560",
+          "conv_seq": 1,
+          "duplicate": false,
+          "msg_id": "343273126634717184",
+          "server_time": 1785909891097,
+          "status": "SERVER_RECEIVED"
+        },
+        "status": 200
+      }
+    },
+    "note": "↑ HTTP POST /api/v1/messages",
+    "step": 1
+  },
+  {
+    "actor": "B",
+    "case": "private_message_test/REST 发消息双通道",
+    "direction": "↓ WS CMD_MSG_PUSH",
+    "note": "↓ WS CMD_MSG_PUSH",
+    "packet": {
+      "cid": "c0c5c00195773177",
+      "cmd": 101,
+      "cmd_name": "CMD_MSG_PUSH",
+      "compression": "PAYLOAD_COMPRESSION_NONE",
+      "payload": {
+        "burn_after_read": "false",
+        "burn_ttl_sec": 0,
+        "burned": "false",
+        "chat_type": "CHAT_PRIVATE",
+        "client_msg_id": "c0c5c00195773177",
+        "content": "rest-path",
+        "conv_id": "p:user_2918:user_3560",
+        "conv_seq": 1,
+        "edit_version": 0,
+        "ext": {},
+        "from": "user_3560",
+        "inbox_seq": 0,
+        "msg_id": "343273126634717184",
+        "msg_type": "MSG_TEXT",
+        "priority": "MSG_PRIORITY_NORMAL",
+        "recalled": "false",
+        "server_time": 1785909891097,
+        "target_users": [],
+        "to": "user_2918"
+      },
+      "route_key": "p:user_2918:user_3560",
+      "seq": 0,
+      "trace_id": "lt-cc284ec4f817",
+      "ts": 1785909891102,
+      "ver": 1
+    },
+    "step": 2
+  },
+  {
+    "actor": "B",
+    "case": "private_message_test/批量 ACK",
+    "direction": "↑ WS CMD_MSG_ACK_BATCH_UP",
+    "note": "↑ WS CMD_MSG_ACK_BATCH_UP",
+    "packet": {
+      "cid": "",
+      "cmd": 203,
+      "cmd_name": "CMD_MSG_ACK_BATCH_UP",
+      "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
+      "payload": {
+        "acks": [
+          {
+            "client_msg_id": "cm-3334",
+            "conv_seq": 1,
+            "msg_id": "343273126739574784",
+            "status": "ACK_CLIENT_RECEIVED"
+          }
+        ]
+      },
+      "route_key": "",
+      "seq": 1,
+      "trace_id": "",
+      "ts": 1785909891128,
+      "ver": 1
+    },
+    "step": 2
   }
 ]

@@ -5,18 +5,18 @@ defmodule IM.Schemas.Conversation do
   import Ecto.Changeset
 
   schema "conversations" do
-    field :app_key, :string
-    field :user_id, :string
-    field :chat_type, :integer
-    field :conv_id, :string
-    field :peer_id, :string
-    field :last_msg_id, :string
-    field :last_msg_type, :integer
-    field :last_msg_preview, :string
-    field :last_msg_time, :integer
-    field :last_msg_seq, :integer
-    field :unread_count, :integer, default: 0
-    field :last_read_conv_seq, :integer, default: 0
+    field(:app_key, :string)
+    field(:user_id, :string)
+    field(:chat_type, :integer)
+    field(:conv_id, :string)
+    field(:peer_id, :string)
+    field(:last_msg_id, :string)
+    field(:last_msg_type, :integer)
+    field(:last_msg_preview, :string)
+    field(:last_msg_time, :integer)
+    field(:last_msg_seq, :integer)
+    field(:unread_count, :integer, default: 0)
+    field(:last_read_conv_seq, :integer, default: 0)
 
     timestamps(type: :utc_datetime_usec)
   end

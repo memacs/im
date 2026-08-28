@@ -6,25 +6,25 @@ defmodule IM.Schemas.MessageBody do
 
   @primary_key false
   schema "message_bodies" do
-    field :app_key, :string, primary_key: true
-    field :msg_id, :string, primary_key: true
-    field :chat_type, :integer
-    field :conv_id, :string
-    field :from_uid, :string
-    field :to_id, :string
-    field :msg_type, :integer
-    field :content, :binary
-    field :server_time, :integer
-    field :conv_seq, :integer
-    field :client_msg_id, :string
-    field :target_users, {:array, :string}
-    field :recalled, :boolean, default: false
-    field :edit_version, :integer, default: 0
-    field :burn_after_read, :boolean, default: false
-    field :burn_ttl_sec, :integer, default: 0
-    field :burned, :boolean, default: false
-    field :burn_at, :utc_datetime_usec
-    field :ext, :map
+    field(:app_key, :string, primary_key: true)
+    field(:msg_id, :string, primary_key: true)
+    field(:chat_type, :integer)
+    field(:conv_id, :string)
+    field(:from_uid, :string)
+    field(:to_id, :string)
+    field(:msg_type, :integer)
+    field(:content, :binary)
+    field(:server_time, :integer)
+    field(:conv_seq, :integer)
+    field(:client_msg_id, :string)
+    field(:target_users, {:array, :string})
+    field(:recalled, :boolean, default: false)
+    field(:edit_version, :integer, default: 0)
+    field(:burn_after_read, :boolean, default: false)
+    field(:burn_ttl_sec, :integer, default: 0)
+    field(:burned, :boolean, default: false)
+    field(:burn_at, :utc_datetime_usec)
+    field(:ext, :map)
 
     timestamps(type: :utc_datetime_usec)
   end

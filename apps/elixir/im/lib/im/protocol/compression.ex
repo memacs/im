@@ -16,7 +16,9 @@ defmodule IM.Protocol.Compression do
   @doc "压缩 payload；NONE 原样返回。"
   @spec compress(binary(), atom()) :: {:ok, binary()} | {:error, term()}
   def compress(payload, :PAYLOAD_COMPRESSION_NONE) when is_binary(payload), do: {:ok, payload}
-  def compress(payload, :PAYLOAD_COMPRESSION_UNSPECIFIED) when is_binary(payload), do: {:ok, payload}
+
+  def compress(payload, :PAYLOAD_COMPRESSION_UNSPECIFIED) when is_binary(payload),
+    do: {:ok, payload}
 
   def compress(payload, :PAYLOAD_COMPRESSION_GZIP) when is_binary(payload) do
     {:ok, :zlib.gzip(payload)}
@@ -34,7 +36,9 @@ defmodule IM.Protocol.Compression do
   @doc "解压 payload。"
   @spec decompress(binary(), atom()) :: {:ok, binary()} | {:error, term()}
   def decompress(payload, :PAYLOAD_COMPRESSION_NONE) when is_binary(payload), do: {:ok, payload}
-  def decompress(payload, :PAYLOAD_COMPRESSION_UNSPECIFIED) when is_binary(payload), do: {:ok, payload}
+
+  def decompress(payload, :PAYLOAD_COMPRESSION_UNSPECIFIED) when is_binary(payload),
+    do: {:ok, payload}
 
   def decompress(payload, :PAYLOAD_COMPRESSION_GZIP) when is_binary(payload) do
     {:ok, :zlib.gunzip(payload)}

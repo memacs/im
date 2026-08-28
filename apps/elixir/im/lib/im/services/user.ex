@@ -31,7 +31,9 @@ defmodule IM.Services.User do
 
   defp cast(params) do
     required = ["app_key", "user_id", "password"]
-    missing = Enum.reject(required, &(present?(params[&1]) or present?(params[String.to_atom(&1)])))
+
+    missing =
+      Enum.reject(required, &(present?(params[&1]) or present?(params[String.to_atom(&1)])))
 
     if missing != [] do
       {:error, Error.new(:msg_invalid, "missing fields: #{Enum.join(missing, ",")}")}

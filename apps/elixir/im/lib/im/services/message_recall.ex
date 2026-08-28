@@ -79,11 +79,16 @@ defmodule IM.Services.MessageRecall do
     end
   end
 
-  defp reject_if_burned(%{burned: true}), do: {:error, Error.new(:msg_recall_denied, "already burned")}
+  defp reject_if_burned(%{burned: true}),
+    do: {:error, Error.new(:msg_recall_denied, "already burned")}
+
   defp reject_if_burned(_), do: :ok
 
   defp recipients_for(%{chat_type: 1, from_uid: from, to_id: to}), do: Enum.uniq([from, to])
-  defp recipients_for(%{chat_type: 2} = b), do: IM.Group.MemberCache.list_member_ids(b.app_key, b.to_id)
+
+  defp recipients_for(%{chat_type: 2} = b),
+    do: IM.Group.MemberCache.list_member_ids(b.app_key, b.to_id)
+
   defp recipients_for(%{from_uid: from, to_id: to}), do: Enum.uniq([from, to])
 
   defp chat_type(1), do: :CHAT_PRIVATE

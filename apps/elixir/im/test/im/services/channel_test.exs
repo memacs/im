@@ -35,6 +35,7 @@ defmodule IM.Services.ChannelTest do
     assert_receive {:channel_push, bin}, 500
     assert {:ok, %Packet{cmd: cmd, seq: 0, payload: payload}} = Codec.decode(bin)
     assert cmd == CmdType.value(:CMD_CHANNEL_PUSH)
+
     assert %ChannelPush{channel_id: "fleet:alert", event_id: ^eid, payload: "hi"} =
              ChannelPush.decode(payload)
   end

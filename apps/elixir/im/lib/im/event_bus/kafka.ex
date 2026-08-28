@@ -68,4 +68,3 @@ defmodule IM.EventBus.Kafka do
     Keyword.get(conf, :batch_size, 100)
   end
 end
-

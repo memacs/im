@@ -17,6 +17,7 @@ defmodule IM.Permission.DeviceBanCacheTest do
     assert :ok = DeviceBanCache.ensure_allowed(user.app_key, user.user_id, "d1")
     assert :ok = DeviceBan.ban(user.app_key, user.user_id, "d1", "risk")
     assert DeviceBanCache.banned?(user.app_key, user.user_id, "d1")
+
     assert {:error, %{msg: "device_banned"}} =
              DeviceBanCache.ensure_allowed(user.app_key, user.user_id, "d1")
   end

@@ -7,7 +7,8 @@ defmodule IM.WebSocket.HandlerAuthTest do
   alias Pb.Im.Protocol.{AuthReq, CmdType, HeartbeatReq, Packet}
 
   test "AUTH 成功后可心跳" do
-    %{token: token, app_key: app_key, user_id: user_id, device_id: device_id} = AuthFixtures.login!()
+    %{token: token, app_key: app_key, user_id: user_id, device_id: device_id} =
+      AuthFixtures.login!()
 
     auth_payload =
       AuthReq.encode(%AuthReq{

@@ -11,7 +11,12 @@ defmodule IM.Services.MessageTest do
 
   setup do
     alice = AuthFixtures.create_user!(user_id: "alice_#{System.unique_integer([:positive])}")
-    bob = AuthFixtures.create_user!(app_key: alice.app_key, user_id: "bob_#{System.unique_integer([:positive])}")
+
+    bob =
+      AuthFixtures.create_user!(
+        app_key: alice.app_key,
+        user_id: "bob_#{System.unique_integer([:positive])}"
+      )
 
     ctx = %MessageContext{
       app_key: alice.app_key,
@@ -34,7 +39,9 @@ defmodule IM.Services.MessageTest do
     assert result.message.msg_id != ""
     assert result.message.conv_seq == 1
     assert result.ack.status == :ACK_SERVER_RECEIVED
-    assert result.message.conv_id == "p:#{min_id(alice.user_id, bob.user_id)}:#{max_id(alice.user_id, bob.user_id)}"
+
+    assert result.message.conv_id ==
+             "p:#{min_id(alice.user_id, bob.user_id)}:#{max_id(alice.user_id, bob.user_id)}"
 
     assert {:ok, _} = MessageStore.get_by_msg_id(alice.app_key, result.message.msg_id)
     rows = MessageStore.list_by_inbox_seq(alice.app_key, alice.user_id, 0, 10)

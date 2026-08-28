@@ -5,6 +5,7 @@ defmodule IM.Services.Friend do
   alias IM.Permission.BlockCache
   alias IM.Friend.FriendshipCache
   alias IM.Stores.{AppConfigStore, FriendStore}
+
   alias Pb.Im.Protocol.{
     FriendAcceptNotify,
     FriendAcceptReq,

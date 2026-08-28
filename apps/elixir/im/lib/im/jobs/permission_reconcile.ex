@@ -16,7 +16,9 @@ defmodule IM.Jobs.PermissionReconcile do
     }
 
     case args |> IM.Workers.PermissionReconcile.new() |> Oban.insert() do
-      {:ok, _} -> :ok
+      {:ok, _} ->
+        :ok
+
       {:error, _} ->
         _ = run_once(app_key, opts)
         :ok

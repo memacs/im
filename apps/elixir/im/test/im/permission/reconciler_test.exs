@@ -13,7 +13,13 @@ defmodule IM.Permission.ReconcilerTest do
     Memory.reset!()
     L1.reset!()
     a = AuthFixtures.create_user!(user_id: "rc_a_#{System.unique_integer([:positive])}")
-    b = AuthFixtures.create_user!(app_key: a.app_key, user_id: "rc_b_#{System.unique_integer([:positive])}")
+
+    b =
+      AuthFixtures.create_user!(
+        app_key: a.app_key,
+        user_id: "rc_b_#{System.unique_integer([:positive])}"
+      )
+
     %{a: a, b: b}
   end
 

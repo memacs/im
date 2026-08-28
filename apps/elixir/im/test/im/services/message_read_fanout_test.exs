@@ -22,7 +22,10 @@ defmodule IM.Services.MessageReadFanoutTest do
     }
 
     {:ok, group} = Group.create(%{"name" => "big", "member_uids" => [peer.user_id]}, ctx)
-    {:ok, group} = GroupStore.promote_read_fanout(GroupStore.get(owner.app_key, group.group_id) |> elem(1))
+
+    {:ok, group} =
+      GroupStore.promote_read_fanout(GroupStore.get(owner.app_key, group.group_id) |> elem(1))
+
     :ok = MetaCache.put(group)
 
     assert {:ok, sent} =

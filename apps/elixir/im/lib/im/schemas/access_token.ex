@@ -5,12 +5,12 @@ defmodule IM.Schemas.AccessToken do
   import Ecto.Changeset
 
   schema "access_tokens" do
-    field :app_key, :string
-    field :user_id, :string
-    field :device_id, :string
-    field :token_hash, :string
-    field :expires_at, :utc_datetime_usec
-    field :revoked_at, :utc_datetime_usec
+    field(:app_key, :string)
+    field(:user_id, :string)
+    field(:device_id, :string)
+    field(:token_hash, :string)
+    field(:expires_at, :utc_datetime_usec)
+    field(:revoked_at, :utc_datetime_usec)
 
     timestamps(type: :utc_datetime_usec)
   end

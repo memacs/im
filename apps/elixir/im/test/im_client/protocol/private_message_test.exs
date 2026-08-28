@@ -62,8 +62,16 @@ defmodule IM.Client.Protocol.PrivateMessageTest do
     push = await_push_message!(b.client)
 
     trace_as!("B")
+
     trace!("↑ WS CMD_MSG_ACK_BATCH_UP", %MsgAckBatchUp{
-      acks: [%MsgAck{msg_id: msg_id, client_msg_id: push.client_msg_id, conv_seq: push.conv_seq, status: :ACK_CLIENT_RECEIVED}]
+      acks: [
+        %MsgAck{
+          msg_id: msg_id,
+          client_msg_id: push.client_msg_id,
+          conv_seq: push.conv_seq,
+          status: :ACK_CLIENT_RECEIVED
+        }
+      ]
     })
 
     :ok =
@@ -83,7 +91,10 @@ defmodule IM.Client.Protocol.PrivateMessageTest do
                content: "rest-path"
              })
 
-    trace_http!("↑ HTTP POST /api/v1/messages", %{to: b.login.user_id, content: "rest-path"}, %{status: 200, body: resp})
+    trace_http!("↑ HTTP POST /api/v1/messages", %{to: b.login.user_id, content: "rest-path"}, %{
+      status: 200,
+      body: resp
+    })
 
     trace_as!("B")
     push_packet = Assertions.assert_push(b.client) |> elem(1)

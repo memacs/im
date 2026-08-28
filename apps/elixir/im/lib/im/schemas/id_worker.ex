@@ -6,10 +6,10 @@ defmodule IM.Schemas.IdWorker do
 
   @primary_key false
   schema "id_workers" do
-    field :worker_id, :integer, primary_key: true
-    field :node_name, :string
-    field :lease_until, :utc_datetime_usec
-    field :updated_at, :utc_datetime_usec
+    field(:worker_id, :integer, primary_key: true)
+    field(:node_name, :string)
+    field(:lease_until, :utc_datetime_usec)
+    field(:updated_at, :utc_datetime_usec)
   end
 
   def changeset(row, attrs) do

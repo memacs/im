@@ -7,7 +7,8 @@ defmodule IM.Services.AuthTest do
   alias Pb.Im.Protocol.AuthReq
 
   test "有效 token 返回 AuthResp 与 context" do
-    %{token: token, app_key: app_key, user_id: user_id, device_id: device_id} = AuthFixtures.login!()
+    %{token: token, app_key: app_key, user_id: user_id, device_id: device_id} =
+      AuthFixtures.login!()
 
     req = %AuthReq{
       app_key: app_key,

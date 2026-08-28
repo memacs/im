@@ -5,14 +5,14 @@ defmodule IM.Schemas.Room do
   import Ecto.Changeset
 
   schema "rooms" do
-    field :app_key, :string
-    field :room_id, :string
-    field :name, :string
-    field :owner_uid, :string
-    field :max_members, :integer, default: 10_000
-    field :member_count, :integer, default: 0
-    field :persist_msg, :boolean, default: false
-    field :msg_ttl_sec, :integer, default: 300
+    field(:app_key, :string)
+    field(:room_id, :string)
+    field(:name, :string)
+    field(:owner_uid, :string)
+    field(:max_members, :integer, default: 10_000)
+    field(:member_count, :integer, default: 0)
+    field(:persist_msg, :boolean, default: false)
+    field(:msg_ttl_sec, :integer, default: 300)
 
     timestamps(type: :utc_datetime_usec)
   end

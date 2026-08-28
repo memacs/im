@@ -54,4 +54,3 @@ defmodule IM.Protocol.CodecTest do
     end
   end
 end
-

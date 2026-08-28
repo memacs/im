@@ -3,7 +3,7 @@ defmodule IMWeb.Api.V1.SessionController do
 
   use IMWeb, :controller
 
-  action_fallback IMWeb.FallbackController
+  action_fallback(IMWeb.FallbackController)
 
   alias IM.Domain.Error
   alias IM.Services.Session
@@ -37,6 +37,7 @@ defmodule IMWeb.Api.V1.SessionController do
       :ok ->
         if match?(%IM.Domain.MessageContext{}, ctx) do
           _ = IM.EventBus.Session.logout(ctx, "http_logout")
+
           IM.Audit.record(:auth_logout,
             app_key: ctx.app_key,
             user_id: ctx.user_id,

@@ -38,7 +38,9 @@ defmodule IM.Conversation.UnreadCacheTest do
     :ok = ConversationStore.bump_unread(app, user, conv, chat_type: 1, peer_id: "x")
     assert ConversationStore.get_unread(app, user, conv) == 1
 
-    assert {:ok, _} = ConversationStore.upsert_read(app, user, conv, 2, chat_type: 1, peer_id: "x")
+    assert {:ok, _} =
+             ConversationStore.upsert_read(app, user, conv, 2, chat_type: 1, peer_id: "x")
+
     assert ConversationStore.get_unread(app, user, conv) == 0
   end
 

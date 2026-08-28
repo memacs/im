@@ -9,8 +9,18 @@ defmodule IM.Services.MessageGroupTest do
 
   setup do
     owner = AuthFixtures.create_user!(user_id: "go_#{System.unique_integer([:positive])}")
-    m2 = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "g2_#{System.unique_integer([:positive])}")
-    m3 = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "g3_#{System.unique_integer([:positive])}")
+
+    m2 =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "g2_#{System.unique_integer([:positive])}"
+      )
+
+    m3 =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "g3_#{System.unique_integer([:positive])}"
+      )
 
     ctx = %MessageContext{
       app_key: owner.app_key,
@@ -40,7 +50,9 @@ defmodule IM.Services.MessageGroupTest do
     assert {:ok, result} = Message.send(msg, ctx)
     assert result.message.conv_id == "g:#{group.group_id}"
     assert result.message.chat_type == :CHAT_GROUP
-    assert Enum.sort(result.recipient_user_ids) == Enum.sort([owner.user_id, m2.user_id, m3.user_id])
+
+    assert Enum.sort(result.recipient_user_ids) ==
+             Enum.sort([owner.user_id, m2.user_id, m3.user_id])
 
     for uid <- [owner.user_id, m2.user_id, m3.user_id] do
       rows = MessageStore.list_by_inbox_seq(owner.app_key, uid, 0, 10)

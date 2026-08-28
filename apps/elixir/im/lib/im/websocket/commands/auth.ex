@@ -35,7 +35,10 @@ defmodule IM.WebSocket.Commands.Auth do
 
             platform = to_string(ctx.platform || "unknown")
             :ok = Registry.register(ctx.app_key, ctx.user_id, ctx.device_id, platform)
-            :ok = IM.UserTracker.track(ctx.app_key, ctx.user_id, ctx.device_id, %{platform: platform})
+
+            :ok =
+              IM.UserTracker.track(ctx.app_key, ctx.user_id, ctx.device_id, %{platform: platform})
+
             _ = UserDeviceStore.set_online(ctx.app_key, ctx.user_id, ctx.device_id, true)
             _ = IM.EventBus.Session.login(ctx)
 

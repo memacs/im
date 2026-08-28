@@ -11,6 +11,7 @@ defmodule IM.Client.Protocol.ConversationTest do
     cid = unique_id("conv")
 
     trace_as!("A")
+
     trace!("↑ WS CMD_MSG_SEND", %MsgSendReq{
       message: %ChatMessage{
         from: a.login.user_id,
@@ -104,6 +105,7 @@ defmodule IM.Client.Protocol.ConversationTest do
     group_id = unique_id("gc")
 
     trace_as!("owner")
+
     {:ok, create_packet} =
       Connection.create_group(owner.client, %{
         group_id: group_id,
@@ -112,7 +114,9 @@ defmodule IM.Client.Protocol.ConversationTest do
       })
 
     trace!("↓ WS CMD_GROUP_CREATE_RESP", create_packet)
-    created = assert_cmd_resp!(create_packet, :CMD_GROUP_CREATE_RESP, Pb.Im.Protocol.GroupCreateResp)
+
+    created =
+      assert_cmd_resp!(create_packet, :CMD_GROUP_CREATE_RESP, Pb.Im.Protocol.GroupCreateResp)
 
     {:ok, msg_packet} =
       Connection.send_message(owner.client, %{

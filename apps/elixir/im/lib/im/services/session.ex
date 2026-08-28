@@ -69,7 +69,8 @@ defmodule IM.Services.Session do
   defp cast_login(params) do
     required = ["app_key", "user_id", "password", "device_id", "platform", "sdk_ver"]
 
-    missing = Enum.reject(required, &(present?(params[&1]) or present?(params[String.to_atom(&1)])))
+    missing =
+      Enum.reject(required, &(present?(params[&1]) or present?(params[String.to_atom(&1)])))
 
     if missing != [] do
       {:error, Error.new(:msg_invalid, "missing fields: #{Enum.join(missing, ",")}")}
@@ -87,7 +88,8 @@ defmodule IM.Services.Session do
   end
 
   defp fetch(map, key) do
-    Map.get(map, key) || Map.get(map, String.to_existing_atom(key)) || Map.get(map, String.to_atom(key))
+    Map.get(map, key) || Map.get(map, String.to_existing_atom(key)) ||
+      Map.get(map, String.to_atom(key))
   rescue
     ArgumentError -> Map.get(map, key)
   end
@@ -114,7 +116,9 @@ defmodule IM.Services.Session do
   defp issue_token(fields) do
     plain = Token.generate()
     ttl = Application.get_env(:im, :token_ttl_sec, 86_400)
-    expires_at = DateTime.utc_now() |> DateTime.add(ttl, :second) |> DateTime.truncate(:microsecond)
+
+    expires_at =
+      DateTime.utc_now() |> DateTime.add(ttl, :second) |> DateTime.truncate(:microsecond)
 
     case AccessTokenStore.insert(%{
            app_key: fields.app_key,

@@ -15,7 +15,11 @@ defmodule IM.Client.Protocol.SessionTest do
   @tag trace_case: "session_test/内部 kick 在线设备收到 CMD_KICK"
   test "内部 kick 在线设备收到 CMD_KICK" do
     %{client: client, login: login} = connect_authenticated!()
-    trace_http!("↑ HTTP POST /internal/v1/users/:id/kick", %{user_id: login.user_id}, %{status: 200})
+
+    trace_http!("↑ HTTP POST /internal/v1/users/:id/kick", %{user_id: login.user_id}, %{
+      status: 200
+    })
+
     assert %{"ok" => true} = internal_kick_user!(login.user_id, app_key: login.app_key)
 
     {:ok, packet} = Assertions.await_cmd(client, CmdType.value(:CMD_KICK), 5_000)
@@ -29,6 +33,7 @@ defmodule IM.Client.Protocol.SessionTest do
     Application.put_env(:im, :device_limit, %{max_per_platform: 1, policy: :reject})
 
     user = AuthFixtures.create_user!()
+
     login1 =
       AuthFixtures.login!(
         Map.merge(Map.take(user, [:app_key, :user_id, :password]), %{
@@ -74,7 +79,10 @@ defmodule IM.Client.Protocol.SessionTest do
 
   @tag trace_case: "session_test/同平台超限 kick_oldest 踢掉旧设备"
   test "同平台超限 kick_oldest 踢掉旧设备" do
-    Application.put_env(:im, :device_limit, %{max_per_platform: 1, policy: :kick_oldest_on_platform})
+    Application.put_env(:im, :device_limit, %{
+      max_per_platform: 1,
+      policy: :kick_oldest_on_platform
+    })
 
     user = AuthFixtures.create_user!()
     base = Map.take(user, [:app_key, :user_id, :password])
@@ -83,6 +91,7 @@ defmodule IM.Client.Protocol.SessionTest do
     %{client: old_client} = connect_session!(login1)
 
     login2 = AuthFixtures.login!(Map.merge(base, %{device_id: unique_id("d2"), platform: "ios"}))
+
     trace!("↑ WS CMD_AUTH_REQ (新设备)", %AuthReq{
       app_key: login2.app_key,
       user_id: login2.user_id,
@@ -91,6 +100,7 @@ defmodule IM.Client.Protocol.SessionTest do
       platform: login2.platform,
       sdk_ver: "0.1.0"
     })
+
     _ = connect_session!(login2)
 
     {:ok, packet} = Assertions.await_cmd(old_client, CmdType.value(:CMD_KICK), 5_000)

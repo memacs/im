@@ -164,7 +164,17 @@ defmodule IM.ProtocolTraceRender do
   defp render_packet(packet) do
     envelope =
       packet
-      |> Map.take(["ver", "cmd", "cmd_name", "seq", "ts", "cid", "trace_id", "route_key", "compression"])
+      |> Map.take([
+        "ver",
+        "cmd",
+        "cmd_name",
+        "seq",
+        "ts",
+        "cid",
+        "trace_id",
+        "route_key",
+        "compression"
+      ])
       |> Map.new(fn {k, v} -> {k, format_value(v)} end)
 
     envelope_table =
@@ -192,6 +202,7 @@ defmodule IM.ProtocolTraceRender do
       end
 
     resp_body = get_in(resp, ["body"]) || resp
+
     resp_table =
       if is_map(resp_body) do
         flat =

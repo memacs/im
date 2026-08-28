@@ -37,4 +37,3 @@ defmodule IM.Cluster.FanoutBatcherTest do
     assert_receive {:got, <<"x">>, %{priority: :high, inbox_seq: 9}}, 500
   end
 end
-

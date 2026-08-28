@@ -96,5 +96,3 @@ defmodule IM.Services.SequenceTest do
     def zscore(_key, _member), do: {:error, :down}
   end
 end
-
-

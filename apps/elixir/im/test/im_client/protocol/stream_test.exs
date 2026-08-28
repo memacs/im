@@ -25,7 +25,17 @@ defmodule IM.Client.Protocol.StreamTest do
 
     for {status, seq, chunk} <- chunks do
       trace_as!("A")
-      send_stream_chunk!(a.client, a.login.user_id, b.login.user_id, stream_id, status, seq, chunk)
+
+      send_stream_chunk!(
+        a.client,
+        a.login.user_id,
+        b.login.user_id,
+        stream_id,
+        status,
+        seq,
+        chunk
+      )
+
       trace_as!("B")
       push_packet = Assertions.assert_push(b.client) |> elem(1)
       trace!("↓ WS CMD_MSG_PUSH (#{status})", push_packet)
@@ -52,6 +62,7 @@ defmodule IM.Client.Protocol.StreamTest do
 
     for {action, data} <- steps do
       trace_as!("A")
+
       trace!("↑ WS CMD_PASSTHROUGH (#{action})", %Passthrough{
         chat_type: :CHAT_PRIVATE,
         from: a.login.user_id,
@@ -87,9 +98,36 @@ defmodule IM.Client.Protocol.StreamTest do
     stream_id = unique_id("st-off")
 
     trace_as!("A")
-    send_stream_chunk!(a.client, a.login.user_id, login_b.user_id, stream_id, :STREAM_STATUS_START, 1, "")
-    send_stream_chunk!(a.client, a.login.user_id, login_b.user_id, stream_id, :STREAM_STATUS_ONGOING, 2, "off")
-    send_stream_chunk!(a.client, a.login.user_id, login_b.user_id, stream_id, :STREAM_STATUS_END, 3, "")
+
+    send_stream_chunk!(
+      a.client,
+      a.login.user_id,
+      login_b.user_id,
+      stream_id,
+      :STREAM_STATUS_START,
+      1,
+      ""
+    )
+
+    send_stream_chunk!(
+      a.client,
+      a.login.user_id,
+      login_b.user_id,
+      stream_id,
+      :STREAM_STATUS_ONGOING,
+      2,
+      "off"
+    )
+
+    send_stream_chunk!(
+      a.client,
+      a.login.user_id,
+      login_b.user_id,
+      stream_id,
+      :STREAM_STATUS_END,
+      3,
+      ""
+    )
 
     conv_id = IM.Domain.ConvId.private(a.login.user_id, login_b.user_id)
     b = connect_authenticated!(app_key: a.login.app_key, user_id: login_b.user_id)

@@ -11,6 +11,7 @@ defmodule IM.Client.Protocol.OfflineTest do
     login_b = AuthFixtures.login!(app_key: a.login.app_key)
 
     trace_as!("A")
+
     {msg_id, conv_id} =
       send_private!(a.client, a.login.user_id, login_b.user_id, content: "offline-msg")
 

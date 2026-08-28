@@ -3,7 +3,7 @@ defmodule IM.Client.Protocol.AuthGuardTest do
   use IM.ClientProtocolCase
 
   alias IM.Client.Connection
-  alias Pb.Im.Protocol.{AuthReq, ChatMessage, ErrorBody, HeartbeatReq, KickNotify, MsgSendReq}
+  alias Pb.Im.Protocol.{AuthReq, ChatMessage, HeartbeatReq, KickNotify, MsgSendReq}
 
   setup do
     previous = Application.get_env(:im, :auth_timeout_ms, 10_000)
@@ -95,7 +95,9 @@ defmodule IM.Client.Protocol.AuthGuardTest do
                }
              )
 
-    assert {:ok, packet} = Connection.await(client, [cmd: Pb.Im.Protocol.CmdType.value(:CMD_ERROR)], 3_000)
+    assert {:ok, packet} =
+             Connection.await(client, [cmd: Pb.Im.Protocol.CmdType.value(:CMD_ERROR)], 3_000)
+
     trace!("↓ WS CMD_ERROR", packet)
     assert_cmd_error!(packet, :CODE_UNAUTHORIZED)
     assert :ok = Connection.await_disconnected(client, 3_000)
@@ -134,7 +136,14 @@ defmodule IM.Client.Protocol.AuthGuardTest do
   test "token 与 device_id 不匹配返回 CMD_ERROR 并关闭" do
     login = AuthFixtures.login!()
     client = connect_ws_only!()
-    trace_auth_rejected!(client, login.app_key, login.user_id, login.token, unique_id("wrong-device"))
+
+    trace_auth_rejected!(
+      client,
+      login.app_key,
+      login.user_id,
+      login.token,
+      unique_id("wrong-device")
+    )
   end
 
   @tag trace_case: "auth_guard_test/过期 token"

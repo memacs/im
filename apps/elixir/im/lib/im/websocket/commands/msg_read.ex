@@ -12,12 +12,13 @@ defmodule IM.WebSocket.Commands.MsgRead do
     with {:ok, %MsgRead{} = read} <- Codec.decode_payload(packet, MsgRead),
          {:ok, result} <- MessageRead.mark(read, ctx),
          {:ok, out} <-
-           Push.build(:CMD_MSG_READ, result.read, trace_id: packet.trace_id, route_key: result.read.conv_id) do
+           Push.build(:CMD_MSG_READ, result.read,
+             trace_id: packet.trace_id,
+             route_key: result.read.conv_id
+           ) do
       if result.notify_user_id not in [nil, ""] do
         _ =
-          Router.push_packet(out, ctx.app_key, result.notify_user_id,
-            exclude_device_id: nil
-          )
+          Router.push_packet(out, ctx.app_key, result.notify_user_id, exclude_device_id: nil)
       end
 
       # 发送方其他设备同步已读

@@ -30,7 +30,9 @@ defmodule IM.EventBus.SessionPushTest do
       node: node()
     }
 
-    Application.put_env(:im, :event_bus_kafka,
+    Application.put_env(
+      :im,
+      :event_bus_kafka,
       Keyword.put(Application.get_env(:im, :event_bus_kafka, []), :session_heartbeat_mode, :off)
     )
 
@@ -39,17 +41,24 @@ defmodule IM.EventBus.SessionPushTest do
     Process.sleep(20)
     assert length(Buffer.snapshot()) == before
 
-    Application.put_env(:im, :event_bus_kafka,
+    Application.put_env(
+      :im,
+      :event_bus_kafka,
       Keyword.put(Application.get_env(:im, :event_bus_kafka, []), :session_heartbeat_mode, :all)
     )
 
     assert :ok = Session.heartbeat(ctx)
-    assert wait(fn -> Enum.any?(Buffer.snapshot(), fn {t, e} -> t == :session and e.type == "heartbeat" end) end)
+
+    assert wait(fn ->
+             Enum.any?(Buffer.snapshot(), fn {t, e} -> t == :session and e.type == "heartbeat" end)
+           end)
   end
 
   test "push batch 超 500 分块" do
     before = length(Buffer.snapshot())
-    targets = for i <- 1..501, do: %{user_id: "u", device_id: "d#{i}", platform: "ios", push_token: "t"}
+
+    targets =
+      for i <- 1..501, do: %{user_id: "u", device_id: "d#{i}", platform: "ios", push_token: "t"}
 
     assert :ok = Push.publish_batch("mid-1", targets, app_key: "a")
 
@@ -63,8 +72,12 @@ defmodule IM.EventBus.SessionPushTest do
 
   defp wait(fun, n \\ 40) do
     cond do
-      fun.() -> true
-      n <= 0 -> false
+      fun.() ->
+        true
+
+      n <= 0 ->
+        false
+
       true ->
         Process.sleep(10)
         wait(fun, n - 1)

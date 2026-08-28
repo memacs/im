@@ -9,8 +9,18 @@ defmodule IM.Services.MessageTargetUsersTest do
 
   test "定向群消息仅写目标∪发送方 inbox" do
     owner = AuthFixtures.create_user!(user_id: "to_#{System.unique_integer([:positive])}")
-    a = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "ta_#{System.unique_integer([:positive])}")
-    b = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "tb_#{System.unique_integer([:positive])}")
+
+    a =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "ta_#{System.unique_integer([:positive])}"
+      )
+
+    b =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "tb_#{System.unique_integer([:positive])}"
+      )
 
     ctx = %MessageContext{
       app_key: owner.app_key,

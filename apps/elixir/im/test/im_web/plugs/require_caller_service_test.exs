@@ -16,7 +16,9 @@ defmodule IMWeb.Plugs.RequireCallerServiceTest do
     Application.put_env(:im, :internal_api, allowed_callers: ["ops"], blocked_callers: [])
 
     on_exit(fn ->
-      if prev, do: Application.put_env(:im, :internal_api, prev), else: Application.delete_env(:im, :internal_api)
+      if prev,
+        do: Application.put_env(:im, :internal_api, prev),
+        else: Application.delete_env(:im, :internal_api)
     end)
 
     conn =

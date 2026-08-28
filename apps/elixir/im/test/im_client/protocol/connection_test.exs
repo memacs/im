@@ -18,11 +18,15 @@ defmodule IM.Client.Protocol.ConnectionTest do
                device_id: device_id
              })
 
-    trace_http!("↑ HTTP POST /api/v1/sessions", %{
-      app_key: app_key,
-      user_id: user_id,
-      device_id: device_id
-    }, %{status: 200, body: session.raw})
+    trace_http!(
+      "↑ HTTP POST /api/v1/sessions",
+      %{
+        app_key: app_key,
+        user_id: user_id,
+        device_id: device_id
+      },
+      %{status: 200, body: session.raw}
+    )
 
     assert [ws | _] = session.websocket_urls
     {:ok, client} = Connection.start_link(url: ws)
@@ -58,7 +62,11 @@ defmodule IM.Client.Protocol.ConnectionTest do
   @tag trace_case: "connection_test/登出 DELETE sessions"
   test "connect_authenticated! 辅助与 DELETE sessions/current" do
     %{login: login} = connect_authenticated!()
-    trace_http!("↑ WS 已鉴权（见 connect_authenticated!）", %{user_id: login.user_id}, %{status: "authenticated"})
+
+    trace_http!("↑ WS 已鉴权（见 connect_authenticated!）", %{user_id: login.user_id}, %{
+      status: "authenticated"
+    })
+
     logout!(login.token)
     trace_http!("↑ HTTP DELETE /api/v1/sessions/current", %{token: "Bearer …"}, %{status: 204})
     assert {:error, _} = IM.Auth.verify_token(login.token)
@@ -71,7 +79,11 @@ defmodule IM.Client.Protocol.ConnectionTest do
     assert {:ok, %Req.Response{status: 200, body: body}} =
              Req.get(url, receive_timeout: 10_000)
 
-    trace_http!("↑ HTTP GET /metrics", %{}, %{status: 200, body: String.slice(body, 0, 200) <> "…"})
+    trace_http!("↑ HTTP GET /metrics", %{}, %{
+      status: 200,
+      body: String.slice(body, 0, 200) <> "…"
+    })
+
     assert body =~ "im_"
   end
 end

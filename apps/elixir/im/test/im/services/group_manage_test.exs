@@ -5,6 +5,7 @@ defmodule IM.Services.GroupManageTest do
   alias IM.Domain.MessageContext
   alias IM.Services.Group
   alias IM.Stores.GroupStore
+
   alias Pb.Im.Protocol.{
     GroupAdminReq,
     GroupCreateReq,
@@ -17,9 +18,24 @@ defmodule IM.Services.GroupManageTest do
 
   setup do
     owner = AuthFixtures.create_user!(user_id: "go_#{System.unique_integer([:positive])}")
-    m1 = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "g1_#{System.unique_integer([:positive])}")
-    m2 = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "g2_#{System.unique_integer([:positive])}")
-    outsider = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "gx_#{System.unique_integer([:positive])}")
+
+    m1 =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "g1_#{System.unique_integer([:positive])}"
+      )
+
+    m2 =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "g2_#{System.unique_integer([:positive])}"
+      )
+
+    outsider =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "gx_#{System.unique_integer([:positive])}"
+      )
 
     ctx = ctx(owner, "d-owner")
     %{owner: owner, m1: m1, m2: m2, outsider: outsider, ctx: ctx}

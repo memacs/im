@@ -35,12 +35,18 @@ defmodule IM.ClusterPeerBootTest do
     :ok = :rpc.call(peer, :code, :add_paths, [:code.get_path()])
 
     result =
-      :rpc.call(peer, IM.ClusterPeerBoot, :boot, [
-        main,
+      :rpc.call(
         peer,
-        4102,
-        Application.fetch_env!(:im, IM.Repo)
-      ], 120_000)
+        IM.ClusterPeerBoot,
+        :boot,
+        [
+          main,
+          peer,
+          4102,
+          Application.fetch_env!(:im, IM.Repo)
+        ],
+        120_000
+      )
 
     assert result == :ok, "boot returned #{inspect(result)}"
 
@@ -58,7 +64,10 @@ defmodule IM.ClusterPeerBootTest do
         password_hash: IM.Auth.Password.hash("secret", app_key, user_id)
       })
 
-    assert :rpc.call(peer, IM.Repo, :get_by, [IM.Schemas.User, [app_key: app_key, user_id: user_id]])
+    assert :rpc.call(peer, IM.Repo, :get_by, [
+             IM.Schemas.User,
+             [app_key: app_key, user_id: user_id]
+           ])
   end
 
   defp wait(fun, n \\ 50) do

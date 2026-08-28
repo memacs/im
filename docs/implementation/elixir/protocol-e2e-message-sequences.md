@@ -42,38 +42,39 @@
 7. [auth_guard_test/未鉴权发 MSG_SEND 静默关闭](#auth_guard_test/%E6%9C%AA%E9%89%B4%E6%9D%83%E5%8F%91%20MSG_SEND%20%E9%9D%99%E9%BB%98%E5%85%B3%E9%97%AD)
 8. [auth_guard_test/未鉴权发心跳静默关闭](#auth_guard_test/%E6%9C%AA%E9%89%B4%E6%9D%83%E5%8F%91%E5%BF%83%E8%B7%B3%E9%9D%99%E9%BB%98%E5%85%B3%E9%97%AD)
 9. [auth_guard_test/过期 token](#auth_guard_test/%E8%BF%87%E6%9C%9F%20token)
-10. [auth_guard_test/鉴权超时静默关闭](#auth_guard_test/%E9%89%B4%E6%9D%83%E8%B6%85%E6%97%B6%E9%9D%99%E9%BB%98%E5%85%B3%E9%97%AD)
-11. [channel_test/订阅与 publish](#channel_test/%E8%AE%A2%E9%98%85%E4%B8%8E%20publish)
-12. [cluster_test/跨节点 PUSH 单聊](#cluster_test/%E8%B7%A8%E8%8A%82%E7%82%B9%20PUSH%20%E5%8D%95%E8%81%8A)
-13. [cluster_test/跨节点 erpc 转发](#cluster_test/%E8%B7%A8%E8%8A%82%E7%82%B9%20erpc%20%E8%BD%AC%E5%8F%91)
-14. [connection_test/GET metrics](#connection_test/GET%20metrics)
-15. [connection_test/REST 登录 + WS AUTH + 心跳](#connection_test/REST%20%E7%99%BB%E5%BD%95%20+%20WS%20AUTH%20+%20%E5%BF%83%E8%B7%B3)
-16. [connection_test/登出 DELETE sessions](#connection_test/%E7%99%BB%E5%87%BA%20DELETE%20sessions)
-17. [conversation_test/REST 会话列表未读与已读同步](#conversation_test/REST%20%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8%E6%9C%AA%E8%AF%BB%E4%B8%8E%E5%B7%B2%E8%AF%BB%E5%90%8C%E6%AD%A5)
-18. [conversation_test/群聊会话列表未读](#conversation_test/%E7%BE%A4%E8%81%8A%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8%E6%9C%AA%E8%AF%BB)
-19. [extensions_test/已读回执](#extensions_test/%E5%B7%B2%E8%AF%BB%E5%9B%9E%E6%89%A7)
-20. [extensions_test/撤回消息](#extensions_test/%E6%92%A4%E5%9B%9E%E6%B6%88%E6%81%AF)
-21. [extensions_test/编辑消息](#extensions_test/%E7%BC%96%E8%BE%91%E6%B6%88%E6%81%AF)
-22. [extensions_test/透传指令](#extensions_test/%E9%80%8F%E4%BC%A0%E6%8C%87%E4%BB%A4)
-23. [extensions_test/阅后即焚：已读后双方收到 BURN_PUSH](#extensions_test/%E9%98%85%E5%90%8E%E5%8D%B3%E7%84%9A%EF%BC%9A%E5%B7%B2%E8%AF%BB%E5%90%8E%E5%8F%8C%E6%96%B9%E6%94%B6%E5%88%B0%20BURN_PUSH)
-24. [friend_policy_test/require_friend_to_send](#friend_policy_test/require_friend_to_send)
-25. [friend_test/好友请求列表](#friend_test/%E5%A5%BD%E5%8F%8B%E8%AF%B7%E6%B1%82%E5%88%97%E8%A1%A8)
-26. [friend_test/拉黑与取消拉黑](#friend_test/%E6%8B%89%E9%BB%91%E4%B8%8E%E5%8F%96%E6%B6%88%E6%8B%89%E9%BB%91)
-27. [friend_test/拒绝好友请求](#friend_test/%E6%8B%92%E7%BB%9D%E5%A5%BD%E5%8F%8B%E8%AF%B7%E6%B1%82)
-28. [friend_test/添加-接受-列表-备注-删除](#friend_test/%E6%B7%BB%E5%8A%A0-%E6%8E%A5%E5%8F%97-%E5%88%97%E8%A1%A8-%E5%A4%87%E6%B3%A8-%E5%88%A0%E9%99%A4)
-29. [group_test/群生命周期与群消息](#group_test/%E7%BE%A4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E7%BE%A4%E6%B6%88%E6%81%AF)
-30. [offline_test/离线消息可通过 CMD_OFFLINE_PULL 拉取](#offline_test/%E7%A6%BB%E7%BA%BF%E6%B6%88%E6%81%AF%E5%8F%AF%E9%80%9A%E8%BF%87%20CMD_OFFLINE_PULL%20%E6%8B%89%E5%8F%96)
-31. [private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK](#private_message_test/A%20%E5%8F%91%E5%8D%95%E8%81%8A%20%E2%86%92%20B%20%E6%94%B6%20PUSH%20+%20%E5%AE%A2%E6%88%B7%E7%AB%AF%20ACK)
-32. [private_message_test/REST 发消息双通道](#private_message_test/REST%20%E5%8F%91%E6%B6%88%E6%81%AF%E5%8F%8C%E9%80%9A%E9%81%93)
-33. [private_message_test/client_msg_id 幂等](#private_message_test/client_msg_id%20%E5%B9%82%E7%AD%89)
-34. [private_message_test/批量 ACK](#private_message_test/%E6%89%B9%E9%87%8F%20ACK)
-35. [room_test/聊天室生命周期与广播](#room_test/%E8%81%8A%E5%A4%A9%E5%AE%A4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E5%B9%BF%E6%92%AD)
-36. [session_test/内部 kick 在线设备收到 CMD_KICK](#session_test/%E5%86%85%E9%83%A8%20kick%20%E5%9C%A8%E7%BA%BF%E8%AE%BE%E5%A4%87%E6%94%B6%E5%88%B0%20CMD_KICK)
-37. [session_test/同平台超限 kick_oldest 踢掉旧设备](#session_test/%E5%90%8C%E5%B9%B3%E5%8F%B0%E8%B6%85%E9%99%90%20kick_oldest%20%E8%B8%A2%E6%8E%89%E6%97%A7%E8%AE%BE%E5%A4%87)
-38. [session_test/同平台超限 reject 鉴权失败](#session_test/%E5%90%8C%E5%B9%B3%E5%8F%B0%E8%B6%85%E9%99%90%20reject%20%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5)
-39. [stream_test/MSG_STREAM 四段推送至对端](#stream_test/MSG_STREAM%20%E5%9B%9B%E6%AE%B5%E6%8E%A8%E9%80%81%E8%87%B3%E5%AF%B9%E7%AB%AF)
-40. [stream_test/MSG_STREAM 离线拉取](#stream_test/MSG_STREAM%20%E7%A6%BB%E7%BA%BF%E6%8B%89%E5%8F%96)
-41. [stream_test/流式透传 stream_start/chunk/end](#stream_test/%E6%B5%81%E5%BC%8F%E9%80%8F%E4%BC%A0%20stream_start/chunk/end)
+10. [auth_guard_test/连接中 token 过期 CMD_KICK](#auth_guard_test/%E8%BF%9E%E6%8E%A5%E4%B8%AD%20token%20%E8%BF%87%E6%9C%9F%20CMD_KICK)
+11. [auth_guard_test/鉴权超时静默关闭](#auth_guard_test/%E9%89%B4%E6%9D%83%E8%B6%85%E6%97%B6%E9%9D%99%E9%BB%98%E5%85%B3%E9%97%AD)
+12. [channel_test/订阅与 publish](#channel_test/%E8%AE%A2%E9%98%85%E4%B8%8E%20publish)
+13. [cluster_test/跨节点 PUSH 单聊](#cluster_test/%E8%B7%A8%E8%8A%82%E7%82%B9%20PUSH%20%E5%8D%95%E8%81%8A)
+14. [cluster_test/跨节点 erpc 转发](#cluster_test/%E8%B7%A8%E8%8A%82%E7%82%B9%20erpc%20%E8%BD%AC%E5%8F%91)
+15. [connection_test/GET metrics](#connection_test/GET%20metrics)
+16. [connection_test/REST 登录 + WS AUTH + 心跳](#connection_test/REST%20%E7%99%BB%E5%BD%95%20+%20WS%20AUTH%20+%20%E5%BF%83%E8%B7%B3)
+17. [connection_test/登出 DELETE sessions](#connection_test/%E7%99%BB%E5%87%BA%20DELETE%20sessions)
+18. [conversation_test/REST 会话列表未读与已读同步](#conversation_test/REST%20%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8%E6%9C%AA%E8%AF%BB%E4%B8%8E%E5%B7%B2%E8%AF%BB%E5%90%8C%E6%AD%A5)
+19. [conversation_test/群聊会话列表未读](#conversation_test/%E7%BE%A4%E8%81%8A%E4%BC%9A%E8%AF%9D%E5%88%97%E8%A1%A8%E6%9C%AA%E8%AF%BB)
+20. [extensions_test/已读回执](#extensions_test/%E5%B7%B2%E8%AF%BB%E5%9B%9E%E6%89%A7)
+21. [extensions_test/撤回消息](#extensions_test/%E6%92%A4%E5%9B%9E%E6%B6%88%E6%81%AF)
+22. [extensions_test/编辑消息](#extensions_test/%E7%BC%96%E8%BE%91%E6%B6%88%E6%81%AF)
+23. [extensions_test/透传指令](#extensions_test/%E9%80%8F%E4%BC%A0%E6%8C%87%E4%BB%A4)
+24. [extensions_test/阅后即焚：已读后双方收到 BURN_PUSH](#extensions_test/%E9%98%85%E5%90%8E%E5%8D%B3%E7%84%9A%EF%BC%9A%E5%B7%B2%E8%AF%BB%E5%90%8E%E5%8F%8C%E6%96%B9%E6%94%B6%E5%88%B0%20BURN_PUSH)
+25. [friend_policy_test/require_friend_to_send](#friend_policy_test/require_friend_to_send)
+26. [friend_test/好友请求列表](#friend_test/%E5%A5%BD%E5%8F%8B%E8%AF%B7%E6%B1%82%E5%88%97%E8%A1%A8)
+27. [friend_test/拉黑与取消拉黑](#friend_test/%E6%8B%89%E9%BB%91%E4%B8%8E%E5%8F%96%E6%B6%88%E6%8B%89%E9%BB%91)
+28. [friend_test/拒绝好友请求](#friend_test/%E6%8B%92%E7%BB%9D%E5%A5%BD%E5%8F%8B%E8%AF%B7%E6%B1%82)
+29. [friend_test/添加-接受-列表-备注-删除](#friend_test/%E6%B7%BB%E5%8A%A0-%E6%8E%A5%E5%8F%97-%E5%88%97%E8%A1%A8-%E5%A4%87%E6%B3%A8-%E5%88%A0%E9%99%A4)
+30. [group_test/群生命周期与群消息](#group_test/%E7%BE%A4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E7%BE%A4%E6%B6%88%E6%81%AF)
+31. [offline_test/离线消息可通过 CMD_OFFLINE_PULL 拉取](#offline_test/%E7%A6%BB%E7%BA%BF%E6%B6%88%E6%81%AF%E5%8F%AF%E9%80%9A%E8%BF%87%20CMD_OFFLINE_PULL%20%E6%8B%89%E5%8F%96)
+32. [private_message_test/A 发单聊 → B 收 PUSH + 客户端 ACK](#private_message_test/A%20%E5%8F%91%E5%8D%95%E8%81%8A%20%E2%86%92%20B%20%E6%94%B6%20PUSH%20+%20%E5%AE%A2%E6%88%B7%E7%AB%AF%20ACK)
+33. [private_message_test/REST 发消息双通道](#private_message_test/REST%20%E5%8F%91%E6%B6%88%E6%81%AF%E5%8F%8C%E9%80%9A%E9%81%93)
+34. [private_message_test/client_msg_id 幂等](#private_message_test/client_msg_id%20%E5%B9%82%E7%AD%89)
+35. [private_message_test/批量 ACK](#private_message_test/%E6%89%B9%E9%87%8F%20ACK)
+36. [room_test/聊天室生命周期与广播](#room_test/%E8%81%8A%E5%A4%A9%E5%AE%A4%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E5%B9%BF%E6%92%AD)
+37. [session_test/内部 kick 在线设备收到 CMD_KICK](#session_test/%E5%86%85%E9%83%A8%20kick%20%E5%9C%A8%E7%BA%BF%E8%AE%BE%E5%A4%87%E6%94%B6%E5%88%B0%20CMD_KICK)
+38. [session_test/同平台超限 kick_oldest 踢掉旧设备](#session_test/%E5%90%8C%E5%B9%B3%E5%8F%B0%E8%B6%85%E9%99%90%20kick_oldest%20%E8%B8%A2%E6%8E%89%E6%97%A7%E8%AE%BE%E5%A4%87)
+39. [session_test/同平台超限 reject 鉴权失败](#session_test/%E5%90%8C%E5%B9%B3%E5%8F%B0%E8%B6%85%E9%99%90%20reject%20%E9%89%B4%E6%9D%83%E5%A4%B1%E8%B4%A5)
+40. [stream_test/MSG_STREAM 四段推送至对端](#stream_test/MSG_STREAM%20%E5%9B%9B%E6%AE%B5%E6%8E%A8%E9%80%81%E8%87%B3%E5%AF%B9%E7%AB%AF)
+41. [stream_test/MSG_STREAM 离线拉取](#stream_test/MSG_STREAM%20%E7%A6%BB%E7%BA%BF%E6%8B%89%E5%8F%96)
+42. [stream_test/流式透传 stream_start/chunk/end](#stream_test/%E6%B5%81%E5%BC%8F%E9%80%8F%E4%BC%A0%20stream_start/chunk/end)
 
 ---
 
@@ -91,7 +92,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566905` | 发送时间戳（毫秒） |
+| `ts` | `1785909886841` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -100,15 +101,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `wrong-device-5155` | 设备唯一标识 |
+| `device_id` | `wrong-device-2408` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `JR2JIS1WazRhYpsH4nExrmMOecAfbntPoCRGyLyfAQc` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_4261` | 业务用户 ID |
+| `token` | `flyecjuRhk_Ee1VT3pNhmk8RrLYAuznkDbN25Hg8t2w` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_8167` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -126,20 +127,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "wrong-device-5155",
+      "device_id": "wrong-device-2408",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "JR2JIS1WazRhYpsH4nExrmMOecAfbntPoCRGyLyfAQc",
-      "user_id": "user_4261"
+      "token": "flyecjuRhk_Ee1VT3pNhmk8RrLYAuznkDbN25Hg8t2w",
+      "user_id": "user_8167"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566905,
+    "ts": 1785909886841,
     "ver": 1
   },
   "step": 2
@@ -161,7 +162,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566910` | 发送时间戳（毫秒） |
+| `ts` | `1785909886844` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -195,7 +196,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566910,
+    "ts": 1785909886844,
     "ver": 1
   },
   "step": 3
@@ -220,7 +221,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566212` | 发送时间戳（毫秒） |
+| `ts` | `1785909886849` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -229,15 +230,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `device_1700` | 设备唯一标识 |
+| `device_id` | `device_2472` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `8AjPIf4rOq29vFzuF8NH1STfrUF9GXSbMGcbhhF7jWQ` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `wrong-user-1732` | 业务用户 ID |
+| `token` | `dmJQ3JQddQ2PG-uOTQpuyYo6X13gmP1xHPnhYfbLS1U` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `wrong-user-2504` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -255,20 +256,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "device_1700",
+      "device_id": "device_2472",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "8AjPIf4rOq29vFzuF8NH1STfrUF9GXSbMGcbhhF7jWQ",
-      "user_id": "wrong-user-1732"
+      "token": "dmJQ3JQddQ2PG-uOTQpuyYo6X13gmP1xHPnhYfbLS1U",
+      "user_id": "wrong-user-2504"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566212,
+    "ts": 1785909886849,
     "ver": 1
   },
   "step": 2
@@ -290,7 +291,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566223` | 发送时间戳（毫秒） |
+| `ts` | `1785909886851` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -324,7 +325,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566223,
+    "ts": 1785909886851,
     "ver": 1
   },
   "step": 3
@@ -349,7 +350,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565548` | 发送时间戳（毫秒） |
+| `ts` | `1785909887805` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -358,15 +359,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `device_898` | 设备唯一标识 |
+| `device_id` | `device_8647` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `LO7uwNPVRnWlu4gtEAkOoAsJxAXjfS7qbkE_TofPmAk` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_4867` | 业务用户 ID |
+| `token` | `n7kUX9mw42CJavXG_YDePWUAS_Pp3YIFb_Co04Sba3I` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_395` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -384,20 +385,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "device_898",
+      "device_id": "device_8647",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "LO7uwNPVRnWlu4gtEAkOoAsJxAXjfS7qbkE_TofPmAk",
-      "user_id": "user_4867"
+      "token": "n7kUX9mw42CJavXG_YDePWUAS_Pp3YIFb_Co04Sba3I",
+      "user_id": "user_395"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565548,
+    "ts": 1785909887805,
     "ver": 1
   },
   "step": 2
@@ -419,7 +420,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565550` | 发送时间戳（毫秒） |
+| `ts` | `1785909887812` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -453,7 +454,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565550,
+    "ts": 1785909887812,
     "ver": 1
   },
   "step": 3
@@ -478,7 +479,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566190` | 发送时间戳（毫秒） |
+| `ts` | `1785909886861` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -487,15 +488,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `device_1636` | 设备唯一标识 |
+| `device_id` | `device_8455` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `bUjxB0hu23fcWZ6fmKHal5JiZ6nWg64tvJ5pQc1UV8s` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_1604` | 业务用户 ID |
+| `token` | `FG4pZ3i9BWtaXxWIaoxU2dq2rB8DftPEWdylqpBkqWs` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_8423` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -513,20 +514,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "device_1636",
+      "device_id": "device_8455",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "bUjxB0hu23fcWZ6fmKHal5JiZ6nWg64tvJ5pQc1UV8s",
-      "user_id": "user_1604"
+      "token": "FG4pZ3i9BWtaXxWIaoxU2dq2rB8DftPEWdylqpBkqWs",
+      "user_id": "user_8423"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566190,
+    "ts": 1785909886861,
     "ver": 1
   },
   "step": 2
@@ -548,7 +549,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566193` | 发送时间戳（毫秒） |
+| `ts` | `1785909886862` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -582,7 +583,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566193,
+    "ts": 1785909886862,
     "ver": 1
   },
   "step": 3
@@ -607,7 +608,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566248` | 发送时间戳（毫秒） |
+| `ts` | `1785909886856` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -616,15 +617,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `device_4931` | 设备唯一标识 |
+| `device_id` | `device_8295` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `1.0.0` | SDK 版本号 |
-| `token` | `TSfaUJaKFcEjzS12gaUnGRrOcUMao3VPnLGZD3PPEZI` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_4899` | 业务用户 ID |
+| `token` | `BD7Mv3q2PZeajnmiB6Q7VqVAqHui2qp1PqsWwbUSLp4` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_420` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -642,20 +643,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "device_4931",
+      "device_id": "device_8295",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "1.0.0",
-      "token": "TSfaUJaKFcEjzS12gaUnGRrOcUMao3VPnLGZD3PPEZI",
-      "user_id": "user_4899"
+      "token": "BD7Mv3q2PZeajnmiB6Q7VqVAqHui2qp1PqsWwbUSLp4",
+      "user_id": "user_420"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566248,
+    "ts": 1785909886856,
     "ver": 1
   },
   "step": 2
@@ -677,7 +678,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566249` | 发送时间戳（毫秒） |
+| `ts` | `1785909886856` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -711,7 +712,7 @@
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827566249,
+    "ts": 1785909886856,
     "ver": 1
   },
   "step": 3
@@ -736,7 +737,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565554` | 发送时间戳（毫秒） |
+| `ts` | `1785909886845` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -745,7 +746,7 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `d-1572` | 设备唯一标识 |
+| `device_id` | `d-331` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
@@ -753,7 +754,7 @@
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
 | `token` | `not-a-valid-token` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_4133` | 业务用户 ID |
+| `user_id` | `user_299` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -771,7 +772,7 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "d-1572",
+      "device_id": "d-331",
       "device_model": "",
       "device_name": "",
       "network": "",
@@ -779,12 +780,12 @@
       "platform": "ios",
       "sdk_ver": "0.1.0",
       "token": "not-a-valid-token",
-      "user_id": "user_4133"
+      "user_id": "user_299"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565554,
+    "ts": 1785909886845,
     "ver": 1
   },
   "step": 2
@@ -806,7 +807,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565557` | 发送时间戳（毫秒） |
+| `ts` | `1785909886846` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -840,7 +841,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565557,
+    "ts": 1785909886846,
     "ver": 1
   },
   "step": 3
@@ -865,14 +866,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565862` | 发送时间戳（毫秒） |
+| `ts` | `1785909887815` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"cm-930","content":"illegal","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"u1","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"u2"}` |  |
+| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"cm-2536","content":"illegal","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"u1","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"u2"}` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -893,7 +894,7 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "cm-930",
+        "client_msg_id": "cm-2536",
         "content": "illegal",
         "conv_id": "",
         "conv_seq": 0,
@@ -913,7 +914,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565862,
+    "ts": 1785909887815,
     "ver": 1
   },
   "step": 2
@@ -965,7 +966,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565559` | 发送时间戳（毫秒） |
+| `ts` | `1785909886863` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -993,7 +994,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565559,
+    "ts": 1785909886863,
     "ver": 1
   },
   "step": 2
@@ -1045,7 +1046,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566876` | 发送时间戳（毫秒） |
+| `ts` | `1785909887786` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1054,15 +1055,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `device_5091` | 设备唯一标识 |
+| `device_id` | `device_1926` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `5NiEWURJnAN-7hmfu6yERET4uUzUr3YCa--Q1S89lLM` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_5059` | 业务用户 ID |
+| `token` | `nF-wQi9-3Ex9enSQD_bk7zGk-ucRQgIox-G2GWu8G5s` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_363` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -1080,20 +1081,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "device_5091",
+      "device_id": "device_1926",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "5NiEWURJnAN-7hmfu6yERET4uUzUr3YCa--Q1S89lLM",
-      "user_id": "user_5059"
+      "token": "nF-wQi9-3Ex9enSQD_bk7zGk-ucRQgIox-G2GWu8G5s",
+      "user_id": "user_363"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566876,
+    "ts": 1785909887786,
     "ver": 1
   },
   "step": 2
@@ -1115,7 +1116,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827566882` | 发送时间戳（毫秒） |
+| `ts` | `1785909887791` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1149,10 +1150,71 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827566882,
+    "ts": 1785909887791,
     "ver": 1
   },
   "step": 3
+}
+```
+
+</details>
+
+---
+
+## auth_guard_test/连接中 token 过期 CMD_KICK
+### 步骤 1：↓ WS CMD_KICK (token_expired)（client）
+
+**Packet 信封**
+
+| 字段 | E2E 实测值 | 说明 |
+| --- | --- | --- |
+| `cid` | `` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cmd` | `5` | 命令字（CmdType 枚举整数值） |
+| `cmd_name` | `CMD_KICK` | 命令字名称（文档衍生字段） |
+| `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
+| `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
+| `trace_id` | `a3c04e32-1f0b-4c43-b2df-52ccef0248df` | 链路追踪 ID |
+| `ts` | `1785909888430` | 发送时间戳（毫秒） |
+| `ver` | `1` | 协议版本，当前固定 1 |
+
+**payload 字段**
+
+| 字段 | E2E 实测值 | 说明 |
+| --- | --- | --- |
+| `clear_local_data` | `false` |  |
+| `kicker` | `` |  |
+| `reason` | `token_expired` | 踢下线/撤回等原因 |
+| `reason_code` | `KICK_REASON_TOKEN_EXPIRED` | KickReason 枚举 |
+| `timestamp` | `1785909888429` |  |
+
+<details><summary>完整 JSON</summary>
+
+```json
+{
+  "actor": "client",
+  "case": "auth_guard_test/连接中 token 过期 CMD_KICK",
+  "direction": "↓ WS CMD_KICK (token_expired)",
+  "note": "↓ WS CMD_KICK (token_expired)",
+  "packet": {
+    "cid": "",
+    "cmd": 5,
+    "cmd_name": "CMD_KICK",
+    "compression": "PAYLOAD_COMPRESSION_NONE",
+    "payload": {
+      "clear_local_data": "false",
+      "kicker": null,
+      "reason": "token_expired",
+      "reason_code": "KICK_REASON_TOKEN_EXPIRED",
+      "timestamp": 1785909888429
+    },
+    "route_key": "",
+    "seq": 0,
+    "trace_id": "a3c04e32-1f0b-4c43-b2df-52ccef0248df",
+    "ts": 1785909888430,
+    "ver": 1
+  },
+  "step": 1
 }
 ```
 
@@ -1204,7 +1266,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565139` | 发送时间戳（毫秒） |
+| `ts` | `1785909886830` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1236,7 +1298,7 @@
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565139,
+    "ts": 1785909886830,
     "ver": 1
   },
   "step": 1
@@ -1293,8 +1355,8 @@
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
 | `route_key` | `news:alerts` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
-| `trace_id` | `tr-514` | 链路追踪 ID |
-| `ts` | `1785827565159` | 发送时间戳（毫秒） |
+| `trace_id` | `tr-2376` | 链路追踪 ID |
+| `ts` | `1785909886832` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1304,9 +1366,9 @@
 | `caller_service` | `protocol-e2e` |  |
 | `channel_id` | `news:alerts` | 应用通道 ID（namespace:name） |
 | `content_type` | `application/json` |  |
-| `event_id` | `87821fab-678a-42a3-b9eb-f6681e18c884` |  |
+| `event_id` | `46cb2fc1-d010-4499-8c84-c323c8093d72` |  |
 | `payload` | `{"n":1}` |  |
-| `server_time` | `1785827565158` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909886831` | 服务端当前时间（毫秒） |
 
 <details><summary>完整 JSON</summary>
 
@@ -1325,14 +1387,14 @@
       "caller_service": "protocol-e2e",
       "channel_id": "news:alerts",
       "content_type": "application/json",
-      "event_id": "87821fab-678a-42a3-b9eb-f6681e18c884",
+      "event_id": "46cb2fc1-d010-4499-8c84-c323c8093d72",
       "payload": "{\"n\":1}",
-      "server_time": 1785827565158
+      "server_time": 1785909886831
     },
     "route_key": "news:alerts",
     "seq": 0,
-    "trace_id": "tr-514",
-    "ts": 1785827565159,
+    "trace_id": "tr-2376",
+    "ts": 1785909886832,
     "ver": 1
   },
   "step": 3
@@ -1354,7 +1416,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565161` | 发送时间戳（毫秒） |
+| `ts` | `1785909886832` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -1374,7 +1436,7 @@
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827565161,
+    "ts": 1785909886832,
     "ver": 1
   },
   "step": 5
@@ -1396,7 +1458,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565162` | 发送时间戳（毫秒） |
+| `ts` | `1785909886834` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1426,7 +1488,7 @@
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827565162,
+    "ts": 1785909886834,
     "ver": 1
   },
   "step": 6
@@ -1448,7 +1510,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `7` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565163` | 发送时间戳（毫秒） |
+| `ts` | `1785909886834` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1482,7 +1544,7 @@
     "route_key": "",
     "seq": 7,
     "trace_id": "",
-    "ts": 1785827565163,
+    "ts": 1785909886834,
     "ver": 1
   },
   "step": 8
@@ -1504,7 +1566,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565164` | 发送时间戳（毫秒） |
+| `ts` | `1785909886836` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1513,7 +1575,7 @@
 | --- | --- | --- |
 | `accepted` | `true` |  |
 | `channel_id` | `news:alerts` | 应用通道 ID（namespace:name） |
-| `event_id` | `10b60306-1733-41b6-bc01-638d8e178b2c` |  |
+| `event_id` | `1a7ae425-60d9-4818-bcf9-9f61758a4ee3` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -1531,12 +1593,12 @@
     "payload": {
       "accepted": "true",
       "channel_id": "news:alerts",
-      "event_id": "10b60306-1733-41b6-bc01-638d8e178b2c"
+      "event_id": "1a7ae425-60d9-4818-bcf9-9f61758a4ee3"
     },
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827565164,
+    "ts": 1785909886836,
     "ver": 1
   },
   "step": 9
@@ -1554,14 +1616,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `cm-4357` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `cm-2728` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1924:user_4325` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_4226:user_868` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827567912` | 发送时间戳（毫秒） |
+| `ts` | `1785909889601` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1572,21 +1634,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `cm-4357` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `cm-2728` | 消息级幂等 ID（业务去重） |
 | `content` | `cross-node-push` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_1924:user_4325` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_4226:user_868` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_4325` | 发送方 user_id |
+| `from` | `user_868` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927838057332736` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273120225820672` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827567887` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909889574` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_1924` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_4226` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -1597,7 +1659,7 @@
   "direction": "↓ WS CMD_MSG_PUSH (peer 节点)",
   "note": "↓ WS CMD_MSG_PUSH (peer 节点)",
   "packet": {
-    "cid": "cm-4357",
+    "cid": "cm-2728",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -1606,26 +1668,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "cm-4357",
+      "client_msg_id": "cm-2728",
       "content": "cross-node-push",
-      "conv_id": "p:user_1924:user_4325",
+      "conv_id": "p:user_4226:user_868",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_4325",
+      "from": "user_868",
       "inbox_seq": 0,
-      "msg_id": "342927838057332736",
+      "msg_id": "343273120225820672",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827567887,
+      "server_time": 1785909889574,
       "target_users": [],
-      "to": "user_1924"
+      "to": "user_4226"
     },
-    "route_key": "p:user_1924:user_4325",
+    "route_key": "p:user_4226:user_868",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827567912,
+    "ts": 1785909889601,
     "ver": 1
   },
   "step": 1
@@ -1650,16 +1712,16 @@
 | `route_key` | `cluster-rk-1` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569015` | 发送时间戳（毫秒） |
+| `ts` | `1785909890718` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `cm-1378` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `cm-3080` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927842662678528` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273124927635456` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -1676,15 +1738,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "cm-1378",
+      "client_msg_id": "cm-3080",
       "conv_seq": 1,
-      "msg_id": "342927842662678528",
+      "msg_id": "343273124927635456",
       "status": "ACK_SERVER_RECEIVED"
     },
     "route_key": "cluster-rk-1",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569015,
+    "ts": 1785909890718,
     "ver": 1
   },
   "step": 1
@@ -1699,14 +1761,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `cm-1378` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `cm-3080` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_4389:user_5219` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_2792:user_2952` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569015` | 发送时间戳（毫秒） |
+| `ts` | `1785909890718` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1717,21 +1779,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `cm-1378` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `cm-3080` | 消息级幂等 ID（业务去重） |
 | `content` | `cross-node-erpc` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_4389:user_5219` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_2792:user_2952` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_5219` | 发送方 user_id |
+| `from` | `user_2792` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927842662678528` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273124927635456` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827568986` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909890693` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_4389` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_2952` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -1742,7 +1804,7 @@
   "direction": "↓ WS CMD_MSG_PUSH (peer)",
   "note": "↓ WS CMD_MSG_PUSH (peer)",
   "packet": {
-    "cid": "cm-1378",
+    "cid": "cm-3080",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -1751,26 +1813,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "cm-1378",
+      "client_msg_id": "cm-3080",
       "content": "cross-node-erpc",
-      "conv_id": "p:user_4389:user_5219",
+      "conv_id": "p:user_2792:user_2952",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_5219",
+      "from": "user_2792",
       "inbox_seq": 0,
-      "msg_id": "342927842662678528",
+      "msg_id": "343273124927635456",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827568986,
+      "server_time": 1785909890693,
       "target_users": [],
-      "to": "user_4389"
+      "to": "user_2952"
     },
-    "route_key": "p:user_4389:user_5219",
+    "route_key": "p:user_2792:user_2952",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569015,
+    "ts": 1785909890718,
     "ver": 1
   },
   "step": 2
@@ -1799,7 +1861,7 @@
   "http": {
     "request": {},
     "response": {
-      "body": "# HELP im_permission_check_count \n# TYPE im_permission_check_count counter\nim_permission_check_count{layer=\"pg\",result=\"allow\",type=\"device_ban\"} 15\nim_permission_check_count{layer=\"l1\",result=\"allow\"…",
+      "body": "# HELP im_permission_check_count \n# TYPE im_permission_check_count counter\nim_permission_check_count{layer=\"l1\",result=\"allow\",type=\"device_ban\"} 1\nim_permission_check_count{layer=\"pg\",result=\"allow\",…",
       "status": 200
     }
   },
@@ -1820,19 +1882,19 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
-| `device_id` | `d-3877` | 设备唯一标识 |
-| `user_id` | `user_3845` | 业务用户 ID |
+| `device_id` | `d-4775` | 设备唯一标识 |
+| `user_id` | `user_2946` | 业务用户 ID |
 
 **HTTP 响应体（节选）**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `access_token` | `hvvDwznLh5WA4-hpYRE6dB4B8_LuJcpPSYnLHJ4dCgM` | REST 返回的会话 token |
+| `access_token` | `du8StgBNsoQXEKknPAhuPnbYlKwD02YUelBiy3jX7SU` | REST 返回的会话 token |
 | `clear_local_data` | `false` |  |
 | `config` | `{"burn_after_read_enabled":true,"burn_ttl_sec_default":0,"burn_ttl_sec_max":3600,"edit_window_sec":86400,"heartbeat_interval_sec":30,"offline_pull_limit":200,"payload_compression":"none","push_batch_max":50,"recall_window_sec":120}` |  |
 | `connection` | `{"preferred_index":0,"websocket_urls":["ws://127.0.0.1:4002/ws"]}` |  |
-| `expires_at` | `1785913965443` | token 过期时间（毫秒时间戳） |
-| `user_id` | `user_3845` | 业务用户 ID |
+| `expires_at` | `1785996286215` | token 过期时间（毫秒时间戳） |
+| `user_id` | `user_2946` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -1844,12 +1906,12 @@
   "http": {
     "request": {
       "app_key": "app_demo",
-      "device_id": "d-3877",
-      "user_id": "user_3845"
+      "device_id": "d-4775",
+      "user_id": "user_2946"
     },
     "response": {
       "body": {
-        "access_token": "hvvDwznLh5WA4-hpYRE6dB4B8_LuJcpPSYnLHJ4dCgM",
+        "access_token": "du8StgBNsoQXEKknPAhuPnbYlKwD02YUelBiy3jX7SU",
         "clear_local_data": false,
         "config": {
           "burn_after_read_enabled": true,
@@ -1868,8 +1930,8 @@
             "ws://127.0.0.1:4002/ws"
           ]
         },
-        "expires_at": 1785913965443,
-        "user_id": "user_3845"
+        "expires_at": 1785996286215,
+        "user_id": "user_2946"
       },
       "status": 200
     }
@@ -1894,7 +1956,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565448` | 发送时间戳（毫秒） |
+| `ts` | `1785909886236` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1903,15 +1965,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `d-3877` | 设备唯一标识 |
+| `device_id` | `d-4775` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `hvvDwznLh5WA4-hpYRE6dB4B8_LuJcpPSYnLHJ4dCgM` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_3845` | 业务用户 ID |
+| `token` | `du8StgBNsoQXEKknPAhuPnbYlKwD02YUelBiy3jX7SU` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_2946` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -1929,20 +1991,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "d-3877",
+      "device_id": "d-4775",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "hvvDwznLh5WA4-hpYRE6dB4B8_LuJcpPSYnLHJ4dCgM",
-      "user_id": "user_3845"
+      "token": "du8StgBNsoQXEKknPAhuPnbYlKwD02YUelBiy3jX7SU",
+      "user_id": "user_2946"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565448,
+    "ts": 1785909886236,
     "ver": 1
   },
   "step": 3
@@ -1964,7 +2026,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565468` | 发送时间戳（毫秒） |
+| `ts` | `1785909886258` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -1975,15 +2037,15 @@
 | `burn_ttl_sec_default` | `0` |  |
 | `burn_ttl_sec_max` | `3600` |  |
 | `clear_local_data` | `false` |  |
-| `device` | `{"client_ip":"","connected_at":1785827565464,"device_id":"d-3877","device_model":"","device_name":"","network":"","os":"","platform":"loadtest","sdk_ver":"0.1.0","session_id":"b5f30d8c-aaef-4d8b-aa5f-809ab8413c96"}` |  |
+| `device` | `{"client_ip":"","connected_at":1785909886253,"device_id":"d-4775","device_model":"","device_name":"","network":"","os":"","platform":"loadtest","sdk_ver":"0.1.0","session_id":"7eb3c005-c6a7-4297-9c80-7257c4f7ba9b"}` |  |
 | `edit_window_sec` | `86400` |  |
 | `heartbeat_interval_sec` | `30` | 心跳间隔（秒） |
 | `offline_pull_limit` | `200` |  |
 | `payload_compression` | `PAYLOAD_COMPRESSION_NONE` |  |
 | `push_batch_max` | `50` |  |
 | `recall_window_sec` | `120` |  |
-| `server_time` | `1785827565464` | 服务端当前时间（毫秒） |
-| `user_id` | `user_3845` | 业务用户 ID |
+| `server_time` | `1785909886253` | 服务端当前时间（毫秒） |
+| `user_id` | `user_2946` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -2005,15 +2067,15 @@
       "clear_local_data": "false",
       "device": {
         "client_ip": "",
-        "connected_at": 1785827565464,
-        "device_id": "d-3877",
+        "connected_at": 1785909886253,
+        "device_id": "d-4775",
         "device_model": "",
         "device_name": "",
         "network": "",
         "os": "",
         "platform": "loadtest",
         "sdk_ver": "0.1.0",
-        "session_id": "b5f30d8c-aaef-4d8b-aa5f-809ab8413c96"
+        "session_id": "7eb3c005-c6a7-4297-9c80-7257c4f7ba9b"
       },
       "edit_window_sec": 86400,
       "heartbeat_interval_sec": 30,
@@ -2021,13 +2083,13 @@
       "payload_compression": "PAYLOAD_COMPRESSION_NONE",
       "push_batch_max": 50,
       "recall_window_sec": 120,
-      "server_time": 1785827565464,
-      "user_id": "user_3845"
+      "server_time": 1785909886253,
+      "user_id": "user_2946"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565468,
+    "ts": 1785909886258,
     "ver": 1
   },
   "step": 4
@@ -2049,14 +2111,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `5` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565478` | 发送时间戳（毫秒） |
+| `ts` | `1785909886271` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_time` | `1785827565478` | 客户端本地时间（毫秒） |
+| `client_time` | `1785909886271` | 客户端本地时间（毫秒） |
 
 <details><summary>完整 JSON</summary>
 
@@ -2072,12 +2134,12 @@
     "cmd_name": "CMD_HEARTBEAT_REQ",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_time": 1785827565478
+      "client_time": 1785909886271
     },
     "route_key": "",
     "seq": 5,
     "trace_id": "",
-    "ts": 1785827565478,
+    "ts": 1785909886271,
     "ver": 1
   },
   "step": 6
@@ -2099,14 +2161,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565477` | 发送时间戳（毫秒） |
+| `ts` | `1785909886270` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `server_time` | `1785827565474` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909886269` | 服务端当前时间（毫秒） |
 
 <details><summary>完整 JSON</summary>
 
@@ -2122,12 +2184,12 @@
     "cmd_name": "CMD_HEARTBEAT_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "server_time": 1785827565474
+      "server_time": 1785909886269
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565477,
+    "ts": 1785909886270,
     "ver": 1
   },
   "step": 7
@@ -2145,7 +2207,7 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `user_id` | `user_4707` | 业务用户 ID |
+| `user_id` | `user_267` | 业务用户 ID |
 
 **HTTP 响应体（节选）**
 
@@ -2162,7 +2224,7 @@
   "direction": "↑ WS 已鉴权（见 connect_authenticated!）",
   "http": {
     "request": {
-      "user_id": "user_4707"
+      "user_id": "user_267"
     },
     "response": {
       "status": "authenticated"
@@ -2227,14 +2289,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569492` | 发送时间戳（毫秒） |
+| `ts` | `1785909886763` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"conv-5189","content":"list-preview","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"user_2948","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"user_5029"}` |  |
+| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"conv-2248","content":"list-preview","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"user_1928","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"user_2088"}` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -2255,13 +2317,13 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "conv-5189",
+        "client_msg_id": "conv-2248",
         "content": "list-preview",
         "conv_id": "",
         "conv_seq": 0,
         "edit_version": 0,
         "ext": {},
-        "from": "user_2948",
+        "from": "user_1928",
         "inbox_seq": 0,
         "msg_id": "",
         "msg_type": "MSG_TEXT",
@@ -2269,13 +2331,13 @@
         "recalled": "false",
         "server_time": 0,
         "target_users": [],
-        "to": "user_5029"
+        "to": "user_2088"
       }
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569492,
+    "ts": 1785909886763,
     "ver": 1
   },
   "step": 2
@@ -2297,16 +2359,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569502` | 发送时间戳（毫秒） |
+| `ts` | `1785909886773` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `conv-5189` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `conv-2248` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927844810162176` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273108469186560` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -2323,15 +2385,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "conv-5189",
+      "client_msg_id": "conv-2248",
       "conv_seq": 1,
-      "msg_id": "342927844810162176",
+      "msg_id": "343273108469186560",
       "status": "ACK_SERVER_RECEIVED"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569502,
+    "ts": 1785909886773,
     "ver": 1
   },
   "step": 3
@@ -2346,14 +2408,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `conv-5189` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `conv-2248` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_2948:user_5029` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_1928:user_2088` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569502` | 发送时间戳（毫秒） |
+| `ts` | `1785909886773` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -2364,21 +2426,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `conv-5189` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `conv-2248` | 消息级幂等 ID（业务去重） |
 | `content` | `list-preview` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_2948:user_5029` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1928:user_2088` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_2948` | 发送方 user_id |
+| `from` | `user_1928` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927844810162176` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273108469186560` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569495` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909886767` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_5029` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_2088` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -2389,7 +2451,7 @@
   "direction": "↓ WS CMD_MSG_PUSH",
   "note": "↓ WS CMD_MSG_PUSH",
   "packet": {
-    "cid": "conv-5189",
+    "cid": "conv-2248",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -2398,26 +2460,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "conv-5189",
+      "client_msg_id": "conv-2248",
       "content": "list-preview",
-      "conv_id": "p:user_2948:user_5029",
+      "conv_id": "p:user_1928:user_2088",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_2948",
+      "from": "user_1928",
       "inbox_seq": 0,
-      "msg_id": "342927844810162176",
+      "msg_id": "343273108469186560",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569495,
+      "server_time": 1785909886767,
       "target_users": [],
-      "to": "user_5029"
+      "to": "user_2088"
     },
-    "route_key": "p:user_2948:user_5029",
+    "route_key": "p:user_1928:user_2088",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569502,
+    "ts": 1785909886773,
     "ver": 1
   },
   "step": 4
@@ -2438,7 +2500,7 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conversations` | `[{"chat_type":1,"conv_id":"p:user_2948:user_5029","last_msg_id":"342927844810162176","last_msg_preview":"list-preview","last_msg_seq":1,"last_msg_time":1785827569495,"last_msg_type":1,"last_read_conv_seq":0,"peer_id":"user_2948","unread_count":1}]` |  |
+| `conversations` | `[{"chat_type":1,"conv_id":"p:user_1928:user_2088","last_msg_id":"343273108469186560","last_msg_preview":"list-preview","last_msg_seq":1,"last_msg_time":1785909886767,"last_msg_type":1,"last_read_conv_seq":0,"peer_id":"user_1928","unread_count":1}]` |  |
 | `total_unread` | `1` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2457,14 +2519,14 @@
         "conversations": [
           {
             "chat_type": 1,
-            "conv_id": "p:user_2948:user_5029",
-            "last_msg_id": "342927844810162176",
+            "conv_id": "p:user_1928:user_2088",
+            "last_msg_id": "343273108469186560",
             "last_msg_preview": "list-preview",
             "last_msg_seq": 1,
-            "last_msg_time": 1785827569495,
+            "last_msg_time": 1785909886767,
             "last_msg_type": 1,
             "last_read_conv_seq": 0,
-            "peer_id": "user_2948",
+            "peer_id": "user_1928",
             "unread_count": 1
           }
         ],
@@ -2493,7 +2555,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `6` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569505` | 发送时间戳（毫秒） |
+| `ts` | `1785909886778` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -2501,12 +2563,12 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_2948:user_5029` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1928:user_2088` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `from` | `user_5029` | 发送方 user_id |
-| `msg_id` | `342927844810162176` | 服务端分配的全局消息 ID（雪花） |
+| `from` | `user_2088` | 发送方 user_id |
+| `msg_id` | `343273108469186560` | 服务端分配的全局消息 ID（雪花） |
 | `timestamp` | `0` |  |
-| `to` | `user_2948` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_1928` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `unread_count` | `` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2524,18 +2586,18 @@
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_2948:user_5029",
+      "conv_id": "p:user_1928:user_2088",
       "conv_seq": 1,
-      "from": "user_5029",
-      "msg_id": "342927844810162176",
+      "from": "user_2088",
+      "msg_id": "343273108469186560",
       "timestamp": 0,
-      "to": "user_2948",
+      "to": "user_1928",
       "unread_count": null
     },
     "route_key": "",
     "seq": 6,
     "trace_id": "",
-    "ts": 1785827569505,
+    "ts": 1785909886778,
     "ver": 1
   },
   "step": 7
@@ -2554,10 +2616,10 @@
 | `cmd` | `202` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_READ` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_2948:user_5029` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_1928:user_2088` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569507` | 发送时间戳（毫秒） |
+| `ts` | `1785909886779` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -2565,12 +2627,12 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_2948:user_5029` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1928:user_2088` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `from` | `user_5029` | 发送方 user_id |
-| `msg_id` | `342927844810162176` | 服务端分配的全局消息 ID（雪花） |
-| `timestamp` | `1785827569506` |  |
-| `to` | `user_2948` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `from` | `user_2088` | 发送方 user_id |
+| `msg_id` | `343273108469186560` | 服务端分配的全局消息 ID（雪花） |
+| `timestamp` | `1785909886779` |  |
+| `to` | `user_1928` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `unread_count` | `0` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2588,18 +2650,18 @@
     "compression": "PAYLOAD_COMPRESSION_NONE",
     "payload": {
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_2948:user_5029",
+      "conv_id": "p:user_1928:user_2088",
       "conv_seq": 1,
-      "from": "user_5029",
-      "msg_id": "342927844810162176",
-      "timestamp": 1785827569506,
-      "to": "user_2948",
+      "from": "user_2088",
+      "msg_id": "343273108469186560",
+      "timestamp": 1785909886779,
+      "to": "user_1928",
       "unread_count": 0
     },
-    "route_key": "p:user_2948:user_5029",
+    "route_key": "p:user_1928:user_2088",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569507,
+    "ts": 1785909886779,
     "ver": 1
   },
   "step": 8
@@ -2620,7 +2682,7 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conversations` | `[{"chat_type":1,"conv_id":"p:user_2948:user_5029","last_msg_id":"342927844810162176","last_msg_preview":"list-preview","last_msg_seq":1,"last_msg_time":1785827569495,"last_msg_type":1,"last_read_conv_seq":1,"peer_id":"user_2948","unread_count":0}]` |  |
+| `conversations` | `[{"chat_type":1,"conv_id":"p:user_1928:user_2088","last_msg_id":"343273108469186560","last_msg_preview":"list-preview","last_msg_seq":1,"last_msg_time":1785909886767,"last_msg_type":1,"last_read_conv_seq":1,"peer_id":"user_1928","unread_count":0}]` |  |
 | `total_unread` | `0` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2639,14 +2701,14 @@
         "conversations": [
           {
             "chat_type": 1,
-            "conv_id": "p:user_2948:user_5029",
-            "last_msg_id": "342927844810162176",
+            "conv_id": "p:user_1928:user_2088",
+            "last_msg_id": "343273108469186560",
             "last_msg_preview": "list-preview",
             "last_msg_seq": 1,
-            "last_msg_time": 1785827569495,
+            "last_msg_time": 1785909886767,
             "last_msg_type": 1,
             "last_read_conv_seq": 1,
-            "peer_id": "user_2948",
+            "peer_id": "user_1928",
             "unread_count": 0
           }
         ],
@@ -2678,16 +2740,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569529` | 发送时间戳（毫秒） |
+| `ts` | `1785909886807` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:gc-6723` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `created_at` | `1785827569527` |  |
-| `group_id` | `gc-6723` | 群 ID |
+| `conv_id` | `g:gc-4066` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `created_at` | `1785909886805` |  |
+| `group_id` | `gc-4066` | 群 ID |
 | `name` | `conv-g` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2704,15 +2766,15 @@
     "cmd_name": "CMD_GROUP_CREATE_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:gc-6723",
-      "created_at": 1785827569527,
-      "group_id": "gc-6723",
+      "conv_id": "g:gc-4066",
+      "created_at": 1785909886805,
+      "group_id": "gc-4066",
       "name": "conv-g"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569529,
+    "ts": 1785909886807,
     "ver": 1
   },
   "step": 1
@@ -2734,16 +2796,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569535` | 发送时间戳（毫秒） |
+| `ts` | `1785909886816` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `gcm-5317` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `gcm-2312` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927844965351424` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273108653735936` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -2760,15 +2822,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "gcm-5317",
+      "client_msg_id": "gcm-2312",
       "conv_seq": 1,
-      "msg_id": "342927844965351424",
+      "msg_id": "343273108653735936",
       "status": "ACK_SERVER_RECEIVED"
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569535,
+    "ts": 1785909886816,
     "ver": 1
   },
   "step": 2
@@ -2789,7 +2851,7 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conversations` | `[{"chat_type":2,"conv_id":"g:gc-6723","last_msg_id":"342927844965351424","last_msg_preview":"group-unread","last_msg_seq":1,"last_msg_time":1785827569531,"last_msg_type":1,"last_read_conv_seq":0,"peer_id":"gc-6723","unread_count":1}]` |  |
+| `conversations` | `[{"chat_type":2,"conv_id":"g:gc-4066","last_msg_id":"343273108653735936","last_msg_preview":"group-unread","last_msg_seq":1,"last_msg_time":1785909886810,"last_msg_type":1,"last_read_conv_seq":0,"peer_id":"gc-4066","unread_count":1}]` |  |
 | `total_unread` | `1` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2808,14 +2870,14 @@
         "conversations": [
           {
             "chat_type": 2,
-            "conv_id": "g:gc-6723",
-            "last_msg_id": "342927844965351424",
+            "conv_id": "g:gc-4066",
+            "last_msg_id": "343273108653735936",
             "last_msg_preview": "group-unread",
             "last_msg_seq": 1,
-            "last_msg_time": 1785827569531,
+            "last_msg_time": 1785909886810,
             "last_msg_type": 1,
             "last_read_conv_seq": 0,
-            "peer_id": "gc-6723",
+            "peer_id": "gc-4066",
             "unread_count": 1
           }
         ],
@@ -2847,7 +2909,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569403` | 发送时间戳（毫秒） |
+| `ts` | `1785909886662` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -2855,12 +2917,12 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_1319:user_968` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1416:user_7239` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `from` | `user_968` | 发送方 user_id |
-| `msg_id` | `342927844399120384` | 服务端分配的全局消息 ID（雪花） |
+| `from` | `user_1416` | 发送方 user_id |
+| `msg_id` | `343273108003618816` | 服务端分配的全局消息 ID（雪花） |
 | `timestamp` | `0` |  |
-| `to` | `user_1319` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_7239` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `unread_count` | `` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2878,18 +2940,18 @@
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_1319:user_968",
+      "conv_id": "p:user_1416:user_7239",
       "conv_seq": 1,
-      "from": "user_968",
-      "msg_id": "342927844399120384",
+      "from": "user_1416",
+      "msg_id": "343273108003618816",
       "timestamp": 0,
-      "to": "user_1319",
+      "to": "user_7239",
       "unread_count": null
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569403,
+    "ts": 1785909886662,
     "ver": 1
   },
   "step": 2
@@ -2908,10 +2970,10 @@
 | `cmd` | `202` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_READ` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1319:user_968` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_1416:user_7239` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569405` | 发送时间戳（毫秒） |
+| `ts` | `1785909886664` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -2919,12 +2981,12 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_1319:user_968` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1416:user_7239` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `from` | `user_968` | 发送方 user_id |
-| `msg_id` | `342927844399120384` | 服务端分配的全局消息 ID（雪花） |
-| `timestamp` | `1785827569405` |  |
-| `to` | `user_1319` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `from` | `user_1416` | 发送方 user_id |
+| `msg_id` | `343273108003618816` | 服务端分配的全局消息 ID（雪花） |
+| `timestamp` | `1785909886663` |  |
+| `to` | `user_7239` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `unread_count` | `0` |  |
 
 <details><summary>完整 JSON</summary>
@@ -2942,18 +3004,18 @@
     "compression": "PAYLOAD_COMPRESSION_NONE",
     "payload": {
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_1319:user_968",
+      "conv_id": "p:user_1416:user_7239",
       "conv_seq": 1,
-      "from": "user_968",
-      "msg_id": "342927844399120384",
-      "timestamp": 1785827569405,
-      "to": "user_1319",
+      "from": "user_1416",
+      "msg_id": "343273108003618816",
+      "timestamp": 1785909886663,
+      "to": "user_7239",
       "unread_count": 0
     },
-    "route_key": "p:user_1319:user_968",
+    "route_key": "p:user_1416:user_7239",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569405,
+    "ts": 1785909886664,
     "ver": 1
   },
   "step": 3
@@ -2978,7 +3040,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569479` | 发送时间戳（毫秒） |
+| `ts` | `1785909886693` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -2986,12 +3048,12 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_4805:user_6307` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `from` | `user_4805` | 发送方 user_id |
-| `msg_id` | `342927844701110272` | 服务端分配的全局消息 ID（雪花） |
+| `conv_id` | `p:user_1480:user_7303` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `from` | `user_7303` | 发送方 user_id |
+| `msg_id` | `343273108112670720` | 服务端分配的全局消息 ID（雪花） |
 | `reason` | `mistake` | 踢下线/撤回等原因 |
-| `timestamp` | `1785827569479` |  |
-| `to` | `user_6307` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `timestamp` | `1785909886693` |  |
+| `to` | `user_1480` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -3008,17 +3070,17 @@
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_4805:user_6307",
-      "from": "user_4805",
-      "msg_id": "342927844701110272",
+      "conv_id": "p:user_1480:user_7303",
+      "from": "user_7303",
+      "msg_id": "343273108112670720",
       "reason": "mistake",
-      "timestamp": 1785827569479,
-      "to": "user_6307"
+      "timestamp": 1785909886693,
+      "to": "user_1480"
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569479,
+    "ts": 1785909886693,
     "ver": 1
   },
   "step": 1
@@ -3037,10 +3099,10 @@
 | `cmd` | `401` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_RECALL_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_4805:user_6307` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_1480:user_7303` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569479` | 发送时间戳（毫秒） |
+| `ts` | `1785909886693` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3048,12 +3110,12 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_4805:user_6307` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `from` | `user_4805` | 发送方 user_id |
-| `msg_id` | `342927844701110272` | 服务端分配的全局消息 ID（雪花） |
+| `conv_id` | `p:user_1480:user_7303` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `from` | `user_7303` | 发送方 user_id |
+| `msg_id` | `343273108112670720` | 服务端分配的全局消息 ID（雪花） |
 | `reason` | `mistake` | 踢下线/撤回等原因 |
-| `timestamp` | `1785827569479` |  |
-| `to` | `user_6307` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `timestamp` | `1785909886693` |  |
+| `to` | `user_1480` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -3070,17 +3132,17 @@
     "compression": "PAYLOAD_COMPRESSION_NONE",
     "payload": {
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_4805:user_6307",
-      "from": "user_4805",
-      "msg_id": "342927844701110272",
+      "conv_id": "p:user_1480:user_7303",
+      "from": "user_7303",
+      "msg_id": "343273108112670720",
       "reason": "mistake",
-      "timestamp": 1785827569479,
-      "to": "user_6307"
+      "timestamp": 1785909886693,
+      "to": "user_1480"
     },
-    "route_key": "p:user_4805:user_6307",
+    "route_key": "p:user_1480:user_7303",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569479,
+    "ts": 1785909886693,
     "ver": 1
   },
   "step": 2
@@ -3105,7 +3167,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569427` | 发送时间戳（毫秒） |
+| `ts` | `1785909886721` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3114,14 +3176,14 @@
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
 | `content` | `edited` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_5507:user_5699` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1704:user_3778` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `edit_version` | `1` |  |
 | `ext` | `{}` |  |
-| `from` | `user_5507` | 发送方 user_id |
-| `msg_id` | `342927844487200768` | 服务端分配的全局消息 ID（雪花） |
+| `from` | `user_3778` | 发送方 user_id |
+| `msg_id` | `343273108234305536` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
-| `timestamp` | `1785827569427` |  |
-| `to` | `user_5699` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `timestamp` | `1785909886721` |  |
+| `to` | `user_1704` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -3139,19 +3201,19 @@
     "payload": {
       "chat_type": "CHAT_PRIVATE",
       "content": "edited",
-      "conv_id": "p:user_5507:user_5699",
+      "conv_id": "p:user_1704:user_3778",
       "edit_version": 1,
       "ext": {},
-      "from": "user_5507",
-      "msg_id": "342927844487200768",
+      "from": "user_3778",
+      "msg_id": "343273108234305536",
       "msg_type": "MSG_TEXT",
-      "timestamp": 1785827569427,
-      "to": "user_5699"
+      "timestamp": 1785909886721,
+      "to": "user_1704"
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569427,
+    "ts": 1785909886721,
     "ver": 1
   },
   "step": 1
@@ -3176,7 +3238,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569451` | 发送时间戳（毫秒） |
+| `ts` | `1785909886637` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -3196,7 +3258,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569451,
+    "ts": 1785909886637,
     "ver": 1
   },
   "step": 2
@@ -3218,7 +3280,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569453` | 发送时间戳（毫秒） |
+| `ts` | `1785909886639` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3229,9 +3291,9 @@
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
 | `conv_id` | `` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `data` | `{"typing":true}` | 透传 JSON 字符串 |
-| `from` | `user_2852` | 发送方 user_id |
+| `from` | `user_1352` | 发送方 user_id |
 | `persist` | `false` |  |
-| `to` | `user_4741` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_1189` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `ttl_sec` | `0` |  |
 
 <details><summary>完整 JSON</summary>
@@ -3252,15 +3314,15 @@
       "chat_type": "CHAT_PRIVATE",
       "conv_id": "",
       "data": "{\"typing\":true}",
-      "from": "user_2852",
+      "from": "user_1352",
       "persist": "false",
-      "to": "user_4741",
+      "to": "user_1189",
       "ttl_sec": 0
     },
     "route_key": "",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569453,
+    "ts": 1785909886639,
     "ver": 1
   },
   "step": 3
@@ -3285,16 +3347,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569368` | 发送时间戳（毫秒） |
+| `ts` | `1785909886595` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `99fb258be8665887` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `94bb6161a93d79d1` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927844252319744` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273107730989056` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -3311,15 +3373,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "99fb258be8665887",
+      "client_msg_id": "94bb6161a93d79d1",
       "conv_seq": 1,
-      "msg_id": "342927844252319744",
+      "msg_id": "343273107730989056",
       "status": "ACK_SERVER_RECEIVED"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569368,
+    "ts": 1785909886595,
     "ver": 1
   },
   "step": 1
@@ -3334,14 +3396,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `99fb258be8665887` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `94bb6161a93d79d1` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_4645:user_999` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_1029:user_3266` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569368` | 发送时间戳（毫秒） |
+| `ts` | `1785909886595` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3352,21 +3414,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `99fb258be8665887` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `94bb6161a93d79d1` | 消息级幂等 ID（业务去重） |
 | `content` | `secret` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_4645:user_999` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1029:user_3266` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_999` | 发送方 user_id |
+| `from` | `user_1029` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927844252319744` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273107730989056` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569362` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909886590` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_4645` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_3266` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -3377,7 +3439,7 @@
   "direction": "↓ WS CMD_MSG_PUSH",
   "note": "↓ WS CMD_MSG_PUSH",
   "packet": {
-    "cid": "99fb258be8665887",
+    "cid": "94bb6161a93d79d1",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -3386,26 +3448,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "99fb258be8665887",
+      "client_msg_id": "94bb6161a93d79d1",
       "content": "secret",
-      "conv_id": "p:user_4645:user_999",
+      "conv_id": "p:user_1029:user_3266",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_999",
+      "from": "user_1029",
       "inbox_seq": 0,
-      "msg_id": "342927844252319744",
+      "msg_id": "343273107730989056",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569362,
+      "server_time": 1785909886590,
       "target_users": [],
-      "to": "user_4645"
+      "to": "user_3266"
     },
-    "route_key": "p:user_4645:user_999",
+    "route_key": "p:user_1029:user_3266",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569368,
+    "ts": 1785909886595,
     "ver": 1
   },
   "step": 2
@@ -3427,7 +3489,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569368` | 发送时间戳（毫秒） |
+| `ts` | `1785909886596` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3435,12 +3497,12 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_4645:user_999` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1029:user_3266` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `from` | `user_4645` | 发送方 user_id |
-| `msg_id` | `342927844252319744` | 服务端分配的全局消息 ID（雪花） |
+| `from` | `user_3266` | 发送方 user_id |
+| `msg_id` | `343273107730989056` | 服务端分配的全局消息 ID（雪花） |
 | `timestamp` | `0` |  |
-| `to` | `user_999` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_1029` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `unread_count` | `` |  |
 
 <details><summary>完整 JSON</summary>
@@ -3458,18 +3520,18 @@
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_4645:user_999",
+      "conv_id": "p:user_1029:user_3266",
       "conv_seq": 1,
-      "from": "user_4645",
-      "msg_id": "342927844252319744",
+      "from": "user_3266",
+      "msg_id": "343273107730989056",
       "timestamp": 0,
-      "to": "user_999",
+      "to": "user_1029",
       "unread_count": null
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569368,
+    "ts": 1785909886596,
     "ver": 1
   },
   "step": 4
@@ -3488,10 +3550,10 @@
 | `cmd` | `404` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_BURN_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_4645:user_999` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_1029:user_3266` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569384` | 发送时间戳（毫秒） |
+| `ts` | `1785909886612` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3500,11 +3562,11 @@
 | --- | --- | --- |
 | `burn_ttl_sec` | `0` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `conv_id` | `p:user_4645:user_999` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `from` | `user_999` | 发送方 user_id |
-| `msg_id` | `342927844252319744` | 服务端分配的全局消息 ID（雪花） |
-| `timestamp` | `1785827569383` |  |
-| `to` | `user_4645` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `conv_id` | `p:user_1029:user_3266` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `from` | `user_1029` | 发送方 user_id |
+| `msg_id` | `343273107730989056` | 服务端分配的全局消息 ID（雪花） |
+| `timestamp` | `1785909886611` |  |
+| `to` | `user_3266` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -3522,16 +3584,16 @@
     "payload": {
       "burn_ttl_sec": 0,
       "chat_type": "CHAT_PRIVATE",
-      "conv_id": "p:user_4645:user_999",
-      "from": "user_999",
-      "msg_id": "342927844252319744",
-      "timestamp": 1785827569383,
-      "to": "user_4645"
+      "conv_id": "p:user_1029:user_3266",
+      "from": "user_1029",
+      "msg_id": "343273107730989056",
+      "timestamp": 1785909886611,
+      "to": "user_3266"
     },
-    "route_key": "p:user_4645:user_999",
+    "route_key": "p:user_1029:user_3266",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569384,
+    "ts": 1785909886612,
     "ver": 1
   },
   "step": 5
@@ -3556,7 +3618,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565257` | 发送时间戳（毫秒） |
+| `ts` | `1785909886332` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3590,7 +3652,7 @@
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565257,
+    "ts": 1785909886332,
     "ver": 1
   },
   "step": 1
@@ -3612,14 +3674,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565263` | 发送时间戳（毫秒） |
+| `ts` | `1785909886341` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `request_id` | `fr932` | 好友请求 ID |
+| `request_id` | `fr872` | 好友请求 ID |
 | `status` | `FRIEND_STATUS_PENDING` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -3636,13 +3698,13 @@
     "cmd_name": "CMD_FRIEND_ADD_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "request_id": "fr932",
+      "request_id": "fr872",
       "status": "FRIEND_STATUS_PENDING"
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827565263,
+    "ts": 1785909886341,
     "ver": 1
   },
   "step": 2
@@ -3664,7 +3726,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565264` | 发送时间戳（毫秒） |
+| `ts` | `1785909886343` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -3684,7 +3746,7 @@
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827565264,
+    "ts": 1785909886343,
     "ver": 1
   },
   "step": 4
@@ -3706,14 +3768,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565268` | 发送时间戳（毫秒） |
+| `ts` | `1785909886347` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `friend_user_id` | `user_356` |  |
+| `friend_user_id` | `user_264` |  |
 | `status` | `FRIEND_STATUS_ACCEPTED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -3730,13 +3792,13 @@
     "cmd_name": "CMD_FRIEND_ACCEPT_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "friend_user_id": "user_356",
+      "friend_user_id": "user_264",
       "status": "FRIEND_STATUS_ACCEPTED"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565268,
+    "ts": 1785909886347,
     "ver": 1
   },
   "step": 5
@@ -3761,7 +3823,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569740` | 发送时间戳（毫秒） |
+| `ts` | `1785909886485` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -3781,7 +3843,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569740,
+    "ts": 1785909886485,
     "ver": 1
   },
   "step": 2
@@ -3803,7 +3865,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569743` | 发送时间戳（毫秒） |
+| `ts` | `1785909886488` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3812,7 +3874,7 @@
 | --- | --- | --- |
 | `has_more` | `false` |  |
 | `next_cursor` | `` |  |
-| `requests` | `[{"from_avatar":"","from_nickname":"","from_user_id":"user_1954","message":"","request_id":"fr2274","status":"FRIEND_REQUEST_STATUS_PENDING","timestamp":1785827569739,"to_avatar":"","to_nickname":"","to_user_id":"user_2114"}]` |  |
+| `requests` | `[{"from_avatar":"","from_nickname":"","from_user_id":"user_1224","message":"","request_id":"fr1318","status":"FRIEND_REQUEST_STATUS_PENDING","timestamp":1785909886482,"to_avatar":"","to_nickname":"","to_user_id":"user_1158"}]` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -3834,21 +3896,21 @@
         {
           "from_avatar": "",
           "from_nickname": "",
-          "from_user_id": "user_1954",
+          "from_user_id": "user_1224",
           "message": "",
-          "request_id": "fr2274",
+          "request_id": "fr1318",
           "status": "FRIEND_REQUEST_STATUS_PENDING",
-          "timestamp": 1785827569739,
+          "timestamp": 1785909886482,
           "to_avatar": "",
           "to_nickname": "",
-          "to_user_id": "user_2114"
+          "to_user_id": "user_1158"
         }
       ]
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569743,
+    "ts": 1785909886488,
     "ver": 1
   },
   "step": 3
@@ -3873,14 +3935,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569758` | 发送时间戳（毫秒） |
+| `ts` | `1785909886537` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `user_id` | `user_6725` | 业务用户 ID |
+| `user_id` | `user_1288` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -3896,12 +3958,12 @@
     "cmd_name": "CMD_FRIEND_BLOCK_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "user_id": "user_6725"
+      "user_id": "user_1288"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569758,
+    "ts": 1785909886537,
     "ver": 1
   },
   "step": 1
@@ -3923,7 +3985,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569759` | 发送时间戳（毫秒） |
+| `ts` | `1785909886538` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -3957,7 +4019,7 @@
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569759,
+    "ts": 1785909886538,
     "ver": 1
   },
   "step": 2
@@ -3979,14 +4041,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569762` | 发送时间戳（毫秒） |
+| `ts` | `1785909886541` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `user_id` | `user_6725` | 业务用户 ID |
+| `user_id` | `user_1288` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -4002,12 +4064,12 @@
     "cmd_name": "CMD_FRIEND_UNBLOCK_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "user_id": "user_6725"
+      "user_id": "user_1288"
     },
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827569762,
+    "ts": 1785909886541,
     "ver": 1
   },
   "step": 3
@@ -4032,14 +4094,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569719` | 发送时间戳（毫秒） |
+| `ts` | `1785909886567` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `request_id` | `fr6533` | 好友请求 ID |
+| `request_id` | `fr997` | 好友请求 ID |
 | `status` | `FRIEND_STATUS_PENDING` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -4056,13 +4118,13 @@
     "cmd_name": "CMD_FRIEND_ADD_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "request_id": "fr6533",
+      "request_id": "fr997",
       "status": "FRIEND_STATUS_PENDING"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569719,
+    "ts": 1785909886567,
     "ver": 1
   },
   "step": 1
@@ -4084,14 +4146,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569723` | 发送时间戳（毫秒） |
+| `ts` | `1785909886571` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `friend_user_id` | `user_6213` |  |
+| `friend_user_id` | `user_1446` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4107,12 +4169,12 @@
     "cmd_name": "CMD_FRIEND_REJECT_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "friend_user_id": "user_6213"
+      "friend_user_id": "user_1446"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569723,
+    "ts": 1785909886571,
     "ver": 1
   },
   "step": 2
@@ -4137,14 +4199,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569692` | 发送时间戳（毫秒） |
+| `ts` | `1785909886505` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `request_id` | `fr1858` | 好友请求 ID |
+| `request_id` | `fr6663` | 好友请求 ID |
 | `status` | `FRIEND_STATUS_PENDING` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -4161,13 +4223,13 @@
     "cmd_name": "CMD_FRIEND_ADD_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "request_id": "fr1858",
+      "request_id": "fr6663",
       "status": "FRIEND_STATUS_PENDING"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569692,
+    "ts": 1785909886505,
     "ver": 1
   },
   "step": 1
@@ -4189,14 +4251,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569695` | 发送时间戳（毫秒） |
+| `ts` | `1785909886508` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `friend_user_id` | `user_1352` |  |
+| `friend_user_id` | `user_709` |  |
 | `status` | `FRIEND_STATUS_ACCEPTED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -4213,13 +4275,13 @@
     "cmd_name": "CMD_FRIEND_ACCEPT_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "friend_user_id": "user_1352",
+      "friend_user_id": "user_709",
       "status": "FRIEND_STATUS_ACCEPTED"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569695,
+    "ts": 1785909886508,
     "ver": 1
   },
   "step": 2
@@ -4241,14 +4303,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569699` | 发送时间戳（毫秒） |
+| `ts` | `1785909886511` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `friends` | `[{"avatar":"","created_at":1785827569692,"ext":"","nickname":"","remark":"","status":"FRIEND_STATUS_ACCEPTED","user_id":"user_1698"}]` |  |
+| `friends` | `[{"avatar":"","created_at":1785909886504,"ext":"","nickname":"","remark":"","status":"FRIEND_STATUS_ACCEPTED","user_id":"user_1256"}]` |  |
 | `has_more` | `false` |  |
 | `next_cursor` | `` |  |
 
@@ -4269,12 +4331,12 @@
       "friends": [
         {
           "avatar": "",
-          "created_at": 1785827569692,
+          "created_at": 1785909886504,
           "ext": "",
           "nickname": "",
           "remark": "",
           "status": "FRIEND_STATUS_ACCEPTED",
-          "user_id": "user_1698"
+          "user_id": "user_1256"
         }
       ],
       "has_more": "false",
@@ -4283,7 +4345,7 @@
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569699,
+    "ts": 1785909886511,
     "ver": 1
   },
   "step": 3
@@ -4305,7 +4367,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569699` | 发送时间戳（毫秒） |
+| `ts` | `1785909886511` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -4325,7 +4387,7 @@
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827569699,
+    "ts": 1785909886511,
     "ver": 1
   },
   "step": 5
@@ -4347,14 +4409,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569701` | 发送时间戳（毫秒） |
+| `ts` | `1785909886514` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `friend_user_id` | `user_1698` |  |
+| `friend_user_id` | `user_1256` |  |
 | `remark` | `buddy` |  |
 
 <details><summary>完整 JSON</summary>
@@ -4371,13 +4433,13 @@
     "cmd_name": "CMD_FRIEND_SET_REMARK_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "friend_user_id": "user_1698",
+      "friend_user_id": "user_1256",
       "remark": "buddy"
     },
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827569701,
+    "ts": 1785909886514,
     "ver": 1
   },
   "step": 6
@@ -4399,14 +4461,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `5` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569704` | 发送时间戳（毫秒） |
+| `ts` | `1785909886517` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `friend_user_id` | `user_1698` |  |
+| `friend_user_id` | `user_1256` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4422,12 +4484,12 @@
     "cmd_name": "CMD_FRIEND_DELETE_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "friend_user_id": "user_1698"
+      "friend_user_id": "user_1256"
     },
     "route_key": "",
     "seq": 5,
     "trace_id": "",
-    "ts": 1785827569704,
+    "ts": 1785909886517,
     "ver": 1
   },
   "step": 7
@@ -4452,16 +4514,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569558` | 发送时间戳（毫秒） |
+| `ts` | `1785909890974` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `created_at` | `1785827569558` |  |
-| `group_id` | `g-5445` | 群 ID |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `created_at` | `1785909890974` |  |
+| `group_id` | `g-3144` | 群 ID |
 | `name` | `test-group` |  |
 
 <details><summary>完整 JSON</summary>
@@ -4478,15 +4540,15 @@
     "cmd_name": "CMD_GROUP_CREATE_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "created_at": 1785827569558,
-      "group_id": "g-5445",
+      "conv_id": "g:g-3144",
+      "created_at": 1785909890974,
+      "group_id": "g-3144",
       "name": "test-group"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569558,
+    "ts": 1785909890974,
     "ver": 1
   },
   "step": 1
@@ -4508,18 +4570,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569563` | 发送时间戳（毫秒） |
+| `ts` | `1785909890987` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `member_uids` | `["user_7107"]` |  |
-| `operator_uid` | `user_7107` |  |
-| `timestamp` | `1785827569563` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `member_uids` | `["user_2342"]` |  |
+| `operator_uid` | `user_2342` |  |
+| `timestamp` | `1785909890987` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4535,18 +4597,18 @@
     "cmd_name": "CMD_GROUP_JOIN_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
       "member_uids": [
-        "user_7107"
+        "user_2342"
       ],
-      "operator_uid": "user_7107",
-      "timestamp": 1785827569563
+      "operator_uid": "user_2342",
+      "timestamp": 1785909890987
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569563,
+    "ts": 1785909890987,
     "ver": 1
   },
   "step": 2
@@ -4568,19 +4630,19 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569568` | 发送时间戳（毫秒） |
+| `ts` | `1785909890996` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `member_uid` | `user_6947` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `member_uid` | `user_2182` |  |
 | `new_role` | `GROUP_MEMBER_ROLE_ADMIN` |  |
-| `operator_uid` | `user_1479` |  |
-| `timestamp` | `1785827569567` |  |
+| `operator_uid` | `user_579` |  |
+| `timestamp` | `1785909890994` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4596,17 +4658,17 @@
     "cmd_name": "CMD_GROUP_SET_ADMIN_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
-      "member_uid": "user_6947",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
+      "member_uid": "user_2182",
       "new_role": "GROUP_MEMBER_ROLE_ADMIN",
-      "operator_uid": "user_1479",
-      "timestamp": 1785827569567
+      "operator_uid": "user_579",
+      "timestamp": 1785909890994
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569568,
+    "ts": 1785909890996,
     "ver": 1
   },
   "step": 3
@@ -4628,19 +4690,19 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569570` | 发送时间戳（毫秒） |
+| `ts` | `1785909890999` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `member_uid` | `user_6947` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `member_uid` | `user_2182` |  |
 | `new_role` | `GROUP_MEMBER_ROLE_MEMBER` |  |
-| `operator_uid` | `user_1479` |  |
-| `timestamp` | `1785827569570` |  |
+| `operator_uid` | `user_579` |  |
+| `timestamp` | `1785909890999` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4656,17 +4718,17 @@
     "cmd_name": "CMD_GROUP_REMOVE_ADMIN_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
-      "member_uid": "user_6947",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
+      "member_uid": "user_2182",
       "new_role": "GROUP_MEMBER_ROLE_MEMBER",
-      "operator_uid": "user_1479",
-      "timestamp": 1785827569570
+      "operator_uid": "user_579",
+      "timestamp": 1785909890999
     },
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827569570,
+    "ts": 1785909890999,
     "ver": 1
   },
   "step": 4
@@ -4685,19 +4747,19 @@
 | `cmd` | `201` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_ACK_DOWN` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_UNSPECIFIED` | payload 压缩算法 |
-| `route_key` | `g-5445` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `g-3144` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `5` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569579` | 发送时间戳（毫秒） |
+| `ts` | `1785909891016` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `800f3ac2706c6ec0` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `68302119686465e3` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927845137317888` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126244646912` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -4714,15 +4776,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "800f3ac2706c6ec0",
+      "client_msg_id": "68302119686465e3",
       "conv_seq": 1,
-      "msg_id": "342927845137317888",
+      "msg_id": "343273126244646912",
       "status": "ACK_SERVER_RECEIVED"
     },
-    "route_key": "g-5445",
+    "route_key": "g-3144",
     "seq": 5,
     "trace_id": "",
-    "ts": 1785827569579,
+    "ts": 1785909891016,
     "ver": 1
   },
   "step": 5
@@ -4737,14 +4799,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `800f3ac2706c6ec0` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `68302119686465e3` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `g:g-5445` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `g:g-3144` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569579` | 发送时间戳（毫秒） |
+| `ts` | `1785909891016` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -4755,21 +4817,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_GROUP` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `800f3ac2706c6ec0` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `68302119686465e3` | 消息级幂等 ID（业务去重） |
 | `content` | `group-hi` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1479` | 发送方 user_id |
+| `from` | `user_579` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927845137317888` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126244646912` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569572` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909891004` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `g-5445` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `g-3144` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -4780,7 +4842,7 @@
   "direction": "↓ WS CMD_MSG_PUSH",
   "note": "↓ WS CMD_MSG_PUSH",
   "packet": {
-    "cid": "800f3ac2706c6ec0",
+    "cid": "68302119686465e3",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -4789,26 +4851,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_GROUP",
-      "client_msg_id": "800f3ac2706c6ec0",
+      "client_msg_id": "68302119686465e3",
       "content": "group-hi",
-      "conv_id": "g:g-5445",
+      "conv_id": "g:g-3144",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1479",
+      "from": "user_579",
       "inbox_seq": 0,
-      "msg_id": "342927845137317888",
+      "msg_id": "343273126244646912",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569572,
+      "server_time": 1785909891004,
       "target_users": [],
-      "to": "g-5445"
+      "to": "g-3144"
     },
-    "route_key": "g:g-5445",
+    "route_key": "g:g-3144",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569579,
+    "ts": 1785909891016,
     "ver": 1
   },
   "step": 6
@@ -4830,18 +4892,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569583` | 发送时间戳（毫秒） |
+| `ts` | `1785909891021` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `member_uids` | `["user_7107"]` |  |
-| `operator_uid` | `user_7107` |  |
-| `timestamp` | `1785827569583` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `member_uids` | `["user_2342"]` |  |
+| `operator_uid` | `user_2342` |  |
+| `timestamp` | `1785909891021` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4857,18 +4919,18 @@
     "cmd_name": "CMD_GROUP_LEAVE_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
       "member_uids": [
-        "user_7107"
+        "user_2342"
       ],
-      "operator_uid": "user_7107",
-      "timestamp": 1785827569583
+      "operator_uid": "user_2342",
+      "timestamp": 1785909891021
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569583,
+    "ts": 1785909891021,
     "ver": 1
   },
   "step": 7
@@ -4890,18 +4952,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `6` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569588` | 发送时间戳（毫秒） |
+| `ts` | `1785909891026` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `new_owner_uid` | `user_6947` |  |
-| `old_owner_uid` | `user_1479` |  |
-| `timestamp` | `1785827569587` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `new_owner_uid` | `user_2182` |  |
+| `old_owner_uid` | `user_579` |  |
+| `timestamp` | `1785909891026` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4917,16 +4979,16 @@
     "cmd_name": "CMD_GROUP_TRANSFER_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
-      "new_owner_uid": "user_6947",
-      "old_owner_uid": "user_1479",
-      "timestamp": 1785827569587
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
+      "new_owner_uid": "user_2182",
+      "old_owner_uid": "user_579",
+      "timestamp": 1785909891026
     },
     "route_key": "",
     "seq": 6,
     "trace_id": "",
-    "ts": 1785827569588,
+    "ts": 1785909891026,
     "ver": 1
   },
   "step": 8
@@ -4948,7 +5010,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569590` | 发送时间戳（毫秒） |
+| `ts` | `1785909891029` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -4956,11 +5018,11 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `announcement` | `ann` |  |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
 | `name` | `renamed` |  |
-| `operator_uid` | `user_6947` |  |
-| `timestamp` | `1785827569589` |  |
+| `operator_uid` | `user_2182` |  |
+| `timestamp` | `1785909891029` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -4977,16 +5039,16 @@
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
       "announcement": "ann",
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
       "name": "renamed",
-      "operator_uid": "user_6947",
-      "timestamp": 1785827569589
+      "operator_uid": "user_2182",
+      "timestamp": 1785909891029
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569590,
+    "ts": 1785909891029,
     "ver": 1
   },
   "step": 9
@@ -5008,18 +5070,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569593` | 发送时间戳（毫秒） |
+| `ts` | `1785909891033` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `member_uids` | `["user_5413"]` |  |
-| `operator_uid` | `user_6947` |  |
-| `timestamp` | `1785827569593` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `member_uids` | `["user_2502"]` |  |
+| `operator_uid` | `user_2182` |  |
+| `timestamp` | `1785909891033` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -5035,18 +5097,18 @@
     "cmd_name": "CMD_GROUP_INVITE_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
       "member_uids": [
-        "user_5413"
+        "user_2502"
       ],
-      "operator_uid": "user_6947",
-      "timestamp": 1785827569593
+      "operator_uid": "user_2182",
+      "timestamp": 1785909891033
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569593,
+    "ts": 1785909891033,
     "ver": 1
   },
   "step": 10
@@ -5068,18 +5130,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569597` | 发送时间戳（毫秒） |
+| `ts` | `1785909891037` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `member_uids` | `["user_1479"]` |  |
-| `operator_uid` | `user_6947` |  |
-| `timestamp` | `1785827569597` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `member_uids` | `["user_579"]` |  |
+| `operator_uid` | `user_2182` |  |
+| `timestamp` | `1785909891037` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -5095,18 +5157,18 @@
     "cmd_name": "CMD_GROUP_KICK_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
       "member_uids": [
-        "user_1479"
+        "user_579"
       ],
-      "operator_uid": "user_6947",
-      "timestamp": 1785827569597
+      "operator_uid": "user_2182",
+      "timestamp": 1785909891037
     },
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827569597,
+    "ts": 1785909891037,
     "ver": 1
   },
   "step": 11
@@ -5128,18 +5190,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `5` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569600` | 发送时间戳（毫秒） |
+| `ts` | `1785909891040` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `g:g-5445` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `group_id` | `g-5445` | 群 ID |
-| `operator_uid` | `user_6947` |  |
+| `conv_id` | `g:g-3144` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `group_id` | `g-3144` | 群 ID |
+| `operator_uid` | `user_2182` |  |
 | `reason` | `` | 踢下线/撤回等原因 |
-| `timestamp` | `1785827569600` |  |
+| `timestamp` | `1785909891040` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -5155,16 +5217,16 @@
     "cmd_name": "CMD_GROUP_DISMISS_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "g:g-5445",
-      "group_id": "g-5445",
-      "operator_uid": "user_6947",
+      "conv_id": "g:g-3144",
+      "group_id": "g-3144",
+      "operator_uid": "user_2182",
       "reason": "",
-      "timestamp": 1785827569600
+      "timestamp": 1785909891040
     },
     "route_key": "",
     "seq": 5,
     "trace_id": "",
-    "ts": 1785827569600,
+    "ts": 1785909891040,
     "ver": 1
   },
   "step": 12
@@ -5189,14 +5251,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565227` | 发送时间戳（毫秒） |
+| `ts` | `1785909886747` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `p:user_260:user_518` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_1478:user_1638` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `cursor` | `0` | 离线拉取游标（conv_seq） |
 | `limit` | `50` | 离线拉取条数上限 |
 
@@ -5214,14 +5276,14 @@
     "cmd_name": "CMD_OFFLINE_PULL_REQ",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "p:user_260:user_518",
+      "conv_id": "p:user_1478:user_1638",
       "cursor": 0,
       "limit": 50
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565227,
+    "ts": 1785909886747,
     "ver": 1
   },
   "step": 2
@@ -5243,7 +5305,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565230` | 发送时间戳（毫秒） |
+| `ts` | `1785909886750` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -5251,7 +5313,7 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `has_more` | `false` |  |
-| `messages` | `[{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"cm-582","content":"offline-msg","conv_id":"p:user_260:user_518","conv_seq":1,"edit_version":0,"ext":{},"from":"user_260","inbox_seq":1,"msg_id":"342927826799820800","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785827565202,"target_users":[],"to":"user_518"}]` |  |
+| `messages` | `[{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"cm-1702","content":"offline-msg","conv_id":"p:user_1478:user_1638","conv_seq":1,"edit_version":0,"ext":{},"from":"user_1478","inbox_seq":2,"msg_id":"343273108343357440","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785909886736,"target_users":[],"to":"user_1638"}]` |  |
 | `next_cursor` | `1` |  |
 
 <details><summary>完整 JSON</summary>
@@ -5275,21 +5337,21 @@
           "burn_ttl_sec": 0,
           "burned": "false",
           "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "cm-582",
+          "client_msg_id": "cm-1702",
           "content": "offline-msg",
-          "conv_id": "p:user_260:user_518",
+          "conv_id": "p:user_1478:user_1638",
           "conv_seq": 1,
           "edit_version": 0,
           "ext": {},
-          "from": "user_260",
-          "inbox_seq": 1,
-          "msg_id": "342927826799820800",
+          "from": "user_1478",
+          "inbox_seq": 2,
+          "msg_id": "343273108343357440",
           "msg_type": "MSG_TEXT",
           "priority": "MSG_PRIORITY_NORMAL",
           "recalled": "false",
-          "server_time": 1785827565202,
+          "server_time": 1785909886736,
           "target_users": [],
-          "to": "user_518"
+          "to": "user_1638"
         }
       ],
       "next_cursor": 1
@@ -5297,7 +5359,7 @@
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565230,
+    "ts": 1785909886750,
     "ver": 1
   },
   "step": 3
@@ -5322,14 +5384,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569246` | 发送时间戳（毫秒） |
+| `ts` | `1785909891070` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"cm-4421","content":"hi-b","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"user_1988","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"user_5315"}` |  |
+| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"cm-3528","content":"hi-b","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"user_3240","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"user_3368"}` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -5350,13 +5412,13 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "cm-4421",
+        "client_msg_id": "cm-3528",
         "content": "hi-b",
         "conv_id": "",
         "conv_seq": 0,
         "edit_version": 0,
         "ext": {},
-        "from": "user_1988",
+        "from": "user_3240",
         "inbox_seq": 0,
         "msg_id": "",
         "msg_type": "MSG_TEXT",
@@ -5364,13 +5426,13 @@
         "recalled": "false",
         "server_time": 0,
         "target_users": [],
-        "to": "user_5315"
+        "to": "user_3368"
       }
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569246,
+    "ts": 1785909891070,
     "ver": 1
   },
   "step": 2
@@ -5392,16 +5454,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569275` | 发送时间戳（毫秒） |
+| `ts` | `1785909891080` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `cm-4421` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `cm-3528` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927843811917824` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126538248192` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -5418,15 +5480,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "cm-4421",
+      "client_msg_id": "cm-3528",
       "conv_seq": 1,
-      "msg_id": "342927843811917824",
+      "msg_id": "343273126538248192",
       "status": "ACK_SERVER_RECEIVED"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569275,
+    "ts": 1785909891080,
     "ver": 1
   },
   "step": 3
@@ -5441,14 +5503,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `cm-4421` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `cm-3528` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1988:user_5315` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_3240:user_3368` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569275` | 发送时间戳（毫秒） |
+| `ts` | `1785909891080` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -5459,21 +5521,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `cm-4421` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `cm-3528` | 消息级幂等 ID（业务去重） |
 | `content` | `hi-b` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_1988:user_5315` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_3240:user_3368` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1988` | 发送方 user_id |
+| `from` | `user_3240` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927843811917824` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126538248192` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569258` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909891074` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_5315` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_3368` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -5484,7 +5546,7 @@
   "direction": "↓ WS CMD_MSG_PUSH",
   "note": "↓ WS CMD_MSG_PUSH",
   "packet": {
-    "cid": "cm-4421",
+    "cid": "cm-3528",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -5493,26 +5555,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "cm-4421",
+      "client_msg_id": "cm-3528",
       "content": "hi-b",
-      "conv_id": "p:user_1988:user_5315",
+      "conv_id": "p:user_3240:user_3368",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1988",
+      "from": "user_3240",
       "inbox_seq": 0,
-      "msg_id": "342927843811917824",
+      "msg_id": "343273126538248192",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569258,
+      "server_time": 1785909891074,
       "target_users": [],
-      "to": "user_5315"
+      "to": "user_3368"
     },
-    "route_key": "p:user_1988:user_5315",
+    "route_key": "p:user_3240:user_3368",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569275,
+    "ts": 1785909891080,
     "ver": 1
   },
   "step": 4
@@ -5534,16 +5596,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `5` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569276` | 发送时间戳（毫秒） |
+| `ts` | `1785909891082` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `cm-4421` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `cm-3528` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927843811917824` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126538248192` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_CLIENT_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -5560,15 +5622,15 @@
     "cmd_name": "CMD_MSG_ACK_UP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "cm-4421",
+      "client_msg_id": "cm-3528",
       "conv_seq": 1,
-      "msg_id": "342927843811917824",
+      "msg_id": "343273126538248192",
       "status": "ACK_CLIENT_RECEIVED"
     },
     "route_key": "",
     "seq": 5,
     "trace_id": "",
-    "ts": 1785827569276,
+    "ts": 1785909891082,
     "ver": 1
   },
   "step": 6
@@ -5587,18 +5649,18 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `content` | `rest-path` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `to` | `user_4613` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_2918` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 **HTTP 响应体（节选）**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `10f42bf856ed31a9` | 消息级幂等 ID（业务去重） |
-| `conv_id` | `p:user_1062:user_4613` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `client_msg_id` | `c0c5c00195773177` | 消息级幂等 ID（业务去重） |
+| `conv_id` | `p:user_2918:user_3560` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `duplicate` | `false` |  |
-| `msg_id` | `342927844172627968` | 服务端分配的全局消息 ID（雪花） |
-| `server_time` | `1785827569343` | 服务端当前时间（毫秒） |
+| `msg_id` | `343273126634717184` | 服务端分配的全局消息 ID（雪花） |
+| `server_time` | `1785909891097` | 服务端当前时间（毫秒） |
 | `status` | `SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -5611,16 +5673,16 @@
   "http": {
     "request": {
       "content": "rest-path",
-      "to": "user_4613"
+      "to": "user_2918"
     },
     "response": {
       "body": {
-        "client_msg_id": "10f42bf856ed31a9",
-        "conv_id": "p:user_1062:user_4613",
+        "client_msg_id": "c0c5c00195773177",
+        "conv_id": "p:user_2918:user_3560",
         "conv_seq": 1,
         "duplicate": false,
-        "msg_id": "342927844172627968",
-        "server_time": 1785827569343,
+        "msg_id": "343273126634717184",
+        "server_time": 1785909891097,
         "status": "SERVER_RECEIVED"
       },
       "status": 200
@@ -5639,14 +5701,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `10f42bf856ed31a9` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `c0c5c00195773177` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1062:user_4613` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_2918:user_3560` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
-| `trace_id` | `lt-2c811fb810c0` | 链路追踪 ID |
-| `ts` | `1785827569349` | 发送时间戳（毫秒） |
+| `trace_id` | `lt-cc284ec4f817` | 链路追踪 ID |
+| `ts` | `1785909891102` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -5657,21 +5719,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `10f42bf856ed31a9` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `c0c5c00195773177` | 消息级幂等 ID（业务去重） |
 | `content` | `rest-path` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_1062:user_4613` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_2918:user_3560` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1062` | 发送方 user_id |
+| `from` | `user_3560` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927844172627968` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126634717184` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569343` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909891097` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_4613` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_2918` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -5682,7 +5744,7 @@
   "direction": "↓ WS CMD_MSG_PUSH",
   "note": "↓ WS CMD_MSG_PUSH",
   "packet": {
-    "cid": "10f42bf856ed31a9",
+    "cid": "c0c5c00195773177",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -5691,26 +5753,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "10f42bf856ed31a9",
+      "client_msg_id": "c0c5c00195773177",
       "content": "rest-path",
-      "conv_id": "p:user_1062:user_4613",
+      "conv_id": "p:user_2918:user_3560",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1062",
+      "from": "user_3560",
       "inbox_seq": 0,
-      "msg_id": "342927844172627968",
+      "msg_id": "343273126634717184",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569343,
+      "server_time": 1785909891097,
       "target_users": [],
-      "to": "user_4613"
+      "to": "user_2918"
     },
-    "route_key": "p:user_1062:user_4613",
+    "route_key": "p:user_2918:user_3560",
     "seq": 0,
-    "trace_id": "lt-2c811fb810c0",
-    "ts": 1785827569349,
+    "trace_id": "lt-cc284ec4f817",
+    "ts": 1785909891102,
     "ver": 1
   },
   "step": 2
@@ -5735,14 +5797,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569318` | 发送时间戳（毫秒） |
+| `ts` | `1785909891052` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"idem-2756","content":"once","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"user_2436","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"user_4517"}` |  |
+| `message` | `{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"idem-3208","content":"once","conv_id":"","conv_seq":0,"edit_version":0,"ext":{},"from":"user_9255","inbox_seq":0,"msg_id":"","msg_type":"MSG_TEXT","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":0,"target_users":[],"to":"user_3176"}` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -5763,13 +5825,13 @@
         "burn_ttl_sec": 0,
         "burned": "false",
         "chat_type": "CHAT_PRIVATE",
-        "client_msg_id": "idem-2756",
+        "client_msg_id": "idem-3208",
         "content": "once",
         "conv_id": "",
         "conv_seq": 0,
         "edit_version": 0,
         "ext": {},
-        "from": "user_2436",
+        "from": "user_9255",
         "inbox_seq": 0,
         "msg_id": "",
         "msg_type": "MSG_TEXT",
@@ -5777,13 +5839,13 @@
         "recalled": "false",
         "server_time": 0,
         "target_users": [],
-        "to": "user_4517"
+        "to": "user_3176"
       }
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569318,
+    "ts": 1785909891052,
     "ver": 1
   },
   "step": 2
@@ -5805,16 +5867,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569327` | 发送时间戳（毫秒） |
+| `ts` | `1785909891058` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `idem-2756` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `idem-3208` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927844084547584` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126454362112` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -5831,15 +5893,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "idem-2756",
+      "client_msg_id": "idem-3208",
       "conv_seq": 1,
-      "msg_id": "342927844084547584",
+      "msg_id": "343273126454362112",
       "status": "ACK_SERVER_RECEIVED"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569327,
+    "ts": 1785909891058,
     "ver": 1
   },
   "step": 3
@@ -5861,16 +5923,16 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569328` | 发送时间戳（毫秒） |
+| `ts` | `1785909891059` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `idem-2756` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `idem-3208` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927844084547584` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273126454362112` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -5887,15 +5949,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "idem-2756",
+      "client_msg_id": "idem-3208",
       "conv_seq": 1,
-      "msg_id": "342927844084547584",
+      "msg_id": "343273126454362112",
       "status": "ACK_SERVER_RECEIVED"
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827569328,
+    "ts": 1785909891059,
     "ver": 1
   },
   "step": 4
@@ -5920,14 +5982,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569307` | 发送时间戳（毫秒） |
+| `ts` | `1785909891128` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `acks` | `[{"client_msg_id":"cm-2404","conv_seq":1,"msg_id":"342927843996467200","status":"ACK_CLIENT_RECEIVED"}]` |  |
+| `acks` | `[{"client_msg_id":"cm-3334","conv_seq":1,"msg_id":"343273126739574784","status":"ACK_CLIENT_RECEIVED"}]` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -5945,9 +6007,9 @@
     "payload": {
       "acks": [
         {
-          "client_msg_id": "cm-2404",
+          "client_msg_id": "cm-3334",
           "conv_seq": 1,
-          "msg_id": "342927843996467200",
+          "msg_id": "343273126739574784",
           "status": "ACK_CLIENT_RECEIVED"
         }
       ]
@@ -5955,7 +6017,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569307,
+    "ts": 1785909891128,
     "ver": 1
   },
   "step": 2
@@ -5980,17 +6042,17 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565340` | 发送时间戳（毫秒） |
+| `ts` | `1785909886448` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `created_at` | `1785827565335` |  |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `created_at` | `1785909886443` |  |
 | `name` | `lobby` |  |
-| `room_id` | `room-3589` | 聊天室 ID |
+| `room_id` | `room-1192` | 聊天室 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -6006,15 +6068,15 @@
     "cmd_name": "CMD_ROOM_CREATE_RESP",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "r:room-3589",
-      "created_at": 1785827565335,
+      "conv_id": "r:room-1192",
+      "created_at": 1785909886443,
       "name": "lobby",
-      "room_id": "room-3589"
+      "room_id": "room-1192"
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565340,
+    "ts": 1785909886448,
     "ver": 1
   },
   "step": 1
@@ -6036,18 +6098,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565344` | 发送时间戳（毫秒） |
+| `ts` | `1785909886453` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `member_uids` | `["user_3429"]` |  |
-| `operator_uid` | `user_3429` |  |
-| `room_id` | `room-3589` | 聊天室 ID |
-| `timestamp` | `1785827565343` |  |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `member_uids` | `["user_614"]` |  |
+| `operator_uid` | `user_614` |  |
+| `room_id` | `room-1192` | 聊天室 ID |
+| `timestamp` | `1785909886452` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6063,18 +6125,18 @@
     "cmd_name": "CMD_ROOM_JOIN_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "r:room-3589",
+      "conv_id": "r:room-1192",
       "member_uids": [
-        "user_3429"
+        "user_614"
       ],
-      "operator_uid": "user_3429",
-      "room_id": "room-3589",
-      "timestamp": 1785827565343
+      "operator_uid": "user_614",
+      "room_id": "room-1192",
+      "timestamp": 1785909886452
     },
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827565344,
+    "ts": 1785909886453,
     "ver": 1
   },
   "step": 2
@@ -6096,7 +6158,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565344` | 发送时间戳（毫秒） |
+| `ts` | `1785909886453` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -6116,7 +6178,7 @@
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827565344,
+    "ts": 1785909886453,
     "ver": 1
   },
   "step": 4
@@ -6138,18 +6200,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565347` | 发送时间戳（毫秒） |
+| `ts` | `1785909886455` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `name` | `lobby-2` |  |
-| `operator_uid` | `user_1030` |  |
-| `room_id` | `room-3589` | 聊天室 ID |
-| `timestamp` | `1785827565346` |  |
+| `operator_uid` | `user_454` |  |
+| `room_id` | `room-1192` | 聊天室 ID |
+| `timestamp` | `1785909886454` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6165,16 +6227,16 @@
     "cmd_name": "CMD_ROOM_UPDATE_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "r:room-3589",
+      "conv_id": "r:room-1192",
       "name": "lobby-2",
-      "operator_uid": "user_1030",
-      "room_id": "room-3589",
-      "timestamp": 1785827565346
+      "operator_uid": "user_454",
+      "room_id": "room-1192",
+      "timestamp": 1785909886454
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827565347,
+    "ts": 1785909886455,
     "ver": 1
   },
   "step": 5
@@ -6193,19 +6255,19 @@
 | `cmd` | `201` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_ACK_DOWN` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_UNSPECIFIED` | payload 压缩算法 |
-| `route_key` | `room-3589` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `room-1192` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565348` | 发送时间戳（毫秒） |
+| `ts` | `1785909886456` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `client_msg_id` | `a6a401a1657faea4` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `53e7f77ab719cfb5` | 消息级幂等 ID（业务去重） |
 | `conv_seq` | `1` | 会话内单调排序位点 |
-| `msg_id` | `342927827416383488` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273107168952320` | 服务端分配的全局消息 ID（雪花） |
 | `status` | `ACK_SERVER_RECEIVED` | ACK 状态：ACK_SERVER_RECEIVED / ACK_CLIENT_RECEIVED |
 
 <details><summary>完整 JSON</summary>
@@ -6222,15 +6284,15 @@
     "cmd_name": "CMD_MSG_ACK_DOWN",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "client_msg_id": "a6a401a1657faea4",
+      "client_msg_id": "53e7f77ab719cfb5",
       "conv_seq": 1,
-      "msg_id": "342927827416383488",
+      "msg_id": "343273107168952320",
       "status": "ACK_SERVER_RECEIVED"
     },
-    "route_key": "room-3589",
+    "route_key": "room-1192",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827565348,
+    "ts": 1785909886456,
     "ver": 1
   },
   "step": 6
@@ -6245,14 +6307,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `a6a401a1657faea4` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `53e7f77ab719cfb5` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `r:room-3589` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `r:room-1192` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565348` | 发送时间戳（毫秒） |
+| `ts` | `1785909886456` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -6263,21 +6325,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_ROOM` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `a6a401a1657faea4` | 消息级幂等 ID（业务去重） |
+| `client_msg_id` | `53e7f77ab719cfb5` | 消息级幂等 ID（业务去重） |
 | `content` | `room-msg` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1030` | 发送方 user_id |
+| `from` | `user_454` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927827416383488` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273107168952320` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_TEXT` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827565348` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909886456` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `room-3589` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `room-1192` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -6288,7 +6350,7 @@
   "direction": "↓ WS CMD_MSG_PUSH",
   "note": "↓ WS CMD_MSG_PUSH",
   "packet": {
-    "cid": "a6a401a1657faea4",
+    "cid": "53e7f77ab719cfb5",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -6297,26 +6359,26 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_ROOM",
-      "client_msg_id": "a6a401a1657faea4",
+      "client_msg_id": "53e7f77ab719cfb5",
       "content": "room-msg",
-      "conv_id": "r:room-3589",
+      "conv_id": "r:room-1192",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1030",
+      "from": "user_454",
       "inbox_seq": 0,
-      "msg_id": "342927827416383488",
+      "msg_id": "343273107168952320",
       "msg_type": "MSG_TEXT",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827565348,
+      "server_time": 1785909886456,
       "target_users": [],
-      "to": "room-3589"
+      "to": "room-1192"
     },
-    "route_key": "r:room-3589",
+    "route_key": "r:room-1192",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827565348,
+    "ts": 1785909886456,
     "ver": 1
   },
   "step": 7
@@ -6338,7 +6400,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `8` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565348` | 发送时间戳（毫秒） |
+| `ts` | `1785909886456` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -6354,11 +6416,11 @@
     "cmd": 708,
     "cmd_name": "CMD_708",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-    "payload_raw_bytes": 28,
+    "payload_raw_bytes": 27,
     "route_key": "",
     "seq": 8,
     "trace_id": "",
-    "ts": 1785827565348,
+    "ts": 1785909886456,
     "ver": 1
   },
   "step": 9
@@ -6380,18 +6442,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `5` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565352` | 发送时间戳（毫秒） |
+| `ts` | `1785909886459` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `member_uids` | `["user_3429"]` |  |
-| `operator_uid` | `user_1030` |  |
-| `room_id` | `room-3589` | 聊天室 ID |
-| `timestamp` | `1785827565352` |  |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `member_uids` | `["user_614"]` |  |
+| `operator_uid` | `user_454` |  |
+| `room_id` | `room-1192` | 聊天室 ID |
+| `timestamp` | `1785909886459` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6407,18 +6469,18 @@
     "cmd_name": "CMD_ROOM_KICK_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "r:room-3589",
+      "conv_id": "r:room-1192",
       "member_uids": [
-        "user_3429"
+        "user_614"
       ],
-      "operator_uid": "user_1030",
-      "room_id": "room-3589",
-      "timestamp": 1785827565352
+      "operator_uid": "user_454",
+      "room_id": "room-1192",
+      "timestamp": 1785909886459
     },
     "route_key": "",
     "seq": 5,
     "trace_id": "",
-    "ts": 1785827565352,
+    "ts": 1785909886459,
     "ver": 1
   },
   "step": 10
@@ -6440,18 +6502,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `3` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565354` | 发送时间戳（毫秒） |
+| `ts` | `1785909886460` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `member_uids` | `["user_3429"]` |  |
-| `operator_uid` | `user_3429` |  |
-| `room_id` | `room-3589` | 聊天室 ID |
-| `timestamp` | `1785827565354` |  |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `member_uids` | `["user_614"]` |  |
+| `operator_uid` | `user_614` |  |
+| `room_id` | `room-1192` | 聊天室 ID |
+| `timestamp` | `1785909886460` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6467,18 +6529,18 @@
     "cmd_name": "CMD_ROOM_JOIN_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "r:room-3589",
+      "conv_id": "r:room-1192",
       "member_uids": [
-        "user_3429"
+        "user_614"
       ],
-      "operator_uid": "user_3429",
-      "room_id": "room-3589",
-      "timestamp": 1785827565354
+      "operator_uid": "user_614",
+      "room_id": "room-1192",
+      "timestamp": 1785909886460
     },
     "route_key": "",
     "seq": 3,
     "trace_id": "",
-    "ts": 1785827565354,
+    "ts": 1785909886460,
     "ver": 1
   },
   "step": 11
@@ -6500,18 +6562,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565380` | 发送时间戳（毫秒） |
+| `ts` | `1785909886462` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `member_uids` | `["user_3429"]` |  |
-| `operator_uid` | `user_3429` |  |
-| `room_id` | `room-3589` | 聊天室 ID |
-| `timestamp` | `1785827565380` |  |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `member_uids` | `["user_614"]` |  |
+| `operator_uid` | `user_614` |  |
+| `room_id` | `room-1192` | 聊天室 ID |
+| `timestamp` | `1785909886462` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6527,18 +6589,18 @@
     "cmd_name": "CMD_ROOM_LEAVE_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "r:room-3589",
+      "conv_id": "r:room-1192",
       "member_uids": [
-        "user_3429"
+        "user_614"
       ],
-      "operator_uid": "user_3429",
-      "room_id": "room-3589",
-      "timestamp": 1785827565380
+      "operator_uid": "user_614",
+      "room_id": "room-1192",
+      "timestamp": 1785909886462
     },
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827565380,
+    "ts": 1785909886462,
     "ver": 1
   },
   "step": 12
@@ -6560,7 +6622,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `13` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565388` | 发送时间戳（毫秒） |
+| `ts` | `1785909886463` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -6580,7 +6642,7 @@
     "route_key": "",
     "seq": 13,
     "trace_id": "",
-    "ts": 1785827565388,
+    "ts": 1785909886463,
     "ver": 1
   },
   "step": 14
@@ -6602,18 +6664,18 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `6` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565405` | 发送时间戳（毫秒） |
+| `ts` | `1785909886466` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `r:room-3589` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `operator_uid` | `user_1030` |  |
+| `conv_id` | `r:room-1192` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `operator_uid` | `user_454` |  |
 | `reason` | `` | 踢下线/撤回等原因 |
-| `room_id` | `room-3589` | 聊天室 ID |
-| `timestamp` | `1785827565402` |  |
+| `room_id` | `room-1192` | 聊天室 ID |
+| `timestamp` | `1785909886465` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6629,16 +6691,16 @@
     "cmd_name": "CMD_ROOM_DISMISS_PUSH",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "r:room-3589",
-      "operator_uid": "user_1030",
+      "conv_id": "r:room-1192",
+      "operator_uid": "user_454",
       "reason": "",
-      "room_id": "room-3589",
-      "timestamp": 1785827565402
+      "room_id": "room-1192",
+      "timestamp": 1785909886465
     },
     "route_key": "",
     "seq": 6,
     "trace_id": "",
-    "ts": 1785827565405,
+    "ts": 1785909886466,
     "ver": 1
   },
   "step": 15
@@ -6656,7 +6718,7 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `user_id` | `user_1028` | 业务用户 ID |
+| `user_id` | `user_5351` | 业务用户 ID |
 
 **HTTP 响应体（节选）**
 
@@ -6673,7 +6735,7 @@
   "direction": "↑ HTTP POST /internal/v1/users/:id/kick",
   "http": {
     "request": {
-      "user_id": "user_1028"
+      "user_id": "user_5351"
     },
     "response": {
       "status": 200
@@ -6698,8 +6760,8 @@
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
-| `trace_id` | `tr-1188` | 链路追踪 ID |
-| `ts` | `1785827565290` | 发送时间戳（毫秒） |
+| `trace_id` | `tr-1064` | 链路追踪 ID |
+| `ts` | `1785909886385` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -6710,7 +6772,7 @@
 | `kicker` | `` |  |
 | `reason` | `e2e` | 踢下线/撤回等原因 |
 | `reason_code` | `KICK_REASON_ADMIN_KICK` | KickReason 枚举 |
-| `timestamp` | `1785827565289` |  |
+| `timestamp` | `1785909886384` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6730,12 +6792,12 @@
       "kicker": null,
       "reason": "e2e",
       "reason_code": "KICK_REASON_ADMIN_KICK",
-      "timestamp": 1785827565289
+      "timestamp": 1785909886384
     },
     "route_key": "",
     "seq": 0,
-    "trace_id": "tr-1188",
-    "ts": 1785827565290,
+    "trace_id": "tr-1064",
+    "ts": 1785909886385,
     "ver": 1
   },
   "step": 2
@@ -6760,7 +6822,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565316` | 发送时间戳（毫秒） |
+| `ts` | `1785909886397` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -6769,15 +6831,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `d2-1380` | 设备唯一标识 |
+| `device_id` | `d2-5831` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `Ibr-sUeCVoCnDAo_7wMzhH4uRWNgMLaMypqfTubFtjU` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_648` | 业务用户 ID |
+| `token` | `VthCNufIA1Z5mTQafF8SHtNBS9PeljP_OdwwZyWQYtY` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_5607` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -6795,20 +6857,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "d2-1380",
+      "device_id": "d2-5831",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "Ibr-sUeCVoCnDAo_7wMzhH4uRWNgMLaMypqfTubFtjU",
-      "user_id": "user_648"
+      "token": "VthCNufIA1Z5mTQafF8SHtNBS9PeljP_OdwwZyWQYtY",
+      "user_id": "user_5607"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565316,
+    "ts": 1785909886397,
     "ver": 1
   },
   "step": 2
@@ -6830,7 +6892,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565317` | 发送时间戳（毫秒） |
+| `ts` | `1785909886399` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -6841,7 +6903,7 @@
 | `kicker` | `` |  |
 | `reason` | `device_limit` | 踢下线/撤回等原因 |
 | `reason_code` | `KICK_REASON_DEVICE_LIMIT` | KickReason 枚举 |
-| `timestamp` | `1785827565317` |  |
+| `timestamp` | `1785909886399` |  |
 
 <details><summary>完整 JSON</summary>
 
@@ -6861,12 +6923,12 @@
       "kicker": null,
       "reason": "device_limit",
       "reason_code": "KICK_REASON_DEVICE_LIMIT",
-      "timestamp": 1785827565317
+      "timestamp": 1785909886399
     },
     "route_key": "",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827565317,
+    "ts": 1785909886399,
     "ver": 1
   },
   "step": 3
@@ -6891,7 +6953,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565301` | 发送时间戳（毫秒） |
+| `ts` | `1785909886411` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -6900,15 +6962,15 @@
 | --- | --- | --- |
 | `app_key` | `app_demo` | 租户应用标识 |
 | `compression_offered` | `[]` |  |
-| `device_id` | `d2-770` | 设备唯一标识 |
+| `device_id` | `d2-1096` | 设备唯一标识 |
 | `device_model` | `` |  |
 | `device_name` | `` |  |
 | `network` | `` |  |
 | `os` | `` |  |
 | `platform` | `ios` | 客户端平台：ios/android/web/desktop |
 | `sdk_ver` | `0.1.0` | SDK 版本号 |
-| `token` | `JGB5sGuy1vy1i7gPey7Z5VNpVNCQ1hENZvnIKq7n3uM` | WS 鉴权 token（与 REST access_token 相同） |
-| `user_id` | `user_546` | 业务用户 ID |
+| `token` | `SizzdjcBZnK5vn2u9J8RASv_tF7vzTfC7ZTCb-F3E7M` | WS 鉴权 token（与 REST access_token 相同） |
+| `user_id` | `user_422` | 业务用户 ID |
 
 <details><summary>完整 JSON</summary>
 
@@ -6926,20 +6988,20 @@
     "payload": {
       "app_key": "app_demo",
       "compression_offered": [],
-      "device_id": "d2-770",
+      "device_id": "d2-1096",
       "device_model": "",
       "device_name": "",
       "network": "",
       "os": "",
       "platform": "ios",
       "sdk_ver": "0.1.0",
-      "token": "JGB5sGuy1vy1i7gPey7Z5VNpVNCQ1hENZvnIKq7n3uM",
-      "user_id": "user_546"
+      "token": "SizzdjcBZnK5vn2u9J8RASv_tF7vzTfC7ZTCb-F3E7M",
+      "user_id": "user_422"
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565301,
+    "ts": 1785909886411,
     "ver": 1
   },
   "step": 2
@@ -6961,7 +7023,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827565304` | 发送时间戳（毫秒） |
+| `ts` | `1785909886413` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -6995,7 +7057,7 @@
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827565304,
+    "ts": 1785909886413,
     "ver": 1
   },
   "step": 3
@@ -7013,14 +7075,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `sm-5797` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `sm-747` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1288:user_5637` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_555:user_8839` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569622` | 发送时间戳（毫秒） |
+| `ts` | `1785909888502` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7031,21 +7093,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `sm-5797` | 消息级幂等 ID（业务去重） |
-| `content` | `{"chunk":"","content_type":"text/plain","metadata":{},"sequence":1,"status":"STREAM_STATUS_START","stream_id":"st-5765"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_1288:user_5637` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `client_msg_id` | `sm-747` | 消息级幂等 ID（业务去重） |
+| `content` | `{"chunk":"","content_type":"text/plain","metadata":{},"sequence":1,"status":"STREAM_STATUS_START","stream_id":"st-715"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
+| `conv_id` | `p:user_555:user_8839` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `1` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1288` | 发送方 user_id |
+| `from` | `user_8839` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927845317672960` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273115683389440` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_STREAM` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569616` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909888486` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_5637` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_555` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -7056,7 +7118,7 @@
   "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_START)",
   "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_START)",
   "packet": {
-    "cid": "sm-5797",
+    "cid": "sm-747",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -7065,33 +7127,33 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "sm-5797",
+      "client_msg_id": "sm-747",
       "content": {
         "chunk": "",
         "content_type": "text/plain",
         "metadata": {},
         "sequence": 1,
         "status": "STREAM_STATUS_START",
-        "stream_id": "st-5765"
+        "stream_id": "st-715"
       },
-      "conv_id": "p:user_1288:user_5637",
+      "conv_id": "p:user_555:user_8839",
       "conv_seq": 1,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1288",
+      "from": "user_8839",
       "inbox_seq": 0,
-      "msg_id": "342927845317672960",
+      "msg_id": "343273115683389440",
       "msg_type": "MSG_STREAM",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569616,
+      "server_time": 1785909888486,
       "target_users": [],
-      "to": "user_5637"
+      "to": "user_555"
     },
-    "route_key": "p:user_1288:user_5637",
+    "route_key": "p:user_555:user_8839",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569622,
+    "ts": 1785909888502,
     "ver": 1
   },
   "step": 1
@@ -7106,14 +7168,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `sm-5829` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `sm-779` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1288:user_5637` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_555:user_8839` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569627` | 发送时间戳（毫秒） |
+| `ts` | `1785909888508` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7124,21 +7186,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `sm-5829` | 消息级幂等 ID（业务去重） |
-| `content` | `{"chunk":"Hel","content_type":"text/plain","metadata":{},"sequence":2,"status":"STREAM_STATUS_ONGOING","stream_id":"st-5765"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_1288:user_5637` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `client_msg_id` | `sm-779` | 消息级幂等 ID（业务去重） |
+| `content` | `{"chunk":"Hel","content_type":"text/plain","metadata":{},"sequence":2,"status":"STREAM_STATUS_ONGOING","stream_id":"st-715"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
+| `conv_id` | `p:user_555:user_8839` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `2` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1288` | 发送方 user_id |
+| `from` | `user_8839` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927845351227392` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273115763081216` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_STREAM` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569623` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909888505` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_5637` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_555` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -7149,7 +7211,7 @@
   "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
   "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
   "packet": {
-    "cid": "sm-5829",
+    "cid": "sm-779",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -7158,33 +7220,33 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "sm-5829",
+      "client_msg_id": "sm-779",
       "content": {
         "chunk": "Hel",
         "content_type": "text/plain",
         "metadata": {},
         "sequence": 2,
         "status": "STREAM_STATUS_ONGOING",
-        "stream_id": "st-5765"
+        "stream_id": "st-715"
       },
-      "conv_id": "p:user_1288:user_5637",
+      "conv_id": "p:user_555:user_8839",
       "conv_seq": 2,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1288",
+      "from": "user_8839",
       "inbox_seq": 0,
-      "msg_id": "342927845351227392",
+      "msg_id": "343273115763081216",
       "msg_type": "MSG_STREAM",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569623,
+      "server_time": 1785909888505,
       "target_users": [],
-      "to": "user_5637"
+      "to": "user_555"
     },
-    "route_key": "p:user_1288:user_5637",
+    "route_key": "p:user_555:user_8839",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569627,
+    "ts": 1785909888508,
     "ver": 1
   },
   "step": 2
@@ -7199,14 +7261,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `sm-5861` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `sm-811` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1288:user_5637` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_555:user_8839` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569632` | 发送时间戳（毫秒） |
+| `ts` | `1785909888513` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7217,21 +7279,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `sm-5861` | 消息级幂等 ID（业务去重） |
-| `content` | `{"chunk":"lo","content_type":"text/plain","metadata":{},"sequence":3,"status":"STREAM_STATUS_ONGOING","stream_id":"st-5765"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_1288:user_5637` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `client_msg_id` | `sm-811` | 消息级幂等 ID（业务去重） |
+| `content` | `{"chunk":"lo","content_type":"text/plain","metadata":{},"sequence":3,"status":"STREAM_STATUS_ONGOING","stream_id":"st-715"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
+| `conv_id` | `p:user_555:user_8839` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `3` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1288` | 发送方 user_id |
+| `from` | `user_8839` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927845376393216` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273115788247040` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_STREAM` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569629` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909888510` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_5637` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_555` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -7242,7 +7304,7 @@
   "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
   "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_ONGOING)",
   "packet": {
-    "cid": "sm-5861",
+    "cid": "sm-811",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -7251,33 +7313,33 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "sm-5861",
+      "client_msg_id": "sm-811",
       "content": {
         "chunk": "lo",
         "content_type": "text/plain",
         "metadata": {},
         "sequence": 3,
         "status": "STREAM_STATUS_ONGOING",
-        "stream_id": "st-5765"
+        "stream_id": "st-715"
       },
-      "conv_id": "p:user_1288:user_5637",
+      "conv_id": "p:user_555:user_8839",
       "conv_seq": 3,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1288",
+      "from": "user_8839",
       "inbox_seq": 0,
-      "msg_id": "342927845376393216",
+      "msg_id": "343273115788247040",
       "msg_type": "MSG_STREAM",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569629,
+      "server_time": 1785909888510,
       "target_users": [],
-      "to": "user_5637"
+      "to": "user_555"
     },
-    "route_key": "p:user_1288:user_5637",
+    "route_key": "p:user_555:user_8839",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569632,
+    "ts": 1785909888513,
     "ver": 1
   },
   "step": 3
@@ -7292,14 +7354,14 @@
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `cid` | `sm-5893` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
+| `cid` | `sm-843` | 请求级幂等 ID；PUSH 时可能携带 client_msg_id |
 | `cmd` | `101` | 命令字（CmdType 枚举整数值） |
 | `cmd_name` | `CMD_MSG_PUSH` | 命令字名称（文档衍生字段） |
 | `compression` | `PAYLOAD_COMPRESSION_NONE` | payload 压缩算法 |
-| `route_key` | `p:user_1288:user_5637` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
+| `route_key` | `p:user_555:user_8839` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569637` | 发送时间戳（毫秒） |
+| `ts` | `1785909888519` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7310,21 +7372,21 @@
 | `burn_ttl_sec` | `0` |  |
 | `burned` | `false` |  |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
-| `client_msg_id` | `sm-5893` | 消息级幂等 ID（业务去重） |
-| `content` | `{"chunk":"","content_type":"text/plain","metadata":{},"sequence":4,"status":"STREAM_STATUS_END","stream_id":"st-5765"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
-| `conv_id` | `p:user_1288:user_5637` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `client_msg_id` | `sm-843` | 消息级幂等 ID（业务去重） |
+| `content` | `{"chunk":"","content_type":"text/plain","metadata":{},"sequence":4,"status":"STREAM_STATUS_END","stream_id":"st-715"}` | 消息体；MSG_TEXT 为 UTF-8 文本；MSG_STREAM 为 StreamContent 结构 |
+| `conv_id` | `p:user_555:user_8839` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `conv_seq` | `4` | 会话内单调排序位点 |
 | `edit_version` | `0` |  |
 | `ext` | `{}` |  |
-| `from` | `user_1288` | 发送方 user_id |
+| `from` | `user_8839` | 发送方 user_id |
 | `inbox_seq` | `0` |  |
-| `msg_id` | `342927845393170432` | 服务端分配的全局消息 ID（雪花） |
+| `msg_id` | `343273115809218560` | 服务端分配的全局消息 ID（雪花） |
 | `msg_type` | `MSG_STREAM` | 消息内容类型：MSG_TEXT/MSG_STREAM 等 |
 | `priority` | `MSG_PRIORITY_NORMAL` |  |
 | `recalled` | `false` |  |
-| `server_time` | `1785827569634` | 服务端当前时间（毫秒） |
+| `server_time` | `1785909888515` | 服务端当前时间（毫秒） |
 | `target_users` | `[]` |  |
-| `to` | `user_5637` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_555` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 
 <details><summary>完整 JSON</summary>
 
@@ -7335,7 +7397,7 @@
   "direction": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_END)",
   "note": "↓ WS CMD_MSG_PUSH (STREAM_STATUS_END)",
   "packet": {
-    "cid": "sm-5893",
+    "cid": "sm-843",
     "cmd": 101,
     "cmd_name": "CMD_MSG_PUSH",
     "compression": "PAYLOAD_COMPRESSION_NONE",
@@ -7344,33 +7406,33 @@
       "burn_ttl_sec": 0,
       "burned": "false",
       "chat_type": "CHAT_PRIVATE",
-      "client_msg_id": "sm-5893",
+      "client_msg_id": "sm-843",
       "content": {
         "chunk": "",
         "content_type": "text/plain",
         "metadata": {},
         "sequence": 4,
         "status": "STREAM_STATUS_END",
-        "stream_id": "st-5765"
+        "stream_id": "st-715"
       },
-      "conv_id": "p:user_1288:user_5637",
+      "conv_id": "p:user_555:user_8839",
       "conv_seq": 4,
       "edit_version": 0,
       "ext": {},
-      "from": "user_1288",
+      "from": "user_8839",
       "inbox_seq": 0,
-      "msg_id": "342927845393170432",
+      "msg_id": "343273115809218560",
       "msg_type": "MSG_STREAM",
       "priority": "MSG_PRIORITY_NORMAL",
       "recalled": "false",
-      "server_time": 1785827569634,
+      "server_time": 1785909888515,
       "target_users": [],
-      "to": "user_5637"
+      "to": "user_555"
     },
-    "route_key": "p:user_1288:user_5637",
+    "route_key": "p:user_555:user_8839",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569637,
+    "ts": 1785909888519,
     "ver": 1
   },
   "step": 4
@@ -7395,14 +7457,14 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569675` | 发送时间戳（毫秒） |
+| `ts` | `1785909888553` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
 
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
-| `conv_id` | `p:user_7843:user_7971` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
+| `conv_id` | `p:user_2022:user_548` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
 | `cursor` | `0` | 离线拉取游标（conv_seq） |
 | `limit` | `20` | 离线拉取条数上限 |
 
@@ -7420,14 +7482,14 @@
     "cmd_name": "CMD_OFFLINE_PULL_REQ",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
     "payload": {
-      "conv_id": "p:user_7843:user_7971",
+      "conv_id": "p:user_2022:user_548",
       "cursor": 0,
       "limit": 20
     },
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569675,
+    "ts": 1785909888553,
     "ver": 1
   },
   "step": 2
@@ -7449,7 +7511,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `2` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569676` | 发送时间戳（毫秒） |
+| `ts` | `1785909888555` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7457,7 +7519,7 @@
 | 字段 | E2E 实测值 | 说明 |
 | --- | --- | --- |
 | `has_more` | `false` |  |
-| `messages` | `[{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"sm-8067","content":"\n\u000Bst-off-8035\u0010\u0001\u0018\u0001*\ntext/plain","conv_id":"p:user_7843:user_7971","conv_seq":1,"edit_version":0,"ext":{},"from":"user_7843","inbox_seq":1,"msg_id":"342927845493833728","msg_type":"MSG_STREAM","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785827569657,"target_users":[],"to":"user_7971"},{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"sm-6053","content":"\n\u000Bst-off-8035\u0010\u0002\u0018\u0002\"\u0003off*\ntext/plain","conv_id":"p:user_7843:user_7971","conv_seq":2,"edit_version":0,"ext":{},"from":"user_7843","inbox_seq":2,"msg_id":"342927845514805248","msg_type":"MSG_STREAM","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785827569663,"target_users":[],"to":"user_7971"},{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"sm-6085","content":"\n\u000Bst-off-8035\u0010\u0003\u0018\u0003*\ntext/plain","conv_id":"p:user_7843:user_7971","conv_seq":3,"edit_version":0,"ext":{},"from":"user_7843","inbox_seq":3,"msg_id":"342927845535776768","msg_type":"MSG_STREAM","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785827569668,"target_users":[],"to":"user_7971"}]` |  |
+| `messages` | `[{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"sm-644","content":"\n\nst-off-612\u0010\u0001\u0018\u0001*\ntext/plain","conv_id":"p:user_2022:user_548","conv_seq":1,"edit_version":0,"ext":{},"from":"user_2022","inbox_seq":1,"msg_id":"343273115867938816","msg_type":"MSG_STREAM","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785909888530,"target_users":[],"to":"user_548"},{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"sm-2568","content":"\n\nst-off-612\u0010\u0002\u0018\u0002\"\u0003off*\ntext/plain","conv_id":"p:user_2022:user_548","conv_seq":2,"edit_version":0,"ext":{},"from":"user_2022","inbox_seq":2,"msg_id":"343273115905687552","msg_type":"MSG_STREAM","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785909888539,"target_users":[],"to":"user_548"},{"burn_after_read":"false","burn_ttl_sec":0,"burned":"false","chat_type":"CHAT_PRIVATE","client_msg_id":"sm-2600","content":"\n\nst-off-612\u0010\u0003\u0018\u0003*\ntext/plain","conv_id":"p:user_2022:user_548","conv_seq":3,"edit_version":0,"ext":{},"from":"user_2022","inbox_seq":3,"msg_id":"343273115930853376","msg_type":"MSG_STREAM","priority":"MSG_PRIORITY_NORMAL","recalled":"false","server_time":1785909888545,"target_users":[],"to":"user_548"}]` |  |
 | `next_cursor` | `3` |  |
 
 <details><summary>完整 JSON</summary>
@@ -7481,63 +7543,63 @@
           "burn_ttl_sec": 0,
           "burned": "false",
           "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "sm-8067",
-          "content": "\n\u000Bst-off-8035\u0010\u0001\u0018\u0001*\ntext/plain",
-          "conv_id": "p:user_7843:user_7971",
+          "client_msg_id": "sm-644",
+          "content": "\n\nst-off-612\u0010\u0001\u0018\u0001*\ntext/plain",
+          "conv_id": "p:user_2022:user_548",
           "conv_seq": 1,
           "edit_version": 0,
           "ext": {},
-          "from": "user_7843",
+          "from": "user_2022",
           "inbox_seq": 1,
-          "msg_id": "342927845493833728",
+          "msg_id": "343273115867938816",
           "msg_type": "MSG_STREAM",
           "priority": "MSG_PRIORITY_NORMAL",
           "recalled": "false",
-          "server_time": 1785827569657,
+          "server_time": 1785909888530,
           "target_users": [],
-          "to": "user_7971"
+          "to": "user_548"
         },
         {
           "burn_after_read": "false",
           "burn_ttl_sec": 0,
           "burned": "false",
           "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "sm-6053",
-          "content": "\n\u000Bst-off-8035\u0010\u0002\u0018\u0002\"\u0003off*\ntext/plain",
-          "conv_id": "p:user_7843:user_7971",
+          "client_msg_id": "sm-2568",
+          "content": "\n\nst-off-612\u0010\u0002\u0018\u0002\"\u0003off*\ntext/plain",
+          "conv_id": "p:user_2022:user_548",
           "conv_seq": 2,
           "edit_version": 0,
           "ext": {},
-          "from": "user_7843",
+          "from": "user_2022",
           "inbox_seq": 2,
-          "msg_id": "342927845514805248",
+          "msg_id": "343273115905687552",
           "msg_type": "MSG_STREAM",
           "priority": "MSG_PRIORITY_NORMAL",
           "recalled": "false",
-          "server_time": 1785827569663,
+          "server_time": 1785909888539,
           "target_users": [],
-          "to": "user_7971"
+          "to": "user_548"
         },
         {
           "burn_after_read": "false",
           "burn_ttl_sec": 0,
           "burned": "false",
           "chat_type": "CHAT_PRIVATE",
-          "client_msg_id": "sm-6085",
-          "content": "\n\u000Bst-off-8035\u0010\u0003\u0018\u0003*\ntext/plain",
-          "conv_id": "p:user_7843:user_7971",
+          "client_msg_id": "sm-2600",
+          "content": "\n\nst-off-612\u0010\u0003\u0018\u0003*\ntext/plain",
+          "conv_id": "p:user_2022:user_548",
           "conv_seq": 3,
           "edit_version": 0,
           "ext": {},
-          "from": "user_7843",
+          "from": "user_2022",
           "inbox_seq": 3,
-          "msg_id": "342927845535776768",
+          "msg_id": "343273115930853376",
           "msg_type": "MSG_STREAM",
           "priority": "MSG_PRIORITY_NORMAL",
           "recalled": "false",
-          "server_time": 1785827569668,
+          "server_time": 1785909888545,
           "target_users": [],
-          "to": "user_7971"
+          "to": "user_548"
         }
       ],
       "next_cursor": 3
@@ -7545,7 +7607,7 @@
     "route_key": "",
     "seq": 2,
     "trace_id": "",
-    "ts": 1785827569676,
+    "ts": 1785909888555,
     "ver": 1
   },
   "step": 3
@@ -7570,7 +7632,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `1` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569648` | 发送时间戳（毫秒） |
+| `ts` | `1785909888564` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -7586,11 +7648,11 @@
     "cmd": 0,
     "cmd_name": "CMD_0",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-    "payload_raw_bytes": 63,
+    "payload_raw_bytes": 62,
     "route_key": "",
     "seq": 1,
     "trace_id": "",
-    "ts": 1785827569648,
+    "ts": 1785909888564,
     "ver": 1
   },
   "step": 2
@@ -7612,7 +7674,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569648` | 发送时间戳（毫秒） |
+| `ts` | `1785909888564` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7622,10 +7684,10 @@
 | `action` | `stream_start` | 透传 action 名 |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
 | `conv_id` | `` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `data` | `{"stream_id":"ps-5989"}` | 透传 JSON 字符串 |
-| `from` | `user_7523` | 发送方 user_id |
+| `data` | `{"stream_id":"ps-2696"}` | 透传 JSON 字符串 |
+| `from` | `user_451` | 发送方 user_id |
 | `persist` | `false` |  |
-| `to` | `user_5925` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_2664` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `ttl_sec` | `0` |  |
 
 <details><summary>完整 JSON</summary>
@@ -7645,16 +7707,16 @@
       "action": "stream_start",
       "chat_type": "CHAT_PRIVATE",
       "conv_id": "",
-      "data": "{\"stream_id\":\"ps-5989\"}",
-      "from": "user_7523",
+      "data": "{\"stream_id\":\"ps-2696\"}",
+      "from": "user_451",
       "persist": "false",
-      "to": "user_5925",
+      "to": "user_2664",
       "ttl_sec": 0
     },
     "route_key": "",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569648,
+    "ts": 1785909888564,
     "ver": 1
   },
   "step": 3
@@ -7676,7 +7738,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `4` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569648` | 发送时间戳（毫秒） |
+| `ts` | `1785909888564` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -7692,11 +7754,11 @@
     "cmd": 0,
     "cmd_name": "CMD_0",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-    "payload_raw_bytes": 76,
+    "payload_raw_bytes": 75,
     "route_key": "",
     "seq": 4,
     "trace_id": "",
-    "ts": 1785827569648,
+    "ts": 1785909888564,
     "ver": 1
   },
   "step": 5
@@ -7718,7 +7780,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569648` | 发送时间戳（毫秒） |
+| `ts` | `1785909888564` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7728,10 +7790,10 @@
 | `action` | `stream_chunk` | 透传 action 名 |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
 | `conv_id` | `` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `data` | `{"chunk":"Hi","stream_id":"ps-5989"}` | 透传 JSON 字符串 |
-| `from` | `user_7523` | 发送方 user_id |
+| `data` | `{"chunk":"Hi","stream_id":"ps-2696"}` | 透传 JSON 字符串 |
+| `from` | `user_451` | 发送方 user_id |
 | `persist` | `false` |  |
-| `to` | `user_5925` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_2664` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `ttl_sec` | `0` |  |
 
 <details><summary>完整 JSON</summary>
@@ -7751,16 +7813,16 @@
       "action": "stream_chunk",
       "chat_type": "CHAT_PRIVATE",
       "conv_id": "",
-      "data": "{\"chunk\":\"Hi\",\"stream_id\":\"ps-5989\"}",
-      "from": "user_7523",
+      "data": "{\"chunk\":\"Hi\",\"stream_id\":\"ps-2696\"}",
+      "from": "user_451",
       "persist": "false",
-      "to": "user_5925",
+      "to": "user_2664",
       "ttl_sec": 0
     },
     "route_key": "",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569648,
+    "ts": 1785909888564,
     "ver": 1
   },
   "step": 6
@@ -7782,7 +7844,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `7` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569649` | 发送时间戳（毫秒） |
+| `ts` | `1785909888564` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 <details><summary>完整 JSON</summary>
@@ -7798,11 +7860,11 @@
     "cmd": 0,
     "cmd_name": "CMD_0",
     "compression": "PAYLOAD_COMPRESSION_UNSPECIFIED",
-    "payload_raw_bytes": 61,
+    "payload_raw_bytes": 60,
     "route_key": "",
     "seq": 7,
     "trace_id": "",
-    "ts": 1785827569649,
+    "ts": 1785909888564,
     "ver": 1
   },
   "step": 8
@@ -7824,7 +7886,7 @@
 | `route_key` | `` | 网关分流键；单聊常为 conv_id，群/室为 group_id/room_id |
 | `seq` | `0` | 请求序号；客户端上行单调递增；服务端推送为 0 |
 | `trace_id` | `` | 链路追踪 ID |
-| `ts` | `1785827569649` | 发送时间戳（毫秒） |
+| `ts` | `1785909888564` | 发送时间戳（毫秒） |
 | `ver` | `1` | 协议版本，当前固定 1 |
 
 **payload 字段**
@@ -7834,10 +7896,10 @@
 | `action` | `stream_end` | 透传 action 名 |
 | `chat_type` | `CHAT_PRIVATE` | 会话类型：CHAT_PRIVATE/CHAT_GROUP/CHAT_ROOM |
 | `conv_id` | `` | 会话 ID；单聊 p:{lo}:{hi} 字典序 |
-| `data` | `{"stream_id":"ps-5989"}` | 透传 JSON 字符串 |
-| `from` | `user_7523` | 发送方 user_id |
+| `data` | `{"stream_id":"ps-2696"}` | 透传 JSON 字符串 |
+| `from` | `user_451` | 发送方 user_id |
 | `persist` | `false` |  |
-| `to` | `user_5925` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
+| `to` | `user_2664` | 接收目标：单聊=对端 uid；群=group_id；室=room_id |
 | `ttl_sec` | `0` |  |
 
 <details><summary>完整 JSON</summary>
@@ -7857,16 +7919,16 @@
       "action": "stream_end",
       "chat_type": "CHAT_PRIVATE",
       "conv_id": "",
-      "data": "{\"stream_id\":\"ps-5989\"}",
-      "from": "user_7523",
+      "data": "{\"stream_id\":\"ps-2696\"}",
+      "from": "user_451",
       "persist": "false",
-      "to": "user_5925",
+      "to": "user_2664",
       "ttl_sec": 0
     },
     "route_key": "",
     "seq": 0,
     "trace_id": "",
-    "ts": 1785827569649,
+    "ts": 1785909888564,
     "ver": 1
   },
   "step": 9

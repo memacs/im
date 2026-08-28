@@ -6,16 +6,16 @@ defmodule IM.Schemas.PassthroughMessage do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   schema "passthrough_messages" do
-    field :app_key, :string
-    field :user_id, :string
-    field :from_uid, :string
-    field :to_id, :string
-    field :chat_type, :integer
-    field :conv_id, :string
-    field :action, :string
-    field :data, :binary
-    field :expires_at, :utc_datetime_usec
-    field :created_at, :utc_datetime_usec
+    field(:app_key, :string)
+    field(:user_id, :string)
+    field(:from_uid, :string)
+    field(:to_id, :string)
+    field(:chat_type, :integer)
+    field(:conv_id, :string)
+    field(:action, :string)
+    field(:data, :binary)
+    field(:expires_at, :utc_datetime_usec)
+    field(:created_at, :utc_datetime_usec)
   end
 
   def changeset(row, attrs) do

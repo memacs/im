@@ -36,7 +36,8 @@ defmodule IM.Services.DeviceBanTest do
       })
 
     # ban 写入的 banned_at 需清掉才能 ACK 路径独立验证 pending
-    device = Repo.get_by(IM.Schemas.UserDevice, app_key: app_key, user_id: user_id, device_id: device_id)
+    device =
+      Repo.get_by(IM.Schemas.UserDevice, app_key: app_key, user_id: user_id, device_id: device_id)
 
     device
     |> Ecto.Changeset.change(%{banned_at: nil, clear_local_data_pending: true})

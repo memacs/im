@@ -5,5 +5,4 @@ import Config
 config :logger, level: :warning
 
 # DD-028：生产 stdout 单行 NDJSON（自研 Formatter，无 logger_json 依赖）
-config :logger, :default_handler,
-  formatter: {IM.Log.JsonFormatter, %{}}
+config :logger, :default_handler, formatter: {IM.Log.JsonFormatter, %{}}

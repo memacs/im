@@ -5,13 +5,13 @@ defmodule IM.Schemas.FriendRequest do
   import Ecto.Changeset
 
   schema "friend_requests" do
-    field :app_key, :string
-    field :request_id, :string
-    field :from_user_id, :string
-    field :to_user_id, :string
-    field :message, :string
-    field :status, :string
-    field :expires_at, :utc_datetime_usec
+    field(:app_key, :string)
+    field(:request_id, :string)
+    field(:from_user_id, :string)
+    field(:to_user_id, :string)
+    field(:message, :string)
+    field(:status, :string)
+    field(:expires_at, :utc_datetime_usec)
 
     timestamps(type: :utc_datetime_usec)
   end

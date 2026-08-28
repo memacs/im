@@ -70,7 +70,6 @@ defmodule IM.Application do
     end
   end
 
-
   defp cluster_children do
     topologies = IM.Cluster.topologies()
 
@@ -123,9 +122,7 @@ defmodule IM.Application do
       enabled ->
         require Logger
 
-        Logger.info(
-          "[IM] Event Bus 已启用：producer=#{inspect(producer)} brokers=#{length(brokers)}"
-        )
+        Logger.info("[IM] Event Bus 已启用：producer=#{inspect(producer)} brokers=#{length(brokers)}")
 
       true ->
         :ok

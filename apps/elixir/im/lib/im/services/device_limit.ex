@@ -18,7 +18,12 @@ defmodule IM.Services.DeviceLimit do
   @spec enforce(String.t(), String.t(), String.t(), String.t()) ::
           {:ok, %{kick_oldest: nil | tuple()}} | {:error, Error.t()}
   def enforce(app_key, user_id, device_id, platform) do
-    cfg = Application.get_env(:im, :device_limit, %{max_per_platform: 5, policy: :kick_oldest_on_platform})
+    cfg =
+      Application.get_env(:im, :device_limit, %{
+        max_per_platform: 5,
+        policy: :kick_oldest_on_platform
+      })
+
     max = Map.get(cfg, :max_per_platform, 5)
     policy = Map.get(cfg, :policy, :kick_oldest_on_platform)
 

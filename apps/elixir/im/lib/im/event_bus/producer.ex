@@ -25,4 +25,3 @@ defmodule IM.EventBus.Producer do
     Application.get_env(:im, :event_bus_producer, IM.EventBus.Producer.Memory)
   end
 end
-

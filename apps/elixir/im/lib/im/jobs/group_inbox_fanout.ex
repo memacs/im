@@ -45,7 +45,10 @@ defmodule IM.Jobs.GroupInboxFanout do
         :ok
 
       {:error, reason} ->
-        :telemetry.execute([:im, :group, :inbox_fanout_error], %{count: 1}, %{reason: inspect(reason)})
+        :telemetry.execute([:im, :group, :inbox_fanout_error], %{count: 1}, %{
+          reason: inspect(reason)
+        })
+
         {:error, reason}
     end
   end

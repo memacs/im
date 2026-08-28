@@ -64,8 +64,12 @@ defmodule IM.EventBus.DownstreamTest do
 
   defp wait(fun, n \\ 40) do
     cond do
-      fun.() -> true
-      n <= 0 -> false
+      fun.() ->
+        true
+
+      n <= 0 ->
+        false
+
       true ->
         Process.sleep(10)
         wait(fun, n - 1)

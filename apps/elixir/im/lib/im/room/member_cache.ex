@@ -13,8 +13,13 @@ defmodule IM.Room.MemberCache do
     l1 = L1.room_member_key(app_key, room_id, user_id)
 
     case L1.get(l1) do
-      {:ok, hit?} -> hit?
-      :miss -> hit? = member_l2(app_key, room_id, user_id); :ok = L1.put(l1, hit?); hit?
+      {:ok, hit?} ->
+        hit?
+
+      :miss ->
+        hit? = member_l2(app_key, room_id, user_id)
+        :ok = L1.put(l1, hit?)
+        hit?
     end
   end
 

@@ -16,8 +16,18 @@ defmodule IM.Services.GroupPromoteTest do
     on_exit(fn -> Application.put_env(:im, :group_fanout, prev) end)
 
     owner = AuthFixtures.create_user!(user_id: "gp_o_#{System.unique_integer([:positive])}")
-    m1 = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "gp_m1_#{System.unique_integer([:positive])}")
-    m2 = AuthFixtures.create_user!(app_key: owner.app_key, user_id: "gp_m2_#{System.unique_integer([:positive])}")
+
+    m1 =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "gp_m1_#{System.unique_integer([:positive])}"
+      )
+
+    m2 =
+      AuthFixtures.create_user!(
+        app_key: owner.app_key,
+        user_id: "gp_m2_#{System.unique_integer([:positive])}"
+      )
 
     ctx = %MessageContext{
       app_key: owner.app_key,

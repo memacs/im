@@ -32,7 +32,9 @@ defmodule IM.Cluster.SlowNode do
     now = System.monotonic_time(:millisecond)
 
     case :ets.lookup(@table, node) do
-      [{^node, exp}] when exp > now -> true
+      [{^node, exp}] when exp > now ->
+        true
+
       [{^node, _}] ->
         :ets.delete(@table, node)
         false

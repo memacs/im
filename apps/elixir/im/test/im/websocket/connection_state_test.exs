@@ -6,7 +6,9 @@ defmodule IM.WebSocket.ConnectionStateTest do
 
   test "未鉴权仅允许 AUTH" do
     assert :ok = ConnectionState.allow?(:unauthenticated, CmdType.value(:CMD_AUTH_REQ))
-    assert {:error, :silent_close} = ConnectionState.allow?(:unauthenticated, CmdType.value(:CMD_HEARTBEAT_REQ))
+
+    assert {:error, :silent_close} =
+             ConnectionState.allow?(:unauthenticated, CmdType.value(:CMD_HEARTBEAT_REQ))
   end
 
   test "已鉴权禁止再 AUTH，允许心跳与消息/离线 cmd" do

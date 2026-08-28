@@ -15,6 +15,7 @@ defmodule IM.Client.Protocol.TraceCoverageTest do
     "auth_guard_test/token 与 device_id 不匹配",
     "auth_guard_test/过期 token",
     "auth_guard_test/封禁设备 AUTH",
+    "auth_guard_test/连接中 token 过期 CMD_KICK",
     "channel_test/订阅与 publish",
     "cluster_test/跨节点 PUSH 单聊",
     "cluster_test/跨节点 erpc 转发",

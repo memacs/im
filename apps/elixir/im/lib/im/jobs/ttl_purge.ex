@@ -23,7 +23,9 @@ defmodule IM.Jobs.TtlPurge do
       |> maybe_put_arg("batch", Keyword.get(opts, :batch))
 
     case args |> IM.Workers.TtlPurge.new() |> Oban.insert() do
-      {:ok, _} -> :ok
+      {:ok, _} ->
+        :ok
+
       {:error, _} ->
         _ = purge(opts)
         :ok
@@ -37,10 +39,16 @@ defmodule IM.Jobs.TtlPurge do
     batch = Keyword.get(opts, :batch, 500)
 
     cutoff =
-      DateTime.utc_now() |> DateTime.add(-days * 86_400, :second) |> DateTime.truncate(:microsecond)
+      DateTime.utc_now()
+      |> DateTime.add(-days * 86_400, :second)
+      |> DateTime.truncate(:microsecond)
 
     msg_ids = MessageStore.list_expired_msg_ids(app_key, cutoff, batch)
-    deleted = if msg_ids == [], do: %{inbox: 0, bodies: 0}, else: MessageStore.delete_messages(app_key, msg_ids)
+
+    deleted =
+      if msg_ids == [],
+        do: %{inbox: 0, bodies: 0},
+        else: MessageStore.delete_messages(app_key, msg_ids)
 
     room_cutoff =
       DateTime.utc_now() |> DateTime.add(-300, :second) |> DateTime.truncate(:microsecond)
