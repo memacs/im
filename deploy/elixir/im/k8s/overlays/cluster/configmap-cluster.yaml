@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: im
+  namespace: im-dev
+data:
+  # 每 Pod 唯一节点名（rel/env.sh.eex）
+  RELEASE_NODE_MODE: "pod_ip"
+  # 清空固定节点名，避免与 pod_ip 模式冲突（env.sh 会覆盖）
+  RELEASE_NODE: ""
+  CLUSTER_STRATEGY: "kubernetes"
+  CLUSTER_SERVICE: "im-headless"
+  CLUSTER_APP_NAME: "im"

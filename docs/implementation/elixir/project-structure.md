@@ -129,6 +129,20 @@ apps/elixir/im/
 
 ---
 
+## 测试代码落位
+
+与 [`agent.md`](../../../agent.md)「测试代码落位」一致：
+
+- **`lib/`**：Release / loadtest 运行时会加载的模块。
+- **`test/support/`**：ExUnit Case、fixtures、集群 E2E（`IM.ClusterPeerBoot` 等）、Fake/Mox。
+- **`im_client/test/support/`**：`IM.Client.Assertions`、`Scenario`、`FakeTransport` 等客户端测试辅助。
+
+`:peer` 第二 BEAM 通过 `:code.add_paths/1` 同步 test 编译路径，**不得**把测试引导模块放进 `lib/`。
+
+`im` 协议 E2E 使用 `im_client/test/support/` 中的断言辅助时，在 `apps/elixir/im/mix.exs` 的 `elixirc_paths(:test)` 加入 `../im_client/test/support`（与 [`agent.md`](../../../agent.md) 一致）。
+
+---
+
 ## 相关应用（同仓，不同 Mix 项目）
 
 | 路径 | 说明 |

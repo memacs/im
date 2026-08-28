@@ -2,7 +2,7 @@
 
 本目录提供 **本地开发与集成测试** 用的 Kubernetes 清单。团队默认使用 [OrbStack](https://orbstack.dev/) 自带的 K8s 集群。
 
-> **验收黄金路径**：功能必须以 **Release 镜像 + K8s 部署** 验证，与线上一致。详见 [`docs/implementation/elixir/release-deploy-test.md`](../../docs/implementation/elixir/release-deploy-test.md)。
+> **验收黄金路径**：功能必须以 **Release 镜像 + K8s 部署** 验证，与线上一致。详见 [`docs/implementation/elixir/release-deploy-test.md`](../../../../docs/implementation/elixir/release-deploy-test.md)。
 
 > **仅用于本地/联调**：`im-dev` 命名空间内的 Secret 为开发占位值，**禁止**用于生产。
 
@@ -83,7 +83,7 @@ kubectl -n im-dev port-forward svc/redis 6379:6379
 
 ```bash
 mise run pg-forward                       # 终端 A，常驻
-PGPORT=15432 mise run test                # 终端 B
+mise run test                             # 终端 B（自动 PGPORT）
 ```
 
 ---
@@ -111,19 +111,31 @@ Endpoint 摘除是异步的，Pod 被标记 Terminating 后仍可能收到几秒
 先 sleep 再让应用开始关闭。配合 `maxUnavailable: 0`，滚动更新时先起新 Pod 再摘旧 Pod。
 真正的连接 drain（通知客户端重连）在 Phase 9 补。
 
-> **尚未做**：NetworkPolicy、PodDisruptionBudget、HPA、镜像 digest 固定。
-> 前两项要等多副本（P9-01b）才有意义——单副本上 PDB 会挡住节点排空。
+> **尚未做（可选）**：镜像 digest 固定。  
+> **Kafka 旁路（按需）**：`overlays/kafka-event-bus/` 含 Redpanda + ConfigMap 补丁，见 [`deploy-guide.md`](../../../../docs/implementation/elixir/deploy-guide.md) §6。  
+> **cluster overlay 已含**：`PodDisruptionBudget`、`HorizontalPodAutoscaler`、`NetworkPolicy`（见 `im/networkpolicy.yaml`）。
 
 ---
 
-## 多副本联调
+## 多副本联调（P9-01b）
+
+推荐使用 **`overlays/cluster`**（replicas=2 + headless + libcluster DNS + PDB）：
 
 ```bash
-kubectl -n im-dev scale deployment/im --replicas=2
-kubectl -n im-dev get pods -l app=im
+mise run release-build
+kubectl apply -k deploy/elixir/im/k8s/overlays/cluster/
+kubectl -n im-dev rollout status deployment/im
+kubectl -n im-dev get pods,svc -l app=im
 ```
 
-**在 scale 之前**须调整分布式 Erlang，见下一节。Phase 9（P9-01 / P9-01b）与线上一致。
+| 资源 | 作用 |
+| --- | --- |
+| `im-headless` | `clusterIP: None`，供 `Cluster.Strategy.Kubernetes.DNS` |
+| `RELEASE_NODE_MODE=pod_ip` | `rel/env.sh.eex` 导出 `RELEASE_NODE=im@$POD_IP` |
+| `CLUSTER_STRATEGY=kubernetes` | runtime 装配 libcluster topologies |
+| `PodDisruptionBudget` | `minAvailable: 1` |
+
+单副本日常联调仍用 `overlays/local`。
 
 ---
 
@@ -133,26 +145,31 @@ kubectl -n im-dev get pods -l app=im
 
 | 场景 | `RELEASE_DISTRIBUTION` | `RELEASE_NODE` | 发现方式 |
 | --- | --- | --- | --- |
-| **本地单副本**（默认） | `name` | `im@127.0.0.1`（ConfigMap） | 无需 libcluster |
-| **K8s 多副本**（Phase 9） | `name` | **每 Pod 唯一**，如 `im@<POD_IP>` | libcluster + K8s 标签选择器 |
+| **本地单副本**（`overlays/local`） | `name` | `im@127.0.0.1`（ConfigMap） | 无需 libcluster |
+| **K8s 多副本**（`overlays/cluster`） | `name` | **每 Pod** `im@<POD_IP>`（`RELEASE_NODE_MODE=pod_ip`） | libcluster + `im-headless` DNS |
 | **StatefulSet 生产**（可选） | `name` | `im@<pod>.<headless-svc>` | headless Service DNS |
 
 ### 多副本必做项
 
 1. **`RELEASE_COOKIE`**：所有 IM Pod 相同，由 `im-runtime` Secret 注入（已预留）。
-2. **唯一 `RELEASE_NODE`**：从 ConfigMap 全局值改为 **每 Pod 注入**：
-   - Deployment 已通过 `fieldRef` 注入 `POD_IP`、`POD_NAME`（见 `im/deployment.yaml`）。
-   - 在 `config/runtime.exs` 中：`System.get_env("RELEASE_NODE") || "im@#{System.get_env("POD_IP")}"`（Phase 0 脚手架时实现）。
-   - 或在启动脚本中根据 `POD_IP` 导出 `RELEASE_NODE` 后 `exec bin/im start`。
-3. **libcluster**：`Cluster.Strategy.Kubernetes`（或 DNS）发现同命名空间 `app=im` Pod；见 [modular-architecture.md](../../docs/design/modular-architecture.md)、[deploy/elixir/im/README.md](../README.md)。
+2. **唯一 `RELEASE_NODE`**：`rel/env.sh.eex` 在 `RELEASE_NODE_MODE=pod_ip` 时用 `POD_IP` 覆盖。
+3. **libcluster**：`CLUSTER_STRATEGY=kubernetes` + `CLUSTER_SERVICE=im-headless`。
 4. **不要用 `sname@127.0.0.1` 跑多副本**：短名 + 同 IP 会导致节点名冲突、集群分裂。
 
-### 验证
+### 验证 checklist
 
 ```bash
-# 两副本均 Ready 后，进入 Pod 检查节点名互不相同
-kubectl -n im-dev exec -it deploy/im -- bin/im rpc 'Node.self() |> IO.inspect()'
-kubectl -n im-dev get pods -l app=im -o wide   # 确认 POD_IP 与节点名对应
+# 1. 两副本 Ready，节点名互不相同
+kubectl -n im-dev get pods -l app=im -o wide
+kubectl -n im-dev exec deploy/im -- printenv RELEASE_NODE POD_IP RELEASE_NODE_MODE
+
+# 2. BEAM 已互连（任选一 Pod）
+kubectl -n im-dev exec deploy/im -- bin/im rpc 'IO.inspect({Node.self(), Node.list()})'
+# 期望：{:"im@<ip1>", [:"im@<ip2>"]}
+
+# 3. UserTracker 跨 Pod（登录 A 在 pod1，从 pod2 查 presence — 手工联调）
+# 4. /metrics 两副本均可 scrape
+kubectl -n im-dev exec deploy/im -- wget -qO- http://127.0.0.1:4000/metrics | head
 ```
 
 ---
@@ -171,10 +188,12 @@ deploy/elixir/im/
     ├── im/
     │   ├── deployment.yaml
     │   ├── service.yaml
+    │   ├── service-headless.yaml
     │   ├── configmap.yaml
     │   └── secret.yaml
     └── overlays/
-        └── local/              # 全栈入口
+        ├── local/              # 全栈单副本
+        └── cluster/            # 多副本 + libcluster + PDB（P9-01b）
 ```
 
 ---
@@ -203,13 +222,19 @@ kubectl -n im-dev delete pvc data-postgres-0    # 需要清库时（会丢数据
 
 ## mise 任务
 
-见根目录 [`mise.toml`](../../mise.toml)：`mise run k8s-up`、`k8s-full`、`release-deploy`、`k8s-port-forward`、`release-smoke` 等。`mise tasks` 查看全部。
+见根目录 [`mise.toml`](../../../../mise.toml)：`mise run k8s-up`、`k8s-full`、`release-deploy`、`k8s-port-forward`、`release-smoke` 等。`mise tasks` 查看全部。
 
 ---
 
 ## 相关文档
 
-- [`release-deploy-test.md`](../../docs/implementation/elixir/release-deploy-test.md) — 与线上一致性、DoD
-- [`deploy/elixir/im/k8s/README.md`](README.md) — 本目录操作说明
-- [`project-structure.md`](../../docs/implementation/elixir/project-structure.md) — 运行时模块布局
-- [`roadmap.md`](../../docs/implementation/elixir/roadmap.md)
+| 文档 | 说明 |
+| --- | --- |
+| [docs/README.md](../../../../docs/README.md) | 文档总索引 |
+| [deploy/README.md](../../../README.md) | 部署总览 |
+| [apps/elixir/im/README.md](../../../../apps/elixir/im/README.md) | 环境变量、集群模式详解 |
+| [release-deploy-test.md](../../../../docs/implementation/elixir/release-deploy-test.md) | 与线上一致性、DoD |
+| [deploy-guide.md](../../../../docs/implementation/elixir/deploy-guide.md) | 生产部署 §6–§8 |
+| [project-structure.md](../../../../docs/implementation/elixir/project-structure.md) | 运行时模块布局 |
+| [fault-drill.md](../../../../docs/implementation/elixir/fault-drill.md) | 故障演练 |
+| [roadmap.md](../../../../docs/implementation/elixir/roadmap.md) | Phase 9 集群任务 |

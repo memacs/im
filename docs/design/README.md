@@ -2,6 +2,8 @@
 
 本目录存放 IM 系统各模块的**设计文档**，记录「为什么这样设计、有什么好处、放弃了什么」。
 
+文档导航：[docs/README.md](../README.md) · [module-map.md](../module-map.md) · [agent.md §文档地图](../agent.md#文档地图)
+
 ---
 
 ## 文档分类
@@ -69,6 +71,7 @@
 | [unread-count.md](unread-count.md) | 未读数管理设计 |
 | [message-context.md](message-context.md) | 消息上下文设计（内部流转） |
 | [database/database-design.md](database/database-design.md) | PostgreSQL + Redis 存储设计 |
+| [message-ttl-cleanup.md](message-ttl-cleanup.md) | **消息 TTL 清理 Job**（DD-040） |
 | [msg-id-snowflake.md](msg-id-snowflake.md) | **`msg_id` Snowflake 发号**（DD-039） |
 
 ### 基础设施
@@ -77,6 +80,8 @@
 |------|------|
 | [dependency-abstraction.md](dependency-abstraction.md) | 依赖抽象层设计（Redis/JSON/HTTP 等） |
 | [auth-module.md](auth-module.md) | 认证模块架构设计（支持多种认证方式） |
+| [permission-cache.md](permission-cache.md) | 权限状态热缓存（拉黑/禁言/封禁，DD-033） |
+| [payload-compression.md](payload-compression.md) | Packet.payload 压缩协商（DD-034） |
 | [observability.md](observability.md) | 可观测性与监控设计（指标、上下行计数、结构化日志） |
 | [kafka-event-bus.md](kafka-event-bus.md) | Kafka 五 Topic 事件总线（上行/会话/下行/离线推送/应用通道） |
 | [mobile-push.md](mobile-push.md) | 离线设备系统推送（`im.push` → APNs/FCM） |

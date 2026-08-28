@@ -74,42 +74,39 @@ end
 
 ## 6. 出站优先级队列 `IM.Delivery.OutboundQueue`
 
-设计见 [message-send-ack.md](../../design/message-send-ack.md) §7。每设备连接一个队列进程（或挂在 `UserSocket` 进程内）。
+设计见 [message-send-ack.md](../../design/message-send-ack.md) §7。
+
+**落位**：纯状态机挂在 `IMWeb.PacketTransport` 的 `state.outbound`（非独立 GenServer）。下行统一 `{:im_push, bin, meta}`（`meta` 含 `priority` / `inbox_seq`）。
+
+| 能力 | 行为 |
+| --- | --- |
+| WFQ | 三带权重默认 8/4/1；deficit 选带 |
+| 老化 | LOW→NORMAL / NORMAL→HIGH / LOW→HIGH（阈值见 config） |
+| burst | 同带连续写出 ≤ `priority_max_burst`（默认 16）后强制换带 |
+| coalesce | 深度 > `outbound_coalesce_depth`（默认 32）时同带连续 `CMD_MSG_PUSH` 合并为 `CMD_MSG_PUSH_BATCH` |
+| 溢出 | 深度 > `outbound_max_depth` 丢最旧 LOW |
+| 直写 | 队列空且 HIGH 可不入队直推 |
 
 ```elixir
-defmodule IM.Delivery.OutboundQueue do
-  @moduledoc """
-  单连接 WebSocket 出站调度：WFQ + 老化，防低优先饿死。
-
-  ## 示例
-
-      OutboundQueue.enqueue(pid, %{
-        priority: :high,
-        inbox_seq: 100,
-        packet_binary: bin,
-        enqueued_at_ms: System.system_time(:millisecond)
-      })
-
-      OutboundQueue.drain_writable(pid, socket)
-  """
-
-  @type priority_band :: :high | :normal | :low
-
-  @spec enqueue(pid(), map()) :: :ok
-  def enqueue(pid, item), do: GenServer.cast(pid, {:enqueue, item})
-
-  @spec drain_writable(pid(), term()) :: :ok
-  def drain_writable(pid, socket), do: GenServer.cast(pid, {:drain, socket})
-
-  # 内部：三带队列 + deficit 计数；pick_next/1 实现 WFQ + aging + max_burst
-end
+q = OutboundQueue.new()
+q = OutboundQueue.enqueue(q, %{
+  priority: :high,
+  inbox_seq: 100,
+  packet_binary: bin,
+  enqueued_at_ms: System.system_time(:millisecond)
+})
+{bins, q} = OutboundQueue.drain(q, 16)
 ```
+
+`IM.Delivery.Outbound.sort_by_priority/1` 用于 `FanoutBatcher.deliver_messages/3` 批内排序（与连接队列互补）。
 
 ### 测试要点（P3-09 / Delivery 阶段）
 
 | 场景 | 期望 |
 | --- | --- |
-| 仅 HIGH 持续入队 | LOW 在 `priority_aging_low_ms` 内仍被写出 |
-| HIGH:LOW = 8:1 权重稳态 | LOW 约 1/13 写出份额 |
-| 同带 100 条 | 按 `inbox_seq` 升序写出 |
+| 仅 HIGH 持续入队 | LOW 仍能获得写出份额 |
+| 同带多条 | 按 `inbox_seq` 升序写出 |
+| 老化 | 等待超阈值后升带优先写出 |
+| coalesce | 深度超阈值时多条 PUSH → 一条 PUSH_BATCH |
 | UI | 客户端按 `conv_seq` 排序，与到达序无关 |
+

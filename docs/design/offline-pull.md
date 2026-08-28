@@ -27,8 +27,9 @@
 | 4 | **先离线拉完再实时**；拉取与 PUSH 按 `msg_id` 去重 |
 | 5 | 失败 `CMD_ERROR`，**不关连接** |
 | 6 | **不含聊天室**历史 |
-| 7 | 群聊定向消息：**默认不过滤**，与全员消息相同进入 `user_inbox` 与 `OFFLINE_PULL`；仅当应用配置「仅定向可见」时 JOIN 查询侧过滤 `target_users` |
+| 7 | 群聊定向消息（`target_users` 非空）：inbox **只写** `target_users` ∪ {发送方}；非目标成员不进全局 `OFFLINE_PULL`；读扩散 / 会话内按 `conv_seq` 拉取时 JOIN/`message_bodies` 侧过滤 `target_users`（见 [message-model.md](message-model.md) §6、[group.md](group.md) §6.1） |
 | 8 | **大群读扩散**（`groups.storage_mode = read_fanout`）：**无** `user_inbox` 行；须带 `conv_id` 按 `conv_seq` 拉 `message_bodies`；**不进**全局 `inbox_seq` 拉取（见 [group.md](group.md) §6.3） |
+| 9 | **写扩散异步窗口补拉**：群聊 `write_fanout` 在 `SERVER_RECEIVED` 后异步写其余成员 inbox；SDK 全局拉取后须对活跃群做 `conv_seq` 补拉，否则可能漏消息（见 §3.2、[group.md](group.md) §6.2） |
 
 ---
 
@@ -92,11 +93,28 @@ sequenceDiagram
 
 ```text
 AUTH 后：
-  1) OFFLINE_PULL(conv_id=空)     → 单聊 + 小群写扩散消息
-  2) 对每个 read_fanout 群会话：
+  1) OFFLINE_PULL(conv_id=空)     → 单聊 + 小群写扩散消息（inbox 已就绪的部分）
+  2) 对每个活跃 write_fanout 群会话：
+       OFFLINE_PULL(conv_id=g:{id}, cursor=本地 watermark)  → 补异步 fanout 窗口内漏行（§3.2）
+  3) 对每个 read_fanout 群会话：
        OFFLINE_PULL(conv_id=g:{id}, cursor=本地或 group_read_cursors)
-  3) 进入实时 PUSH
+  4) 进入实时 PUSH
 ```
+
+### 3.2 写扩散异步窗口与 `conv_seq` 补拉（已确认）
+
+群聊 `write_fanout` 在发出 `SERVER_RECEIVED` 后，其余成员 `user_inbox` 由 Oban 异步写入（默认滞后窗口约 **5s**，见 [group.md](group.md) §6.2、[message-send-ack.md](message-send-ack.md) §3.2）。
+
+| 项 | 约定 |
+| --- | --- |
+| 为何漏 | 成员在 fanout Job 完成前上线做全局 `OFFLINE_PULL`，该消息在其 `user_inbox` 中尚不存在 |
+| 补拉方式 | 对该群 `OFFLINE_PULL(conv_id=g:{group_id}, cursor=本地 watermark)`，服务端按 `message_bodies.conv_seq`（JOIN 或直查）返回增量 |
+| watermark | 客户端本地持久化每群最后成功处理的 `conv_seq`；无本地值时用 `0` 或服务端会话水位 |
+| 去重 | 补拉结果与全局拉取 / 实时 PUSH 一律按 `msg_id` 去重 |
+| 定向消息 | 补拉 SQL 仍过滤 `target_users`；非目标用户补拉不到（与 §2 决策 7 一致） |
+| SDK 必做 | **写进主路径**：AUTH → 全局拉取 → **活跃写扩散群补拉** → 读扩散群拉取 → 实时；缺补拉即视为实现缺陷 |
+
+服务端实现可在「全局拉取发现某群 `conv_seq` 超前于用户 inbox 水位」时提示客户端补拉，但**不得**依赖该提示替代 SDK 主动补拉。
 
 ---
 
@@ -108,6 +126,8 @@ AUTH_RESP
     OFFLINE_PULL_REQ(cursor, conv_id?, limit)
     OFFLINE_PULL_RESP → 落库，cursor = next_cursor
     until !has_more
+  对每个活跃 write_fanout 群：OFFLINE_PULL(conv_id=g:…) 补拉（§3.2）
+  对每个 read_fanout 群：OFFLINE_PULL(conv_id=g:…)（§3.1）
   进入实时 CMD_MSG_PUSH / PUSH_BATCH
 ```
 

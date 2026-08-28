@@ -1,4 +1,4 @@
-# 离线设备系统推送 - Elixir 实现
+# 离线设备系统推送 - Elixir 实现（v1）
 
 | 项 | 内容 |
 |------|------|
@@ -6,134 +6,94 @@
 | 设计文档 | [mobile-push.md](../../design/mobile-push.md) |
 | Kafka | [kafka-event-bus.md](kafka-event-bus.md) §2.11 |
 | Roadmap | Phase 5（P5-09）、Phase 9（P9-03c） |
+| 差距审查 | [gap-review-2026-08-wave3.md](gap-review-2026-08-wave3.md) G-50/G-51 |
 
 ---
 
-## 1. 模块划分
+## 1. v1 模块划分（实际代码）
 
 | 模块 | 职责 |
 |------|------|
-| `IM.Delivery.Router` | 扇出：在线 → WS；离线设备收集进 `MobilePush` |
-| `IM.Delivery.MobilePush` | 判定 eligibility、聚合 `targets`、构造 `PushNotificationBatchEvent` |
-| `IM.Delivery.PushDisplay` | 从 `ChatMessage` 生成 `title` / `body` |
-| `IM.EventBus.Push` | 编码并 `publish(:push, batch_event)`；超限时 `chunk_targets/2` |
-| `IM.Stores.DeviceStore` | 查 `user_devices`（`push_token`、`platform`） |
+| `IM.Delivery.Router` | 在线 → WS（`UserTracker` / Registry）；**无在线设备**时 `MobilePush.maybe_enqueue/4` |
+| `IM.Cluster.GroupPusher` | 大群扇出；对用户级离线集合同样 `MobilePush` |
+| `IM.Delivery.MobilePush` | 查 `push_token`、进程内队列、`EventBus.Push.publish_batch/3` |
+| `IM.EventBus.Push` | 旁路 topic `:push` → Kafka `im.push`（需 `EVENT_BUS_ENABLED=true`） |
+| `IM.Stores.UserDeviceStore` | `push_token` / `platform`；`PUT /api/v1/devices/:id/push-token` |
 
-推送服务（消费 `im.push`、调 APNs/FCM）**不在** IM 仓库内。
+**不在 IM 仓库内**：FCM/APNs HTTP、推送服务消费者。
 
 ---
 
-## 2. Delivery 扇出
+## 2. 扇出路径
+
+### 单聊 / 预编码复用
+
+`IM.WebSocket.Commands.MsgSend.push_to_recipients/3` 对私聊调用：
 
 ```elixir
-defmodule IM.Delivery.Router do
-  def deliver(recipients, encoded_packet, message, context) do
-  push_targets =
-    Enum.flat_map(recipients, fn recipient ->
-      devices = DeviceStore.list_devices(context.app_key, recipient.user_id)
+DeliveryRouter.push_binary(app_key, uid, bin,
+  exclude_device_id: excl,
+  msg_id: message.msg_id,
+  conv_id: message.conv_id
+)
+```
 
-      Enum.reduce(devices, [], fn device, acc ->
-        cond do
-          device_online?(device) ->
-            push_websocket(device, encoded_packet, message)
-            acc
+`Router.push_binary/4` 在 `deliver_bin/5` 返回 `recipients == 0` 时：
 
-          MobilePush.eligible?(device, message, context) ->
-            [MobilePush.build_target(device, message, context) | acc]
+```elixir
+MobilePush.maybe_enqueue(app_key, user_id, bin,
+  online?: false,
+  msg_id: opts[:msg_id],
+  conv_id: opts[:conv_id]
+)
+```
 
-          true ->
-            acc
-        end
-      end)
-    end)
+### 群聊
 
-    MobilePush.flush_batch(message, push_targets, context)
-    :ok
-  end
+`GroupPusher.push/4` 在树状/直推完成后，对 **不在 online_set** 的用户调用 `MobilePush`（同样传递 `msg_id` / `conv_id`）。
+
+### 聊天室
+
+**不做**离线移动推送（设计约束；`CHAT_ROOM` 走 PubSub only）。
+
+---
+
+## 3. MobilePush 行为
+
+```elixir
+# lib/im/delivery/mobile_push.ex（摘要）
+unless online? do
+  devices = UserDeviceStore.list_with_push_token(app_key, user_id)
+  # GenServer 内存队列 + EventPush.publish_batch(msg_id, targets, ...)
 end
 ```
 
-**禁止**在 `handle_msg_send` 同步路径 `await` Kafka produce。
+- `online?: true` 时跳过（群路径由 `GroupPusher` 用户级判断调用）。
+- `msg_id` 默认 `"unknown"` 若未传；单聊/群路径现已传入真实 `msg_id`。
+- **禁止**在 `CMD_MSG_SEND` 同步路径 `await` Kafka produce（`EventBus.publish` 非阻塞或 no-op）。
 
 ---
 
-## 3. 批量事件构造
+## 4. Event Bus 与 Kafka
 
-```elixir
-defmodule IM.Delivery.MobilePush do
-  @batch_max Application.compile_env(:im, :push_batch_targets_max, 500)
+默认配置（`config.exs` / K8s ConfigMap）：
 
-  def flush_batch(_message, [], _context), do: :ok
+- `event_bus_enabled: false` — 旁路关闭，`im.push` 不出节点。
+- 生产需 Kafka 旁路时：`EVENT_BUS_ENABLED=true`、`KAFKA_BROKERS=...`、`EVENT_BUS_PRODUCER=brod`。
 
-  def flush_batch(message, targets, context) do
-    display = PushDisplay.build(message)
-    chunks = Enum.chunk_every(targets, @batch_max)
-    total = length(chunks)
-
-    chunks
-    |> Enum.with_index()
-    |> Enum.each(fn {chunk, index} ->
-      event = %{
-        event_id: Ecto.UUID.generate(),
-        timestamp: System.system_time(:millisecond),
-        app_key: context.app_key,
-        trace_id: context.trace_id,
-        msg_id: message.msg_id,
-        conv_id: message.conv_id,
-        chat_type: message.chat_type,
-        from_user_id: message.from,
-        display: display,
-        targets: chunk,
-        batch_index: index,
-        batch_total: total
-      }
-
-      IM.EventBus.publish(:push, event)
-    end)
-  end
-
-  def build_target(device, message, context) do
-    %{
-      user_id: device.user_id,
-      device_id: device.device_id,
-      platform: device.platform,
-      push_token: device.push_token,
-      channel: channel_for(device.platform),
-      idempotency_key: idempotency_key(context.app_key, device, message)
-    }
-  end
-end
-```
+见 [deploy-guide.md](deploy-guide.md) §Event Bus。
 
 ---
 
-## 4. EventBus 配置
+## 5. v1 deferred（相对设计文档）
 
-```elixir
-config :im, IM.EventBus.Kafka,
-  topics: %{
-    upstream: "im.upstream",
-    session: "im.session",
-    downstream: "im.downstream",
-    push: "im.push",
-    dlq: "im.dlq"
-  },
-  push_enabled: true,
-  push_room_enabled: false,
-  push_display_body_max: 100,
-  push_batch_targets_max: 500
-```
-
-编码：`IM.EventBus.Encoder.encode(%PushNotificationBatchEvent{}, :protobuf)`。
-
----
-
-## 5. 与幂等的关系
-
-`MSG_SEND` 幂等重试**不得**重复写 `im.push`：
-
-- 扇出前标记「本 `msg_id` 已 enqueue push」（Redis `push:batch:{app_key}:{msg_id}`，TTL 24h）
-- `targets[].idempotency_key` 供推送服务侧 per-device 去重
+| 设计能力 | v1 状态 |
+|----------|---------|
+| `IM.Delivery.PushDisplay`（title/body） | 未实现；Kafka 载荷无 display |
+| Redis `push:batch:{app_key}:{msg_id}` 幂等 | 未实现 |
+| `targets[].idempotency_key` | 未实现 |
+| `flush_batch` 多 chunk 元数据 | `EventBus.Push` 按 500 分 chunk，无 batch_index |
+| FCM/APNs | 外置服务 |
 
 ---
 
@@ -141,24 +101,16 @@ config :im, IM.EventBus.Kafka,
 
 | 场景 | 期望 |
 |------|------|
-| 单聊，对端设备在线 | 仅 WS `CMD_MSG_PUSH`，**无** `im.push` |
-| 单聊，对端 1 台离线 + token | **1 条** `im.push`，`targets` 长度 1 |
-| 群聊 3 人，2 人各 1 离线设备 | **1 条** `im.push`，`targets` 长度 2 |
-| 群 600 离线设备 | **2 条** `im.push`（500+100），`batch_total` = 2 |
-| 无 `push_token` | 不进入 `targets` |
-| SEND 幂等重试 | 不重复 `im.push` |
-| Kafka 不可用 | SEND ACK 与在线推送正常 |
+| 单聊，对端在线 | WS `CMD_MSG_PUSH`；`MobilePush.drain()` 为空 |
+| 单聊，对端离线 + token | `RouterTest` / `MobilePushTest`：队列 1 条 |
+| 群聊，成员离线 + token | `GroupPusher` 路径入队 |
+| 无 `push_token` | 不入队 |
+| `EVENT_BUS_ENABLED=false` | 入队 GenServer 仍执行；Kafka 无产出 |
+| 聊天室 | 无 MobilePush |
 
 ---
 
 ## 7. 测试
 
-```elixir
-test "enqueues batch push for offline devices" do
-  {:ok, msg} = send_group_message(members: 3, offline: ["bob", "carol"])
-  assert_push_batch(msg_id: msg.msg_id, target_count: 2)
-  refute_push_batch(target_user: "alice")  # 发送方不收
-end
-```
-
-Mock：`IM.EventBus.Mock` 断言 `:push` topic 载荷为 `PushNotificationBatchEvent`。
+- `test/im/delivery/mobile_push_test.exs`
+- `test/im/delivery/router_test.exs` — 单聊离线 `push_binary`

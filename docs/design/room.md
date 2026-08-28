@@ -24,10 +24,11 @@
 | 1 | 命令段 **700–711**；`route_key` 建议填 `room_id` |
 | 2 | **仅 CREATE** 有独立 `RESP`；其余操作用 `*_PUSH` 回传 `seq` 作成功确认 |
 | 3 | 成员变更向**房间内在线成员**广播 `*_PUSH`（`seq=0`） |
-| 4 | 默认 `persist_msg=false`；可选 `msg_ttl_sec` 短时缓存（默认 **300s**） |
+| 4 | 默认 `persist_msg=false`；开启后可选 `msg_ttl_sec` 短时缓存（默认 **300** 秒，`0` = 不缓存） |
 | 5 | `conv_id` 服务端权威：`r:{room_id}` |
 | 6 | 失败 `CMD_ERROR`（4001–4005），**不关连接** |
 | 7 | 聊天室**无**群主/管理员 proto 枚举；创建者为 `owner_uid`，权限策略服务端配置 |
+| 8 | 在线消息广播**一律** Phoenix PubSub；**不**按规模切换树状扇出（树状仅群聊） |
 
 ---
 
@@ -108,9 +109,11 @@ CREATE 返回 `room_id` / `conv_id`；其余操作复用「回传 `seq` 的 PUSH
 
 | 点 | 说明 |
 | --- | --- |
-| 房间广播 | 优先 Phoenix PubSub 一次 `broadcast`，避免 per-member 单播 |
+| 房间广播 | **一律** Phoenix PubSub 一次 `broadcast`（与成员数无关）；避免 per-member 单播 |
+| 与群聊差异 | **不**使用大群树状扇出（`GroupPusher`）；树状仅服务群聊，见 [modular-architecture.md](modular-architecture.md) §7.2、[group.md](group.md) |
 | 成员计数 | `member_count` 走 Redis；DB 异步校正 |
-| 大房间 | 成员变更 PUSH 仍广播；客户端只更新本地房间态，不拉全量成员 |
+| 大房间 | 成员变更 PUSH 仍走同一 PubSub topic；客户端只更新本地房间态，不拉全量成员 |
+| 压力点 | PubSub 跨节点带宽 + 本节点慢连接背压；不靠换扇出算法缓解 |
 
 ---
 
@@ -121,5 +124,6 @@ CREATE 返回 `room_id` / `conv_id`；其余操作复用「回传 `seq` 的 PUSH
 | 聊天室离线拉取 | 与 message-model 一致；历史走 REST/短缓存 |
 | 房间内双阶段 ACK 全员 | 仅消息 `SERVER_RECEIVED` 必达 |
 | proto 内建管理员角色 | 房间场景多样，先用策略配置 |
+| 大房间改树状扇出 | 与「一律 PubSub」定稿冲突；两套路径难测；群聊已有树状即可 |
 
 ---

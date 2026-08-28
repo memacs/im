@@ -322,7 +322,10 @@ defmodule IM.EventBus.Kafka do
 end
 ```
 
-底层可用 `brod` / `kafka_protocol`；批量 `produce` 由 Buffer flush 触发。
+底层实现：`IM.EventBus.Producer.Brod`（`:brod.produce_sync/5`，`:hash` 分区）或默认 `Producer.Memory`。  
+序列化：默认 **`serialization: :protobuf`**（`Pb.Im.Event.*`）；开发可 `:json_envelope`。  
+启用：`EVENT_BUS_ENABLED=true`、`EVENT_BUS_PRODUCER=brod`、`KAFKA_BROKERS=host:9092`。  
+批量 `produce` 由 Buffer flush 触发；失败记 telemetry，不崩溃 Buffer。
 
 失败重试 N 次后：
 

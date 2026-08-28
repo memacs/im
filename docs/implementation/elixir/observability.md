@@ -12,21 +12,21 @@
 
 ```
 lib/im/
-  ├── log.ex                    # 统一日志入口 IM.Log
+  ├── log.ex                    # 统一日志入口 IM.Log（宏 API）
   ├── log/
-  │   └── metadata.ex           # Logger.metadata 管理
+  │   ├── metadata.ex           # Logger.metadata 管理
+  │   └── rate_limit.ex         # auth_failed / rate_limited 采样
   └── telemetry/
       ├── supervisor.ex
-      ├── tags.ex                  # host / 公共 metadata
-      ├── msg_type.ex              # 从 packet 提取 MsgType 标签
-      ├── packet.ex                # 上下行 byte_size
-      ├── handler.ex
-      ├── delivery.ex
-      ├── ack.ex
-      └── connection.ex
+      ├── metrics.ex               # Prometheus 定义（DD-028 名）
+      ├── tags.ex                  # host / node / cmd / msg_type
+      ├── websocket.ex             # packet received/sent/error + handler
+      ├── message.ex               # ack latency stages
+      └── connection.ex            # connections.total + auth.total
 ```
 
-Application 启动时 `IM.Telemetry.Supervisor` attach 指标 Handler；`IM.Log` 在连接/请求入口设置 metadata。
+**落地状态（2026-08）**：Wave1–5 已对齐——宏日志、生产 NDJSON、核心/存储/投递/出站/跨节点/burn 指标；`IM.Audit`；§2.6.4 失败路径日志 + REST `LogContext` + 登出审计。  
+Application 启动时挂 `IM.Log.RateLimit` + `IM.Telemetry.Supervisor`；Handler 入口 `IM.Log.Metadata.set_from_packet/2`。
 
 ---
 

@@ -42,10 +42,29 @@ end
 
 `user_inbox` 分片键 `(app_key, user_id)`。每条消息：`message_bodies` 1 行 + 每收件人 `user_inbox` 1 瘦行（单聊 2 行、群聊 N 行）。
 
+群聊其余成员 inbox 由 `IM.Jobs.GroupInboxFanout` **异步**写入（见 [group.md](../../design/group.md) §6.2）。`MessageStore.list_conv_joined` / `list_by_conv_seq` 必须能在 inbox 缺行时仍按 `conv_seq` 从 `message_bodies` 补齐（实现草稿见 [group.md](group.md) §5.2）。
+
 ---
 
-## 4. 验收要点
+## 4. SDK / 测试客户端补拉顺序
+
+与设计 [offline-pull.md](../../design/offline-pull.md) §3.2 对齐：
+
+```text
+AUTH 后：
+  1) OFFLINE_PULL(conv_id=空)
+  2) 对每个活跃 write_fanout 群：OFFLINE_PULL(conv_id=g:{id}, cursor=watermark)
+  3) 对每个 read_fanout 群：OFFLINE_PULL(conv_id=g:{id}, cursor=…)
+  4) 进入实时 PUSH（msg_id 去重）
+```
+
+`im_client` / `im-console` 实现离线同步时**不得**省略步骤 2。
+
+---
+
+## 5. 验收要点
 
 - AUTH 后 OFFLINE_PULL 按 `inbox_seq` 递增返回
 - `has_more` 与 `next_cursor` 正确
 - 聊天室消息不出现在 OFFLINE_PULL 结果中
+- 异步 fanout 未完成时：仅全局拉取会漏群消息；加上 `conv_seq` 补拉后不漏（P5-11 / P4 联调）

@@ -45,13 +45,16 @@ flowchart TD
   B -->|PRIVATE| C[conv_id p:uid_lo:uid_hi]
   B -->|GROUP| D[conv_id g:group_id]
   B -->|ROOM| E[conv_id r:room_id]
-  C --> G[message_bodies 1 行 + user_inbox 写扩散]
-  D --> G
-  E --> H{持久化策略}
-  H -->|默认 false| I[PubSub 广播 / 可选 Redis 短缓存]
-  H -->|persist true| J[短 TTL 缓存]
-  G --> K[分配 conv_seq + inbox_seq]
-  K --> L[ACK + PUSH 见 message-send-ack]
+  C --> G[同步 bodies + 双方 inbox]
+  D --> H{storage_mode}
+  H -->|write_fanout| I[同步 bodies + 发送方 inbox → 异步其余成员]
+  H -->|read_fanout| J[仅 bodies]
+  E --> K{持久化策略}
+  K -->|默认 false| L[PubSub 广播 / 可选 Redis 短缓存]
+  K -->|persist true| M[短 TTL 缓存]
+  G --> N[ACK + PUSH 见 message-send-ack]
+  I --> N
+  J --> N
 ```
 
 ### 三种会话对比（流程差异）
@@ -184,11 +187,11 @@ flowchart LR
 | **适用范围** | 仅 `CHAT_GROUP` / `CHAT_ROOM`；`CHAT_PRIVATE` 忽略此字段 |
 | **实时推送** | 仅向 `target_users` 中在线用户推送 `CMD_MSG_PUSH` |
 | **发送方其他设备** | **始终** PUSH（发送设备除外）；见 [multi-device.md](multi-device.md) |
-| **其他成员** | 不收实时 PUSH；默认仍可通过离线拉取/REST 查看历史 |
-| **历史存储** | 写入 `message_bodies`（记录 `target_users`）；群聊同步写扩散 `user_inbox` |
+| **其他成员** | 不收实时 PUSH；**也不能**经离线拉取 / REST 看到（v1 唯一策略） |
+| **历史存储** | 写一条 `message_bodies`（记录 `target_users`）；群聊 `write_fanout` 时 inbox **只写** `target_users` ∪ {发送方} |
 | **ACK 语义** | 首个在线 **`target_users` 成员** `ACK_UP` 后通知发送方 |
-| **离线同步** | 群聊：**默认不过滤**，定向消息进 `OFFLINE_PULL`；聊天室不进离线 |
-| **可见性默认** | 离线拉取与 REST 历史默认**全员可见**；应用可配置仅 `target_users` 可查 |
+| **离线同步** | 群聊：仅目标用户与发送方的 inbox 有行，故仅他们能在全局 `OFFLINE_PULL` 见到；聊天室不进离线 |
+| **可见性** | **仅** `target_users` ∪ {发送方}；需要全员可见时不要设 `target_users` |
 
 ### 服务端处理流程
 
@@ -196,19 +199,18 @@ flowchart LR
 1. 收到群聊/聊天室消息，检查 target_users 是否非空
 2. 非空 → 实时 PUSH：`target_users` 在线成员 + **发送方其他在线设备**（发起 SEND 设备除外）
 3. 空值或 `[]` → 向全部在线成员推送（普通消息）
-4. 写入存储时记录 target_users
-5. 可选：查询历史消息时按 target_users 过滤可见性
+4. 写入 message_bodies（记录 target_users）
+5. 群聊 write_fanout：user_inbox 只写 target_users ∪ {发送方}
+6. 读扩散 / REST：查询侧按 target_users 过滤，非目标用户不可见
 ```
 
-### 可见性策略（可选）
-
-服务端可根据业务需要控制历史消息的可见性：
+### 可见性（v1 定稿）
 
 | 策略 | 说明 |
 | --- | --- |
-| **全部可见** | 未收到推送的成员也可查历史（默认） |
-| **仅定向用户可见** | 查询历史时按 `target_users` 过滤 |
-| **混合策略** | 结合 `ext` 字段或应用配置决定 |
+| **仅定向用户可见（默认且唯一）** | inbox 减量 + 查询过滤；发送方为多端同步保留可见 |
+| **需要全员可见** | 发送时不设 `target_users`（普通群消息） |
+| ~~全部可见 / 可配置翻转~~ | **v1 不做**：与 inbox 减量冲突，且易在 5000 人群上把存储差三个数量级 |
 
 ### 典型用例：@提醒
 

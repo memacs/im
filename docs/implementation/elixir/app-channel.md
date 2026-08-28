@@ -43,7 +43,7 @@ defmodule IM.Services.Channel do
 end
 ```
 
-Socket 进程 `handle_info` 收到 `{:channel_push, packet_binary}` → `OutboundQueue.enqueue`（LOW 带，可丢）。
+Socket 进程 `handle_info` 收到 `{:channel_push, bin}` → 经 `PacketTransport` 入 `OutboundQueue`（`priority: :low`，超深可丢）。
 
 ---
 
@@ -71,7 +71,7 @@ internal publish
   → encode_push/1（全集群 1 次）
   → Phoenix.PubSub.broadcast(topic, {:channel_push, packet_binary})
   → 各节点：订阅了 topic 的 socket 进程 handle_info
-  → OutboundQueue.enqueue(..., priority: :low)   # 可丢
+  → PacketTransport OutboundQueue（priority: :low；见 message-send-ack.md §6）
 ```
 
 | 检查项 | 期望 |
@@ -150,5 +150,5 @@ end
 
 - [kafka-event-bus.md](../../design/kafka-event-bus.md) §2.12
 - [dual-channel-api.md](../../design/dual-channel-api.md) §4.4 internal 路由
-- [room.md](../../design/room.md) PubSub 参考（设计侧 broadcast；**勿**照搬实现草图树状扇出）
+- [room.md](../../design/room.md) / [implementation room.md](room.md)：聊天室**一律** PubSub，与 Channel 相同（均不走 GroupPusher）
 - [app-channel.md](../../design/app-channel.md) §7.4 扇出模型

@@ -57,6 +57,7 @@
 | DD-037 | Web 演示控制台（独立前端） | [web-console.md](design/web-console.md) |
 | DD-038 | 协议为准、变更须人工确认 | [agent.md](../agent.md)（硬约束「协议为准」） |
 | DD-039 | `msg_id` Snowflake 发号 | [msg-id-snowflake.md](design/msg-id-snowflake.md) |
+| DD-040 | 消息 TTL 清理 Job | [message-ttl-cleanup.md](design/message-ttl-cleanup.md) |
 
 > DD-002、DD-025、DD-026 预留。新增决策使用下一可用编号，**禁止复用**。
 
@@ -91,8 +92,9 @@
 | Web 演示控制台 | 已确认 | [design/web-console.md](design/web-console.md)（**协议能力全覆盖**） | — |
 | 协议为准（开发治理） | 已确认 | [agent.md](../agent.md)（DD-038） | — |
 | `msg_id` Snowflake 发号 | 已确认 | [msg-id-snowflake.md](design/msg-id-snowflake.md)（DD-039） | — |
+| 消息 TTL 清理 Job | 已确认 | [message-ttl-cleanup.md](design/message-ttl-cleanup.md)（DD-040） | — |
 | 好友系统 | 已确认 | [design/friend.md](design/friend.md) | §25 |
-| 应用通道（App Channel） | 待评审 | [design/app-channel.md](design/app-channel.md) | §27 |
+| 应用通道（App Channel） | 已确认 | [design/app-channel.md](design/app-channel.md) | §27；Phase 11 已落地 |
 | 认证模块架构 | 已确认 | [design/auth-module.md](design/auth-module.md) | — |
 | 依赖抽象层 | 已确认 | [design/dependency-abstraction.md](design/dependency-abstraction.md) | — |
 | 模块化架构 | 已确认 | [design/modular-architecture.md](design/modular-architecture.md) | — |
@@ -104,4 +106,4 @@
 | Packet.payload 压缩协商 | 已确认 | [design/payload-compression.md](design/payload-compression.md) | §3、§5 |
 | 错误码表 | 已确认 | [proto/common.proto](../proto/common.proto) `ErrorCode` 枚举；错误模型见 [packet.md](design/packet.md) | §17 |
 
-目录说明见 [design/README.md](design/README.md)。
+目录说明见 [design/README.md](design/README.md)。功能模块与代码对照见 [module-map.md](module-map.md)。

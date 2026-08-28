@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: im-headless
+  namespace: im-dev
+  labels:
+    app: im
+spec:
+  clusterIP: None
+  # libcluster DNS 策略靠 A 记录发现 Pod IP
+  publishNotReadyAddresses: true
+  selector:
+    app: im
+  ports:
+    - name: http
+      port: 4000
+      targetPort: http
+    - name: epmd
+      port: 4369
+      targetPort: epmd

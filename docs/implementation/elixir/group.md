@@ -55,7 +55,7 @@ end
 
 在线过滤在 `IM.Delivery.Router` + `UserTracker` 完成；大群走树状扇出（`IM.Cluster.GroupPusher`）。
 
-写扩散优化见设计文档 [group.md](../../design/group.md) §6。
+树状参数（扇出度 8、RPC 超时 2s、慢节点隔离等）见设计 [group.md](../../design/group.md) §5.1；写扩散见同文档 §6。
 
 ---
 

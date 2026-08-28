@@ -26,7 +26,7 @@ run = "cd apps/elixir/im && mix escript.install hex protobuf 0.17.0 --force"
 # 生成物入库：Docker 构建阶段无需 protoc，clone 即可编译。
 # 代价是改完 .proto 必须重跑本任务，proto-gen-check 会在 CI 上把漏跑挡下来。
 [tasks.proto-gen]
-description = "由 proto/ 生成 Elixir 代码到 apps/elixir/im/lib/pb/"
+description = "由 proto/ 生成 Elixir 代码到 im_proto/lib/pb/"
 run = """
 set -e
 # mise 会把 MIX_HOME 指向它管理的 elixir 安装目录，escript 装在那儿而非 ~/.mix
@@ -35,14 +35,14 @@ if [ ! -x "$escripts/protoc-gen-elixir" ]; then
   echo "未找到 protoc-gen-elixir，请先运行：mise run proto-plugin" >&2
   exit 1
 fi
-rm -rf apps/elixir/im/lib/pb
+rm -rf apps/elixir/im_proto/lib/pb
 # 输出根是 lib/：生成器按模块命名空间建子目录，package_prefix=pb 即落在 lib/pb/im/...
 PATH="$escripts:$PATH" protoc \
   --proto_path=proto \
-  --elixir_out=apps/elixir/im/lib \
+  --elixir_out=apps/elixir/im_proto/lib \
   --elixir_opt=package_prefix=pb \
   proto/*.proto
-cd apps/elixir/im && mix format "lib/pb/**/*.ex"
+cd apps/elixir/im_proto && mix format "lib/pb/**/*.ex"
 """
 
 [tasks.proto-gen-check]
@@ -50,13 +50,13 @@ description = "校验 lib/pb/ 与 proto/ 同步（CI 用）"
 depends = ["proto-gen"]
 # 用 status 而非 diff：新增 .proto 会产出未跟踪文件，git diff 看不到
 run = """
-changes=$(git status --porcelain -- apps/elixir/im/lib/pb)
+changes=$(git status --porcelain -- apps/elixir/im_proto/lib/pb)
 if [ -n "$changes" ]; then
   echo "错误：lib/pb/ 与 proto/ 不同步。请运行 'mise run proto-gen' 并提交生成物。" >&2
   echo "$changes" >&2
   exit 1
 fi
-echo "lib/pb/ 与 proto/ 同步"
+echo "lib/pb/（im_proto）与 proto/ 同步"
 """
 
 # ── Mix：apps/elixir/im ───────────────────────────────────────────────────────
@@ -74,8 +74,9 @@ description = "首次初始化：proto + IM 依赖"
 depends = ["proto-check", "im:deps-get", "im:deps-compile"]
 
 [tasks."im:compile"]
-description = "mix compile"
+description = "mix compile（MIX_ENV=dev，避免 test 依赖重复编译 Pb）"
 depends = ["im:deps-get"]
+env = { MIX_ENV = "dev" }
 run = "cd apps/elixir/im && mix compile"
 
 [tasks."im:compile-strict"]
@@ -89,9 +90,23 @@ depends = ["im:deps-get"]
 run = "cd apps/elixir/im && mix hex.audit"
 
 [tasks."im:test"]
-description = "mix test"
+description = "mix test（自动解析 PGPORT：15432 pg-forward 优先，其次 5432）"
 depends = ["im:compile"]
-run = "cd apps/elixir/im && mix test"
+run = """
+set -e
+# shellcheck source=deploy/elixir/im/scripts/resolve-pg-port.sh
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix test "$@"
+"""
+
+[tasks."im:test-smoke"]
+description = "Release 冒烟 ExUnit（等价 bin/smoke-messaging + smoke-auth）"
+depends = ["im:compile"]
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix test test/im/release/
+"""
 
 [tasks."im:format"]
 description = "mix format"
@@ -102,9 +117,13 @@ description = "mix format --check-formatted（CI 用）"
 run = "cd apps/elixir/im && mix format --check-formatted"
 
 [tasks."im:server"]
-description = "mix phx.server（仅开发调试）"
+description = "mix phx.server（dev；自动解析 PGPORT）"
 depends = ["im:compile"]
-run = "cd apps/elixir/im && mix phx.server"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix phx.server
+"""
 
 [tasks."im:release"]
 description = "mix release（MIX_ENV=prod）"
@@ -145,34 +164,62 @@ description = "mix clean"
 run = "cd apps/elixir/im && mix clean"
 
 [tasks.test-watch]
-description = "mix test.watch"
-run = "cd apps/elixir/im && mix test.watch"
+description = "mix test.watch（自动解析 PGPORT）"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix test.watch
+"""
 
 [tasks.test-failed]
-description = "mix test --failed"
+description = "mix test --failed（自动解析 PGPORT）"
 depends = ["im:compile"]
-run = "cd apps/elixir/im && mix test --failed"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix test --failed
+"""
 
 [tasks.console]
-description = "iex -S mix"
+description = "iex -S mix（自动解析 PGPORT）"
 depends = ["im:compile"]
-run = "cd apps/elixir/im && iex -S mix"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && iex -S mix
+"""
 
 [tasks.ecto-create]
 depends = ["im:compile"]
-run = "cd apps/elixir/im && mix ecto.create"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix ecto.create
+"""
 
 [tasks.ecto-migrate]
 depends = ["im:compile"]
-run = "cd apps/elixir/im && mix ecto.migrate"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix ecto.migrate
+"""
 
 [tasks.ecto-setup]
 depends = ["im:compile"]
-run = "cd apps/elixir/im && mix ecto.setup"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix ecto.setup
+"""
 
 [tasks.ecto-reset]
 depends = ["im:compile"]
-run = "cd apps/elixir/im && mix ecto.reset"
+run = """
+set -e
+source deploy/elixir/im/scripts/resolve-pg-port.sh
+cd apps/elixir/im && mix ecto.reset
+"""
 
 # ── 本地 CI ───────────────────────────────────────────────────────────────────
 
@@ -181,13 +228,16 @@ description = "提交前：proto + IM compile + test"
 depends = ["proto-check", "im:compile", "im:test"]
 
 [tasks.ci]
-description = "CI 等价：proto + format + 严格编译 + 依赖审计 + test"
+description = "CI 等价：proto + format + 严格编译 + 依赖审计 + im/im_client/loadtest test"
 depends = [
   "proto-check",
+  "proto-gen-check",
   "im:format-check",
   "im:compile-strict",
   "im:audit",
   "im:test",
+  "im_client:test",
+  "loadtest:test",
 ]
 
 # ── Kubernetes（deploy/elixir/im/k8s）─────────────────────────────────────────
@@ -208,6 +258,10 @@ run = "kubectl -n im-dev get pods,svc"
 description = "部署全栈（依赖 + IM Release 清单，不构建镜像）"
 run = "kubectl apply -k deploy/elixir/im/k8s/overlays/local/"
 
+[tasks.k8s-kafka-event-bus]
+description = "部署全栈 + Redpanda，并开启 Event Bus 旁路（按需）"
+run = "kubectl apply -k deploy/elixir/im/k8s/overlays/kafka-event-bus/"
+
 [tasks.k8s-logs]
 description = "跟踪 IM Pod 日志"
 run = "kubectl -n im-dev logs -f deployment/im"
@@ -221,7 +275,7 @@ run = "kubectl -n im-dev port-forward svc/im 4000:4000"
 [tasks.pg-forward]
 description = "把 K8s Postgres 常驻转发到本机 15432（mix test 用）"
 run = """
-echo "Postgres → localhost:15432（Ctrl-C 退出）；另开终端运行 PGPORT=15432 mise run test"
+echo "Postgres → localhost:15432（Ctrl-C 退出）；另开终端直接 mise run test（自动选 PGPORT）"
 while true; do
   kubectl -n im-dev port-forward statefulset/postgres 15432:5432 || true
   echo "转发断开，2 秒后重连…" >&2
@@ -236,7 +290,12 @@ description = "docker build IM Release 镜像"
 run = "docker build -f deploy/elixir/im/Dockerfile -t im:local ."
 
 [tasks.release-deploy]
-description = "构建 Release 镜像并部署到本地 K8s"
+description = "构建 Release 镜像并部署到本地 K8s（单副本 local overlay）"
+run = "./deploy/elixir/im/scripts/release-deploy-local.sh"
+
+[tasks.release-deploy-cluster]
+description = "构建 Release 镜像并部署到本地 K8s（多副本 cluster overlay）"
+env = { IM_K8S_OVERLAY = "deploy/elixir/im/k8s/overlays/cluster" }
 run = "./deploy/elixir/im/scripts/release-deploy-local.sh"
 
 [tasks.release-deploy-skip-build]
@@ -251,6 +310,63 @@ curl -sf http://localhost:4000/health/live && echo
 curl -sf http://localhost:4000/health/ready && echo
 """
 
+[tasks.release-smoke-messaging]
+description = "冒烟：健康 + Pod 内消息/会话未读（见 release-smoke-messaging.md）"
+run = "chmod +x deploy/elixir/im/scripts/release-smoke-messaging.sh && ./deploy/elixir/im/scripts/release-smoke-messaging.sh"
+
+[tasks.release-smoke-auth]
+description = "冒烟：健康 + Pod 内 REST 登录（见 release-smoke-auth.md）"
+run = "chmod +x deploy/elixir/im/scripts/release-smoke-auth.sh && ./deploy/elixir/im/scripts/release-smoke-auth.sh"
+
 [tasks.verify]
 description = "完整验收：check + Release 构建部署"
 depends = ["check", "release-deploy"]
+
+# ── Mix：apps/elixir/im_client ────────────────────────────────────────────────
+
+[tasks."im_client:deps-get"]
+description = "mix deps.get（im_client）"
+run = "cd apps/elixir/im_client && mix deps.get"
+
+[tasks."im_client:test"]
+description = "im_client mix test"
+depends = ["im_client:deps-get"]
+run = "cd apps/elixir/im_client && mix test"
+
+# ── Mix：apps/elixir/loadtest ─────────────────────────────────────────────────
+
+[tasks."loadtest:deps-get"]
+description = "mix deps.get（loadtest）"
+run = "cd apps/elixir/loadtest && mix deps.get"
+
+[tasks."loadtest:test"]
+description = "loadtest mix test"
+depends = ["loadtest:deps-get"]
+run = "cd apps/elixir/loadtest && mix test"
+
+[tasks."loadtest:run"]
+description = "运行压测（透传参数，例：mise run loadtest:run -- connection_load --app-key X）"
+depends = ["loadtest:deps-get"]
+run = "cd apps/elixir/loadtest && mix loadtest.run $@"
+
+# ── Web：apps/web/im-console ──────────────────────────────────────────────────
+
+[tasks."web:install"]
+description = "npm ci（im-console）"
+run = "cd apps/web/im-console && npm ci"
+
+[tasks."web:proto"]
+description = "proto → TypeScript（im-console）"
+run = "cd apps/web/im-console && npm run proto"
+
+[tasks."web:dev"]
+description = "Vite 开发服务器（proxy → localhost:4000）"
+run = "cd apps/web/im-console && npm run dev"
+
+[tasks."web:test"]
+description = "im-console Vitest"
+run = "cd apps/web/im-console && npm test"
+
+[tasks."web:build"]
+description = "构建 im-console 静态资源"
+run = "cd apps/web/im-console && npm run build"

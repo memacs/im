@@ -113,8 +113,8 @@ IM Pod 通过 `deploy/elixir/im/k8s/im/configmap.yaml` 与 `secret.yaml` 注入�
 | **L1 单元** | 每次改代码 | `mix test` |
 | **L2 Release 构建** | 每次合入前 | `docker build -f deploy/elixir/im/Dockerfile -t im:local .` |
 | **L3 K8s 部署** | 功能任务验收 | `./deploy/elixir/im/scripts/release-deploy-local.sh` |
-| **L4 冒烟** | L3 之后 | `curl http://localhost:4000/health/live` 与 `/health/ready`（port-forward 后） |
-| **L5 协议集成** | Phase 2+ | WebSocket 客户端对 `im` Service 发 `CMD_AUTH_REQ` 等 |
+| **L4 冒烟** | L3 之后 | `mise run release-smoke`（健康）；`mise run release-smoke-messaging`（+ 会话未读，见 [release-smoke-messaging.md](release-smoke-messaging.md)） |
+| **L5 协议集成** | Phase 2+ | WebSocket 客户端对 `im` Service 发 `CMD_AUTH_REQ` 等；REST 会话列表见 [release-smoke-auth.md](release-smoke-auth.md) |
 | **L6 多副本** | Phase 5+ / 9 | `kubectl scale deployment/im --replicas=2` 后重复 L5 |
 
 **任务 DoD（Phase 2 起）**：L1 + L3 + 该任务对应的 L4/L5 通过，方可标 `done`。
@@ -164,6 +164,7 @@ mise run release-deploy     # 构建 + 部署 K8s
 mise run release-deploy-skip-build
 mise run k8s-port-forward   # 另开终端
 mise run release-smoke      # curl /health
+mise run release-smoke-messaging  # 健康 + Pod 内消息/未读冒烟
 mise run verify             # check + release-deploy
 ```
 

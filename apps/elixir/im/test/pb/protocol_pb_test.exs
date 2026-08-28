@@ -61,6 +61,37 @@ defmodule Pb.ProtocolTest do
       assert is_integer(ErrorCode.value(:CODE_PROTO_VERSION_UNSUPPORTED))
       assert PayloadCompression.value(:PAYLOAD_COMPRESSION_UNSPECIFIED) == 0
     end
+
+    test "好友错误码段 7xxx 已生成" do
+      assert ErrorCode.value(:CODE_FRIEND_SELF) == 7001
+      assert ErrorCode.value(:CODE_FRIEND_BLOCKED_BY_PEER) == 7004
+      assert ErrorCode.value(:CODE_FRIEND_NOT_FRIEND) == 7006
+    end
+  end
+
+  describe "KickNotify / MsgRead 加固字段" do
+    test "KickReason 枚举与 KickNotify.reason_code 可用" do
+      alias Pb.Im.Protocol.{KickNotify, KickReason}
+
+      notify = %KickNotify{
+        reason: "device_banned",
+        reason_code: :KICK_REASON_DEVICE_BANNED,
+        timestamp: 1
+      }
+
+      assert notify |> KickNotify.encode() |> KickNotify.decode() == notify
+      assert KickReason.value(:KICK_REASON_DUPLICATE_LOGIN) == 1
+    end
+
+    test "MsgRead.unread_count 为 optional，可区分未设置与 0" do
+      alias Pb.Im.Protocol.MsgRead
+
+      bare = MsgRead.decode(MsgRead.encode(%MsgRead{conv_id: "p:a:b"}))
+      assert bare.unread_count == nil
+
+      zero = MsgRead.decode(MsgRead.encode(%MsgRead{conv_id: "p:a:b", unread_count: 0}))
+      assert zero.unread_count == 0
+    end
   end
 
   describe "跨 package 生成" do

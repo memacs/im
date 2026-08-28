@@ -1,0 +1,6 @@
+#!/bin/sh
+# Release 内 REST+WS 鉴权冒烟（见 release-smoke-auth.md、IM.Release.Smoke.auth/0）。
+set -eu
+
+cd -P -- "$(dirname -- "$0")/.."
+exec ./bin/im eval "IM.Release.Smoke.auth()"

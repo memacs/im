@@ -224,7 +224,7 @@ sequenceDiagram
 
 | 步骤 | 方向 | 命令 | 做什么 | 返回什么 |
 | --- | --- | --- | --- | --- |
-| 1 | G→C | `CMD_KICK` | 服务端主动踢人（互踢 / 管理员踢 / token 过期） | `KickNotify`：`reason`（`duplicate_login`/`admin_kick`/`token_expired`）、`device_id`（可选）、`timestamp` |
+| 1 | G→C | `CMD_KICK` | 服务端主动踢人（互踢 / 管理员踢 / token 过期） | `KickNotify`：`reason_code`（枚举权威）+ 兼容 `reason` 字符串、`kicker`（可选）、`timestamp`、`clear_local_data` |
 | 2 | C | 本地处理 | 展示原因；停止心跳与业务 | — |
 | 3 | C→G | 重连 | `token_expired` 时需 REST 重新获取 token，再 `AUTH_REQ` | 见 §4.1 |
 

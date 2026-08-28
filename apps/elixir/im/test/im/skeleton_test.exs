@@ -1,12 +1,10 @@
 defmodule IM.SkeletonTest do
   @moduledoc """
-  P0-05 骨架契约。
+  P0-05 骨架契约（尚未落地的分层入口）。
 
-  这些模块目前只有签名没有实现，本测试锁定的是**契约形状**：
-  分层入口存在、未实现路径统一返回 `IM.Domain.Error`、
-  `MessageContext` 的必填键不会被悄悄放宽。
-
-  Phase 1+ 每落地一个模块，就把对应用例从这里搬到该模块自己的测试文件。
+  已落地的协议层见 `test/im/protocol/*_test.exs`。
+  本文件继续锁定：未实现入口统一返回 `IM.Domain.Error`、
+  `MessageContext` 必填键不会被悄悄放宽。
   """
   use ExUnit.Case, async: true
 
@@ -52,26 +50,17 @@ defmodule IM.SkeletonTest do
     end
 
     test "Dispatch.execute/3 是 WS 与 REST 的唯一业务入口", %{ctx: ctx} do
-      assert {:error, %Error{code: :not_implemented, ref_cmd: 100}} =
-               IM.Application.Dispatch.execute(100, %{}, ctx)
+      assert {:error, %Error{code: :not_implemented, ref_cmd: 9999}} =
+               IM.Application.Dispatch.execute(9999, %{}, ctx)
     end
 
-    test "Protocol.Codec 双向编解码待 Phase 1 实现" do
-      assert {:error, %Error{code: :not_implemented}} = IM.Protocol.Codec.decode(<<>>)
-      assert {:error, %Error{code: :not_implemented}} = IM.Protocol.Codec.encode(%{})
-    end
-
-    test "Protocol.Router 按 cmd 选 Command 模块" do
-      assert {:error, %Error{code: :not_implemented}} = IM.Protocol.Router.route(100)
-    end
-
-    test "Ingress.Http 是 REST 侧适配，不含业务" do
-      assert {:error, %Error{code: :not_implemented}} =
-               IM.Ingress.Http.dispatch(%{}, 100, fn _ -> {:ok, %{}} end)
+    test "Ingress.Http 需要 MessageContext" do
+      assert {:error, %Error{code: :msg_invalid}} =
+               IM.Ingress.Http.dispatch(%{}, 100, %{})
     end
 
     test "Delivery.Router 负责下行扇出，与 Dispatch 无关", %{ctx: ctx} do
-      assert {:error, %Error{code: :not_implemented}} = IM.Delivery.Router.deliver(%{}, ctx)
+      assert {:error, %Error{code: :msg_invalid}} = IM.Delivery.Router.deliver(%{}, ctx)
     end
   end
 end

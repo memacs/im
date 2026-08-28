@@ -2,6 +2,36 @@
 
 本文件供 AI / 协作者快速建立项目上下文。**所有代码以协议为准**（`proto/` + [`protocol.md`](docs/design/protocol/protocol.md)）；改协议须 **人工确认**。写代码前先读本文与对应 design 文档。
 
+## 文档地图
+
+**新会话首轮**：按任务类型选入口，勿从仓库根盲目 grep。
+
+```text
+对外 / 产品能力     docs/product-overview.md
+        │
+总入口（按角色）    docs/README.md
+        │
+├─ 改某功能        docs/module-map.md  → design/*.md → implementation/elixir/*.md → apps/elixir/im/lib/
+├─ 按 Phase 开发    docs/specs-index.md → .kiro/specs/*/design.md → PROGRESS.md → roadmap.md
+├─ REST 接口       docs/implementation/elixir/http-api-reference.md
+├─ WS 时序         docs/design/protocol/protocol.md + protocol-e2e-message-sequences.md
+├─ 启动 / 配置     apps/README.md → apps/<app>/README.md
+├─ 部署 / K8s      deploy/README.md → deploy/elixir/im/k8s/README.md
+└─ 活状态          design-decisions.md · architecture-overview.md · PROGRESS.md
+```
+
+| 你在做… | 先读 |
+| --- | --- |
+| 任意代码变更 | 本文 → [`module-map`](docs/module-map.md) 定位行 |
+| 继续 roadmap / TDD | [`im-implementation`](.agents/skills/im-implementation/SKILL.md) → [`PROGRESS`](docs/implementation/elixir/PROGRESS.md) |
+| 协议 / cmd 变更 | [`protocol.md`](docs/design/protocol/protocol.md) + [`doc-sync-checklist`](docs/design/doc-sync-checklist.md)（**须人工确认**） |
+| 系统级架构变更 | [`architecture-overview.md`](docs/design/architecture-overview.md) |
+| 合入前文档扇出 | [`doc-sync-checklist`](docs/design/doc-sync-checklist.md) §2 + §2.6 grep |
+
+完整索引：[docs/README.md](docs/README.md) · [apps/README.md](apps/README.md) · [deploy/README.md](deploy/README.md)
+
+---
+
 ## 项目是什么
 
 自研 IM 系统，传输为 **WebSocket 二进制帧**，序列化为 **Protobuf 3**，当前协议版本 `ver = 1`。
@@ -37,7 +67,7 @@ deploy/                # 与 apps 对应的部署清单
 .agents/skills/        # Agent Skill（上游见 skills/README.md）
 ```
 
-仓布局：[docs/implementation/monorepo-layout.md](docs/implementation/monorepo-layout.md)。文档活索引：[architecture-overview.md](docs/design/architecture-overview.md)、[design-decisions.md](docs/design-decisions.md)、[PROGRESS.md](docs/implementation/elixir/PROGRESS.md)。
+仓布局：[docs/implementation/monorepo-layout.md](docs/implementation/monorepo-layout.md)。文档活索引：[docs/README.md](docs/README.md)、[module-map.md](docs/module-map.md)、[architecture-overview.md](docs/design/architecture-overview.md)、[design-decisions.md](docs/design-decisions.md)、[PROGRESS.md](docs/implementation/elixir/PROGRESS.md)。
 
 ## 硬约束
 
@@ -152,6 +182,58 @@ deploy/                # 与 apps 对应的部署清单
 
 编写测试时遵循 [`.agents/skills/testing-essentials/SKILL.md`](.agents/skills/testing-essentials/SKILL.md)；Phase 2+ 运行时行为另按 [`release-deploy-test.md`](docs/implementation/elixir/release-deploy-test.md) 做 Release + K8s 复测。DI 与 Behaviour 约定见 [`dependency-abstraction.md`](docs/design/dependency-abstraction.md)、[`implementation/elixir/dependency-abstraction.md`](docs/implementation/elixir/dependency-abstraction.md)。
 
+### 测试代码落位（禁止 test-only 进 `lib/`）
+
+**仅用于 ExUnit / E2E / Sandbox / Fake 的模块不得放在 `apps/**/lib/`**（Release、`:peer` 第二 BEAM、压测 worker 均不应依赖「为测试塞进 lib 的代码」）。
+
+| 落位 | 适用 |
+| --- | --- |
+| `test/support/` | Case 模板、fixtures、集群 E2E 引导（如 `IM.ClusterPeerBoot`）、Mox/Fake |
+| `im_client/test/support/` | 客户端断言/场景辅助（`Assertions`、`Scenario`、`FakeTransport`） |
+| `lib/` | 生产或 **loadtest 运行时**会加载的代码 |
+
+| 允许留在 `lib/` 的「像测试」代码 | 说明 |
+| --- | --- |
+| `*.Memory` / `*.Noop` 等 Behaviour 实现 | 由 `config` 切换，生产可启用 |
+| 带 `@doc "测试用"` 的 `reset!/snapshot` | 模块本身为生产组件，函数供测试/运维 |
+
+**`:peer` / 跨 BEAM RPC**：须远程调用的测试引导逻辑仍放 `test/support/`；boot 前对 peer 执行 `:code.add_paths(:code.get_path())`，同步主节点 **test 编译路径**，**不要**为此新建 `lib/` 模块。
+
+**path 依赖共享 test 辅助**：模块放在依赖 app's `test/support/`（如 `im_client/test/support/Assertions`）；消费方在 `mix.exs` 的 `elixirc_paths(:test)` 中加入该目录（`im` 已含 `../im_client/test/support`），**仍不得**迁回 `lib/`。
+
+**自检（新增 `lib/` 模块前）**：
+1. 非 `test/` 代码是否引用？仅 test 引用 → 迁到 `test/support/`。
+2. 是否含 Sandbox、`CLUSTER_E2E`、`protocol_e2e_*`、`ExUnit` 等测试专用逻辑？
+3. IM Release / loadtest 是否应打包该模块？
+
+详见 [`project-structure.md`](docs/implementation/elixir/project-structure.md) §测试代码落位。
+
+### 本地 Postgres 端口（OrbStack / mix test）
+
+**跑 `mise run test` 前**：OrbStack 的 Postgres 在 K8s 内，经 `mise run pg-forward` 映射到 **`localhost:15432`**，不是默认的 `5432`。  
+未设 `PGPORT` 且未 port-forward 时会出现 `connection refused`，**不等于 DB 未部署**。
+
+| 动作 | 要求 |
+| --- | --- |
+| 本地验证 | 终端 A：`mise run pg-forward`；终端 B：`mise run test`（mise 自动解析 PGPORT） |
+| 裸 `mix test` | 须 `PGPORT=15432`（OrbStack）或 `5432`（GHA / 原生 Postgres） |
+| 误判禁止 | 不得在 15432 已通时仍报「DB 不可用」而不试 `PGPORT=15432` |
+
+详见 [`local-dev-gotchas.md`](docs/implementation/elixir/local-dev-gotchas.md)。
+
+### 协议 E2E trace 文档（与用例同步）
+
+[`protocol-e2e-message-sequences.md`](docs/implementation/elixir/protocol-e2e-message-sequences.md) 与 [`protocol-e2e-traces.json`](docs/implementation/elixir/protocol-e2e-traces.json) **由 E2E 测试自动导出**，不得手改后长期偏离用例。
+
+| 动作 | 要求 |
+| --- | --- |
+| 新增/修改 `test/im_client/protocol/*_test.exs` | 添加 `@tag trace_case: "…"`，关键步骤调用 `trace!/2`（或 `trace_http!/3` / `trace_event!/2`） |
+| 更新清单 | 同步 `trace_coverage_test.exs` 的 `@expected_trace_cases` |
+| 重新生成文档 | `mise run test` 前确保 pg-forward；或 `PGPORT=15432 mix test.trace` |
+| CI / 本地全量 | `trace_coverage_test.exs` 校验 `@tag trace_case` 与 JSON 覆盖一致 |
+
+实现：`IM.ProtocolTraceRegistry` + `IM.ProtocolTraceRender`（`test/support/`），`ExUnit.after_suite` 写 JSON 与 Markdown。
+
 ### 双通道一致性（WebSocket + REST）
 
 **凡 IM 已支持的客户端业务能力，须同时提供 WebSocket（`Packet` / `CmdType`）与 REST（`/api/v1`）两种入口，且共用同一套服务层逻辑。**
@@ -250,6 +332,8 @@ deploy/                # 与 apps 对应的部署清单
 
 | 你在做… | 优先读 |
 | --- | --- |
+| **定位某功能的文档与代码** | [`module-map`](docs/module-map.md)（设计↔实现↔代码↔测试） |
+| **按 Phase / roadmap 开发** | [`specs-index`](docs/specs-index.md) → `.kiro/specs/` → [`PROGRESS`](docs/implementation/elixir/PROGRESS.md) |
 | **新增/变更协议能力、核对文档是否漏改** | [`doc-sync-checklist`](docs/design/doc-sync-checklist.md)（**历史遗漏复盘 + 合入前清单**） |
 | 按 roadmap 实现、继续开发、TDD 循环 | [`im-implementation`](.agents/skills/im-implementation/SKILL.md) |
 | **写/改任何实现代码（协议为准）** | 先读 `proto/` + [`protocol.md`](docs/design/protocol/protocol.md)；**改协议须人工确认** |
@@ -291,6 +375,9 @@ mise run verify             # check + Release 部署
 ## 相关链接
 
 - [设计决策索引](docs/design-decisions.md)
+- [**文档总索引（按角色导航）**](docs/README.md)
+- [**功能模块对照表**](docs/module-map.md)
+- [**Kiro Spec 索引**](docs/specs-index.md)（`.kiro/specs/` 阶段规格）
 - [**文档同步清单（合入前必跑，勿重复历史遗漏）**](docs/design/doc-sync-checklist.md)
 - [**架构总览（活文档，系统变更必维护）**](docs/design/architecture-overview.md)
 - [协议规范](docs/design/protocol/protocol.md)

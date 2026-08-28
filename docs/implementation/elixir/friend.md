@@ -4,7 +4,7 @@
 |------|------|
 | 语言 | Elixir |
 | 设计文档 | [friend.md](../../design/friend.md) |
-| Roadmap | Phase 8：P8-05–P8-08（纳入）；P8-09（**deferred**，租户级非好友禁发） |
+| Roadmap | Phase 8：P8-05–P8-09（纳入） |
 
 > **文档分级**：边缘模块 impl。Phase 3 单聊不依赖好友；拉黑 P8-08。WS / REST 经 `Dispatch` → `IM.Services.Friend`。详见 [dual-channel-api.md](dual-channel-api.md)。
 
@@ -119,7 +119,8 @@ defmodule IM.Services.Friend do
 end
 ```
 
-`IM.Services.SingleChat` 在 `send/2` 路径调用；`require_friend_to_send?/0` 对应 P8-09（deferred）。
+`IM.Services.Message` 单聊路径调用 `Friend.check_send_permission/3`；租户配置
+`app_configs`：`category=friend` / `config_key=require_friend_to_send`（boolean，默认 false）。
 
 ---
 

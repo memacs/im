@@ -10,17 +10,19 @@ FROM elixir:1.19.5-otp-28 AS build
 RUN apt-get update -y && apt-get install -y build-essential git \
     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+WORKDIR /apps/elixir/im
 
 ENV MIX_ENV=prod
 
+# path 依赖 im_proto 须与 mix.exs 相对路径一致（../im_proto）
+COPY apps/elixir/im_proto /apps/elixir/im_proto
 COPY apps/elixir/im/mix.exs apps/elixir/im/mix.lock ./
 RUN mix local.hex --force && mix local.rebar --force
 RUN mix deps.get --only prod
 RUN mix deps.compile
 
 COPY apps/elixir/im/config config
-# lib/pb 是 protoc 生成物，已入库；构建阶段无需 protoc（生成见 mise run proto-gen）
+# Pb 生成物在 im_proto；im/lib 仅手写业务代码
 COPY apps/elixir/im/lib lib
 COPY apps/elixir/im/priv priv
 # rel/overlays 提供 bin/migrate（Release 内执行 Ecto 迁移）
@@ -45,7 +47,7 @@ USER nobody:nogroup
 ENV HOME=/app
 ENV LANG=C.UTF-8
 
-COPY --from=build --chown=nobody:nogroup /app/_build/prod/rel/im ./
+COPY --from=build --chown=nobody:nogroup /apps/elixir/im/_build/prod/rel/im ./
 
 EXPOSE 4000
 

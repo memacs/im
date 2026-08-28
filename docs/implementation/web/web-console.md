@@ -131,19 +131,27 @@ Console **不调用** `/internal/v1`；**不超前**伪造未实现的 cmd 行�
 
 ## 6. 验收要点（Phase 12 完成）
 
-- [ ] `apps/web/im-console` 可 `npm ci && npm run build`
-- [ ] **Coverage 页**：设计文档 §3.2 每一项均有状态；已实现 IM 能力均为「可演示」
-- [ ] 双用户多 Tab：单聊/群/室收发、ACK、已读、撤回、编辑、阅后即焚、透传可人工走通
-- [ ] 群/室/好友/Channel 管理 cmd 均有可操作 UI（随 IM Phase 逐步变绿）
-- [ ] 支持全部 `MsgType` 的发送表单（至少 mock 附件 URL 或占位 content）
-- [ ] 双通道：发消息、离线拉取、好友/群/室操作等至少各 **1 项** REST 与 WS 对照成功
-- [ ] 断线重连 + `OFFLINE_PULL` 不丢消息（IM P4 就绪后）
-- [ ] 不调用 `/internal/v1`；静态资源不包含密钥
+- [x] `apps/web/im-console` 可 `npm ci && npm run build`
+- [x] **Coverage 页**：设计文档 §3.2 每一项均有状态；已实现 IM 能力均为「可演示」
+- [x] 双用户多 Tab：单聊/群/室收发、ACK、已读、撤回、编辑、阅后即焚、透传可人工走通
+- [x] 群/室/好友/Channel 管理 cmd 均有可操作 UI（随 IM Phase 逐步变绿）
+- [x] 支持全部 `MsgType` 的发送表单（至少 mock 附件 URL 或占位 content）
+- [x] 双通道：发消息、离线拉取、好友/群/室操作等至少各 **1 项** REST 与 WS 对照成功
+- [x] 断线重连 + `OFFLINE_PULL` 不丢消息（IM P4 就绪后）
+- [x] 不调用 `/internal/v1`；静态资源不包含密钥
 
 ---
 
 ## 7. 相关链接
 
-- [release-deploy-test.md](../elixir/release-deploy-test.md) — IM 集群冒烟后再验 Console
-- [test-client.md](../elixir/test-client.md) — 自动化客户端（非 UI）
-- [dual-channel-api.md](../../design/dual-channel-api.md) — REST 路径对照
+| 文档 | 说明 |
+| --- | --- |
+| [docs/README.md](../../README.md) | 文档总索引 |
+| [module-map.md](../../module-map.md) | 功能对照表 |
+| [web-console 设计](../../design/web-console.md) | 能力矩阵（权威） |
+| [apps/web/im-console/README.md](../../../apps/web/im-console/README.md) | 启动、配置、部署 |
+| [specs-index.md](../../specs-index.md) | [phase-12-web-console](../../../.kiro/specs/phase-12-web-console/) |
+| [release-deploy-test.md](../elixir/release-deploy-test.md) | IM 集群冒烟后再验 Console |
+| [test-client.md](../elixir/test-client.md) | 自动化客户端（非 UI） |
+| [dual-channel-api.md](../../design/dual-channel-api.md) | REST 路径对照 |
+| [http-api-reference.md](../elixir/http-api-reference.md) | REST 逐接口文档 |

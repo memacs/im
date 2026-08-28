@@ -9,7 +9,7 @@ package im.protocol;
 // 设计意图见 docs/design/app-channel.md
 //
 // QoS：尽力而为、仅在线投递；允许丢包；无离线补发；不进会话列表。
-// 命令字 900–909，见 common.proto CmdType。
+// 命令字 900–906 已定义，907–909 预留；见 common.proto CmdType。
 
 // ============================================================================
 // ChannelSubscribeReq - CMD_CHANNEL_SUBSCRIBE_REQ payload

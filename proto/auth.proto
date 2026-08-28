@@ -78,21 +78,35 @@ message HeartbeatResp {
 }
 
 // ============================================================================
+// KickReason - KickNotify.reason_code
+// ============================================================================
+// SDK 分支须优先读 reason_code；reason 字符串仅作兼容与日志。
+enum KickReason {
+  KICK_REASON_UNSPECIFIED = 0;
+  KICK_REASON_DUPLICATE_LOGIN = 1;  // 同 device_id 新连接顶替旧连接
+  KICK_REASON_DEVICE_LIMIT = 2;     // 同平台在线设备数超限（见 auth.md §8）
+  KICK_REASON_DEVICE_BANNED = 3;    // 设备被封禁（见 auth.md §9.6）
+  KICK_REASON_ADMIN_KICK = 4;       // 管理端踢人
+  KICK_REASON_TOKEN_EXPIRED = 5;    // token 过期
+}
+
+// ============================================================================
 // KickNotify - CMD_KICK payload
 // ============================================================================
 // 服务端主动踢下线通知。
 //
-// reason 约定（字符串，非枚举）：
-//   duplicate_login  - 同 device_id 新连接顶替旧连接
-//   device_limit     - 同平台在线设备数超限，按策略踢出（见 auth.md §8）
-//   device_banned    - 设备被封禁（见 auth.md §9.6）
-//   admin_kick       - 管理端踢人
-//   token_expired    - token 过期
+// reason 字符串与 reason_code 对应关系（须同步维护）：
+//   duplicate_login  ↔ KICK_REASON_DUPLICATE_LOGIN
+//   device_limit     ↔ KICK_REASON_DEVICE_LIMIT
+//   device_banned    ↔ KICK_REASON_DEVICE_BANNED
+//   admin_kick       ↔ KICK_REASON_ADMIN_KICK
+//   token_expired    ↔ KICK_REASON_TOKEN_EXPIRED
 //
 // clear_local_data：为 true 时 SDK 须清除本地 IM 数据（消息库、会话缓存等），见 auth.md §9.8
 message KickNotify {
-  string reason = 1;           // 踢人原因
-  DeviceResource kicker = 2;   // 触发互踢的对端设备信息（可选，duplicate_login 时提供）
-  int64 timestamp = 3;         // 踢人时间（ms）
-  bool clear_local_data = 4;   // 是否清除 SDK 本地数据；默认 false
+  string reason = 1;              // 兼容字段：短字符串原因；新客户端以 reason_code 为准
+  DeviceResource kicker = 2;      // 触发互踢的对端设备信息（可选，duplicate_login 时提供）
+  int64 timestamp = 3;            // 踢人时间（ms）
+  bool clear_local_data = 4;      // 是否清除 SDK 本地数据；默认 false
+  KickReason reason_code = 5;     // 权威踢人原因；服务端必填（非 UNSPECIFIED）
 }

@@ -251,6 +251,9 @@ message MsgRead {
   int64 conv_seq = 5;      // 读到的最大 conv_seq（推荐）
   int64 timestamp = 6;     // 已读时间（ms）
   string conv_id = 7;      // 会话 ID
+  // 已读后的会话未读数（方案 A，见 unread-count.md §9.2）；
+  // optional：区分「未携带」与「未读为 0」
+  optional int32 unread_count = 8;
 }
 
 // ============================================================================

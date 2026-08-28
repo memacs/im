@@ -169,3 +169,16 @@ Phase 3–4 单库单表 + 索引；规模扩展时：
 | `IM.Workers.MsgIdReconcile` | Oban：兜底计数器与 `message_bodies` 对账 |
 
 位布局、对账、迁移见 [msg-id-snowflake.md](../../design/msg-id-snowflake.md)。`conv_seq` / `inbox_seq` 仍由 `IM.Services.Sequence`（Redis `INCR`）。
+
+---
+
+## 9. 消息 TTL 清理（DD-040）
+
+| 模块 | 职责 |
+|------|------|
+| `IM.Jobs.TtlPurge` | facade：`run_once/1` 同步；`enqueue/1` → Oban |
+| `IM.Workers.TtlPurge` | Oban Worker：chat inbox/bodies + room bodies + passthrough |
+| Cron | `TTL_PURGE_AUTO=true` 时默认每 15 分钟（`TTL_PURGE_CRON` 可覆盖） |
+
+一轮 `purge` 内顺序：过期 chat（按 `msg_ttl_days`）→ 过期 room bodies → 过期 passthrough。  
+权威规格、批大小、指标见 [message-ttl-cleanup.md](../../design/message-ttl-cleanup.md)。Roadmap：**P7-10**。

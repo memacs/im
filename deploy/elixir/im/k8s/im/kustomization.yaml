@@ -6,3 +6,7 @@ resources:
   - secret.yaml
   - deployment.yaml
   - service.yaml
+  - service-headless.yaml
+  - cronjob-smoke-messaging.yaml
+  - cronjob-smoke-auth.yaml
+  - networkpolicy.yaml

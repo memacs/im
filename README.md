@@ -2,9 +2,9 @@
 
 基于 WebSocket + Protobuf 的即时通讯系统。
 
-**当前状态**：协议与设计文档已完成；**Phase 0 工程脚手架 10/10 完成**（见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)），
-Phoenix 骨架、protobuf 代码生成、Release → K8s 黄金路径均已跑通，下一步进入 Phase 1（协议适配层）。
-`mise run ci`、`mise run proto-gen`、`mise run release-deploy`、`mise run release-smoke` 均可运行。
+**当前状态**：协议与设计文档已完成；**Phase 0–13** 核心能力已落地（见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)），
+Release → K8s 黄金路径、压测与 Web 控制台可运行。
+`mise run ci`、`mise run release-deploy`、`mise run release-smoke`、`mise run release-smoke-messaging` 均可使用。
 
 ---
 
@@ -15,7 +15,10 @@ Phoenix 骨架、protobuf 代码生成、Release → K8s 黄金路径均已跑�
 | 文档 | 说明 |
 |------|------|
 | [docs/product-overview.md](docs/product-overview.md) | **产品介绍**（能力、优势、典型场景） |
-| [docs/README.md](docs/README.md) | 文档总索引 |
+| [产品介绍（对外推介）](docs/product-overview.md) | **产品能力、场景、对接方式** |
+| [docs/README.md](docs/README.md) | **文档总索引**（按角色导航） |
+| [docs/module-map.md](docs/module-map.md) | **功能模块对照表**（设计↔实现↔代码） |
+| [docs/specs-index.md](docs/specs-index.md) | **Kiro Spec 索引**（`.kiro/specs/`） |
 | [docs/design/protocol/protocol.md](docs/design/protocol/protocol.md) | 协议规范 |
 | [docs/design/database/database-design.md](docs/design/database/database-design.md) | 数据库设计 |
 | [docs/design/architecture-overview.md](docs/design/architecture-overview.md) | **系统架构总览（推荐首读）** |
@@ -27,14 +30,14 @@ Phoenix 骨架、protobuf 代码生成、Release → K8s 黄金路径均已跑�
 
 | 语言 | 文档 | 状态 |
 |------|------|------|
-| **Elixir** | [docs/implementation/elixir/](docs/implementation/elixir/) | Phase 0 完成，Phase 1 待开始 |
+| **Elixir** | [docs/implementation/elixir/](docs/implementation/elixir/) | Phase 0–13 完成（见 PROGRESS） |
 | **Java** | [docs/implementation/java/](docs/implementation/java/) | 预留 |
 
 ### 部署配置（多语言）
 
 | 语言 | 文档 | 说明 |
 |------|------|------|
-| **Elixir** | [deploy/elixir/](deploy/elixir/) | IM + loadtest（见 [monorepo-layout](docs/implementation/monorepo-layout.md)） |
+| **Elixir** | [deploy/elixir/](deploy/elixir/) | IM + loadtest（见 [deploy/README.md](deploy/README.md)） |
 | **Java** | [deploy/java/](deploy/java/) | 预留 |
 
 ---
@@ -91,7 +94,7 @@ mise install
 mise tasks                  # 查看全部任务
 mise run k8s-up             # 本地 postgres + redis
 mise run pg-forward         # 另开终端常驻：Postgres → localhost:15432（会自动重连）
-PGPORT=15432 mise run ci    # proto + format + 严格编译 + 依赖审计 + test
+mise run ci                 # 自动解析 PGPORT（15432 优先）；见 local-dev-gotchas.md
 mise run release-deploy     # 构建 Release 镜像并部署到 K8s
 ```
 
@@ -105,6 +108,9 @@ Push / PR 触发 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)，与本
 | --- | --- | --- |
 | **Proto** | 始终 | `proto-check` → 装插件 → `proto-gen-check`（生成物防漂移） |
 | **Elixir** | 存在 `apps/elixir/im/mix.exs` 时 | `format-check` → `compile --warnings-as-errors` → `hex.audit` → `test`（含 postgres service） |
+| **im-console** | 存在 `apps/web/im-console/package.json` 时 | `npm ci` → `vitest` → `vite build` |
+| **im_client** | 存在 `im_client/mix.exs` 时 | `mix test` |
+| **loadtest** | 存在 `loadtest/mix.exs` 时 | `mix test`（依赖 im_client） |
 | **Release 镜像** | 同上 | `docker build -f deploy/elixir/im/Dockerfile` |
 
 本地提交前（mix 项目就绪后）：`mise run ci`。
@@ -120,6 +126,7 @@ mise run k8s-up             # 依赖栈（redis + postgres）
 mise run release-deploy     # 构建 Release 镜像 + 部署 IM
 mise run k8s-port-forward   # 另开终端
 mise run release-smoke      # /health/live + /health/ready
+mise run im:test-smoke      # 进程内 messaging + auth（CI 同步骤）
 ```
 
 详见 [docs/implementation/elixir/release-deploy-test.md](docs/implementation/elixir/release-deploy-test.md) 与 [deploy/elixir/im/k8s/README.md](deploy/elixir/im/k8s/README.md)。
@@ -132,13 +139,15 @@ mise run release-smoke      # /health/live + /health/ready
 im/
 ├── proto/                       # 协议（语言无关）
 ├── docs/                        # 设计 + 实现文档
-├── apps/                        # ★ 可运行实现
-│   ├── elixir/im/               # 主 IM（lib/im 手写、lib/pb protoc 生成）
-│   ├── elixir/loadtest/         # 压测（Phase 10）
+├── apps/                        # ★ 可运行实现（各 app 见 apps/README.md）
+│   ├── elixir/im/               # 主 IM → apps/elixir/im/README.md
+│   ├── elixir/im_client/        # 协议客户端库
+│   ├── elixir/loadtest/         # 压测
+│   ├── web/im-console/          # Web 演示控制台
 │   └── java/im/                 # 预留
 ├── deploy/elixir/im/            # IM Dockerfile + k8s + scripts
 ├── mise.toml
-└── agent.md
+└── agent.md                        # AI 协作约定（§文档地图）
 ```
 
 详见 [monorepo-layout.md](docs/implementation/monorepo-layout.md)、[project-structure.md](docs/implementation/elixir/project-structure.md)。
@@ -191,7 +200,7 @@ mise run proto-check
 mise install
 mise run k8s-up             # mix test 需要 postgres
 mise run pg-forward         # 另开终端常驻
-PGPORT=15432 mise run im:test
+mise run im:test            # 自动解析 PGPORT，无需手动 export
 ```
 
 ### 3. 本地部署验收
@@ -204,11 +213,14 @@ mise run release-smoke
 
 进度与下一项任务见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)。
 
+各应用 **启动 / 配置 / 线上部署** 见 [apps/README.md](apps/README.md) 及各子目录 README。
+
 ---
 
 ## 相关链接
 
+- [部署总览](deploy/README.md)
 - [文档总索引](docs/README.md)
 - [Elixir 实现文档](docs/implementation/elixir/)
 - [Elixir 部署文档](deploy/elixir/)
-- [AI 协作约定](agent.md)
+- [AI 协作约定](agent.md)（含 §文档地图）

@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: im
+  namespace: im-dev
+  labels:
+    app: im
+spec:
+  # 多副本时保证至少 1 个可用（单副本部署时 PDB 会阻碍 drain，overlay/local 可不引用）
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: im

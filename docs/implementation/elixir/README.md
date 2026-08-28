@@ -2,9 +2,7 @@
 
 基于 Elixir + Phoenix Framework 的 IM 服务端实现。
 
-> **当前状态**：**Phase 0 完成**。Phoenix 骨架、分层占位模块、protobuf 代码生成（`lib/pb/`）就位，
-> Release 镜像可构建、K8s 在 PSS restricted 下可 rollout、健康检查与 `bin/migrate` 通过。
-> 进度见 [PROGRESS.md](PROGRESS.md)（下一项 Phase 1 协议适配层）。
+> **当前状态**：**Phase 0–13 完成**。进度与差距审查见 [PROGRESS.md](PROGRESS.md)、[gap-review-2026-08.md](gap-review-2026-08.md)。
 
 ---
 
@@ -12,10 +10,13 @@
 
 | 文档 | 用途 |
 |------|------|
+| [http-api-reference.md](http-api-reference.md) | **HTTP REST 逐接口文档**（参数 + curl 示例） |
 | [PROGRESS.md](PROGRESS.md) | **任务状态看板**（做到哪、下一项） |
+| [module-map.md](../../module-map.md) | **功能 ↔ 设计 ↔ 代码 ↔ 测试** 单页对照 |
+| [specs-index.md](../../specs-index.md) | **Kiro Spec 索引**（`.kiro/specs/` 阶段规格） |
 | [roadmap.md](roadmap.md) | 分阶段任务与验收 |
-| [monorepo-layout.md](monorepo-layout.md) | **单仓 apps + deploy 布局（权威）** |
 | [project-structure.md](project-structure.md) | `apps/elixir/im/lib/` 模块树 |
+| [monorepo-layout.md](../monorepo-layout.md) | **单仓 apps + deploy 布局（权威）** |
 | [design-decisions.md](../../design-decisions.md) | 已确认设计模块索引 |
 
 ---
@@ -51,6 +52,7 @@
 | [mobile-push.md](mobile-push.md) | 离线 `im.push` |
 | [zero-copy-delivery.md](zero-copy-delivery.md) | 预编码扇出 |
 | [release-deploy-test.md](release-deploy-test.md) | Release → K8s → 冒烟 |
+| [release-smoke-messaging.md](release-smoke-messaging.md) | Release 消息/会话未读冒烟 |
 
 ### 基础设施（Phase 9+ 厚文档）
 
@@ -58,6 +60,39 @@
 |------|------|
 | [observability.md](observability.md) | 指标、日志、埋点 |
 | [kafka-event-bus.md](kafka-event-bus.md) | Kafka 旁路五 Topic |
+| [permission-cache.md](permission-cache.md) | 拉黑/禁言/封禁热缓存 |
+| [payload-compression.md](payload-compression.md) | WS payload 压缩协商 |
+
+### 运维 / 部署 / 验收
+
+| 文档 | 说明 |
+|------|------|
+| [local-dev-gotchas.md](local-dev-gotchas.md) | 本地 Postgres 15432、CI 端口 |
+| [deploy-guide.md](deploy-guide.md) | 生产部署指南 |
+| [release-smoke-auth.md](release-smoke-auth.md) | Release 鉴权冒烟 |
+| [fault-drill.md](fault-drill.md) | 故障演练步骤 |
+
+### 测试 / 协议验收
+
+| 文档 | 说明 |
+|------|------|
+| [protocol-e2e-message-sequences.md](protocol-e2e-message-sequences.md) | E2E 时序（自动生成，勿手改） |
+| [protocol-regression-checklist.md](protocol-regression-checklist.md) | 协议回归清单 |
+| [test-client.md](test-client.md) | im_client 库实现说明 |
+
+### 压测
+
+| 文档 | 说明 |
+|------|------|
+| [loadtest-report.md](loadtest-report.md) | 压测报告与指标 |
+| [loadtest-stability.md](loadtest-stability.md) | 长时间稳定性跑法 |
+
+### 差距审查
+
+| 文档 | 说明 |
+|------|------|
+| [gap-review-2026-08.md](gap-review-2026-08.md) | 差距审查与 Remediation |
+| [gap-review-2026-08-wave3.md](gap-review-2026-08-wave3.md) | Wave3 生产就绪项 |
 
 ### 边缘模块（薄文档 — 模块表 + 测试要点 + 链设计）
 
@@ -71,6 +106,7 @@
 | [read-receipt.md](read-receipt.md) | [design/read-receipt.md](../../design/read-receipt.md) |
 | [recall.md](recall.md) | [design/recall.md](../../design/recall.md) |
 | [edit.md](edit.md) | [design/edit.md](../../design/edit.md) |
+| [burn-after-read.md](burn-after-read.md) | [design/burn-after-read.md](../../design/burn-after-read.md) |
 | [passthrough.md](passthrough.md) | [design/passthrough.md](../../design/passthrough.md) |
 | [stream-message.md](stream-message.md) | [design/stream-message.md](../../design/stream-message.md) |
 | [group.md](group.md) | [design/group.md](../../design/group.md) |
@@ -81,7 +117,6 @@
 | [unread-count.md](unread-count.md) | [design/unread-count.md](../../design/unread-count.md) |
 | [auth-module.md](auth-module.md) | [design/auth-module.md](../../design/auth-module.md) |
 | [dependency-abstraction.md](dependency-abstraction.md) | [design/dependency-abstraction.md](../../design/dependency-abstraction.md) |
-| [test-client.md](test-client.md) | [design/test-client.md](../../design/test-client.md) |
 
 ---
 
@@ -89,12 +124,12 @@
 
 ```bash
 mise install
-mise run k8s-up        # 本地 postgres + redis（mix test 需要 postgres）
-kubectl -n im-dev port-forward svc/postgres 5432:5432   # 另开终端
-mise run ci            # proto + format + compile + test
+mise run k8s-up             # 本地 postgres + redis
+mise run pg-forward         # 另开终端：Postgres → localhost:15432
+mise run ci                 # proto + format + compile + test
 ```
 
-详见根 [README.md](../../../README.md)。
+详见 [local-dev-gotchas.md](local-dev-gotchas.md) 与根 [README.md](../../../README.md)。
 
 ---
 
@@ -102,16 +137,17 @@ mise run ci            # proto + format + compile + test
 
 | Phase | 名称 | 状态 |
 |-------|------|------|
-| 0 | 工程脚手架 | **完成（10/10）** |
-| 1 | 协议适配层 | 待开始（0/5，骨架模块已就位） |
-| 2 | WebSocket 接入 | 待开始（0/14） |
-| 3+ | … | 见 [roadmap.md](roadmap.md) |
+| 0–12 | 核心协议与集群 | **完成**（见 [PROGRESS.md](PROGRESS.md)） |
+| 13 | 缓存/未读/会话/Remediation | **完成** |
+| 后续 | 规模实测、v1 deferred | 见 [roadmap.md](roadmap.md)、[gap-review-2026-08.md](gap-review-2026-08.md) |
 
 ---
 
 ## 相关链接
 
-- [协议设计](../design/protocol/protocol.md)
-- [数据库设计](../design/database/database-design.md)
+- [文档总索引](../../README.md)
+- [功能模块对照表](../../module-map.md)
+- [协议设计](../../design/protocol/protocol.md)
+- [数据库设计](../../design/database/database-design.md)
 - [AI 协作约定](../../../agent.md)
-- [Agent Skills 索引（Elixir/Phoenix、Redis、Kubernetes：`kubernetes-skill`）](../../../.agents/skills/README.md)
+- [Agent Skills 索引](../../../.agents/skills/README.md)

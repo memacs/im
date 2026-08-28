@@ -82,8 +82,80 @@ jobs:
       - name: 依赖审计（已撤回的 hex 包）
         run: mise run im:audit
 
+      # GHA postgres service 监听 5432（非 OrbStack 的 15432 pg-forward）
       - name: mix test
+        env:
+          PGPORT: "5432"
         run: mise run test
+
+      - name: Release 冒烟（进程内，G-61）
+        env:
+          PGPORT: "5432"
+        run: mise run im:test-smoke
+
+  web-console:
+    name: im-console
+    runs-on: ubuntu-latest
+    needs: proto
+    if: hashFiles('apps/web/im-console/package.json') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          install: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/im-console/package-lock.json
+      - name: npm ci
+        run: mise run web:install
+      - name: vitest
+        run: mise run web:test
+      - name: vite build
+        run: mise run web:build
+
+  im_client:
+    name: im_client
+    runs-on: ubuntu-latest
+    needs: proto
+    if: hashFiles('apps/elixir/im_client/mix.exs') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          install: true
+      - uses: actions/cache@v4
+        with:
+          path: |
+            apps/elixir/im_client/deps
+            apps/elixir/im_client/_build
+          key: im-client-${{ runner.os }}-${{ hashFiles('apps/elixir/im_client/mix.lock') }}
+          restore-keys: im-client-${{ runner.os }}-
+      - name: mix test
+        run: mise run im_client:test
+
+  loadtest:
+    name: loadtest
+    runs-on: ubuntu-latest
+    needs: im_client
+    if: hashFiles('apps/elixir/loadtest/mix.exs') != ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          install: true
+      - uses: actions/cache@v4
+        with:
+          path: |
+            apps/elixir/loadtest/deps
+            apps/elixir/loadtest/_build
+            apps/elixir/im_client/deps
+            apps/elixir/im_client/_build
+          key: loadtest-${{ runner.os }}-${{ hashFiles('apps/elixir/loadtest/mix.lock', 'apps/elixir/im_client/mix.lock') }}
+          restore-keys: loadtest-${{ runner.os }}-
+      - name: mix test
+        run: mise run loadtest:test
 
   release:
     name: Release 镜像

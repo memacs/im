@@ -1,7 +1,8 @@
 # IM 系统产品介绍
 
-> 面向产品、业务方与技术决策者的能力概览。  
-> 协议与架构细节见 [架构总览](design/architecture-overview.md)；实施进度见 [PROGRESS](implementation/elixir/PROGRESS.md)。
+> 面向产品、业务方与技术决策者的能力概览。
+
+**文档导航**：[文档总索引](README.md) · [功能对照表](module-map.md) · [架构总览](design/architecture-overview.md) · [HTTP API](implementation/elixir/http-api-reference.md) · [实施进度](implementation/elixir/PROGRESS.md)
 
 ---
 
@@ -80,7 +81,7 @@
 - **系统推送**（APNs / FCM）：设备离线时手机通知栏提醒
 - **Kafka 事件总线**（五 Topic）：上下行镜像、投递、推送任务、应用事件——供数仓/风控/BI 订阅
 - **权限热缓存**：拉黑、禁言、封禁变更跨节点秒级生效
-- **Payload 压缩协商**（规划）：弱网场景降低带宽
+- **Payload 压缩协商**（gzip/zstd）：弱网场景降低带宽（见 [payload-compression](design/payload-compression.md)）
 - **统一 trace_id**：从 HTTP/WS 入口贯穿 ACK、推送、Kafka、日志
 
 ---
@@ -162,9 +163,9 @@
 |----|------|
 | 协议（`proto/`） | ✅ 已定义，CI `proto-check` 通过 |
 | 设计文档 | ✅ 30+ 模块已评审或待评审（见 [design-decisions.md](design-decisions.md)） |
-| Elixir 实现 | 🚧 **进行中**（Phase 0，Mix 项目已创建；核心 IM 功能按 [roadmap](implementation/elixir/roadmap.md) 分阶段落地） |
+| Elixir 实现 | ✅ **Phase 0–13 完成**（核心协议/集群/运维；见 [PROGRESS](implementation/elixir/PROGRESS.md)） |
 | 本地 K8s 依赖栈 | ✅ Redis / PostgreSQL 可 `mise run k8s-up` |
-| 生产可用 | ⏳ 待 Phase 2+ 功能与 Release 验收完成 |
+| 生产可用 | ⏳ 待规模压测归档、推送/Kafka 等 v1 deferred 项与运维验收 |
 
 **适合现在接入的人**：愿意基于 **清晰协议与架构** 共建实现、或需要 **私有化 IM 蓝图** 的团队。  
 **若需要明天就能上线的成品 SaaS**：请评估自研排期，或先用本仓库作技术选型与协议参考。
@@ -185,17 +186,36 @@ mise run im:compile
 mise run im:test
 ```
 
-**推荐阅读路径**：
+**按角色阅读**：
 
-1. 本文（产品能力）  
-2. [架构总览](design/architecture-overview.md)（系统怎么拼）  
-3. [协议规范](design/protocol/protocol.md) + [proto/](../proto/)（怎么对接）  
-4. [实施路线图](implementation/elixir/roadmap.md)（什么时候有什么）
+| 角色 | 路径 |
+| --- | --- |
+| **产品 / 业务** | 本文 → [架构总览](design/architecture-overview.md) §能力边界 |
+| **客户端对接** | [协议规范](design/protocol/protocol.md) + [proto/](../proto/) → [http-api-reference](implementation/elixir/http-api-reference.md) |
+| **服务端开发** | [文档总索引](README.md) → [module-map](module-map.md) → [PROGRESS](implementation/elixir/PROGRESS.md) |
+| **运维部署** | [deploy/README.md](../deploy/README.md) → [deploy-guide](implementation/elixir/deploy-guide.md) |
+| **AI / 协作者** | [agent.md](../agent.md) → [specs-index](specs-index.md) |
+
+---
+
+## 技术文档索引
+
+| 分类 | 入口 |
+| --- | --- |
+| 文档总索引 | [README.md](README.md) |
+| 功能 ↔ 代码对照 | [module-map.md](module-map.md) |
+| 设计决策（DD-xxx） | [design-decisions.md](design-decisions.md) |
+| 设计文档全集 | [design/README.md](design/README.md) |
+| Elixir 实现 | [implementation/elixir/README.md](implementation/elixir/README.md) |
+| Web 控制台 | [implementation/web/web-console.md](implementation/web/web-console.md) |
+| 应用启动说明 | [apps/README.md](../apps/README.md) |
+| 部署清单 | [deploy/README.md](../deploy/README.md) |
+| Kiro 阶段规格 | [specs-index.md](specs-index.md) |
 
 ---
 
 ## 联系我们 / 参与共建
 
-- 提交 Issue / PR 讨论协议与实现  
-- 按 [agent.md](../agent.md) 与 [PROGRESS](implementation/elixir/PROGRESS.md) 认领阶段性任务  
-- 架构变更请同步 [architecture-overview.md](design/architecture-overview.md) 与对应设计文档
+- 提交 Issue / PR 讨论协议与实现
+- 按 [agent.md](../agent.md) 与 [PROGRESS](implementation/elixir/PROGRESS.md) 认领阶段性任务
+- 架构变更请同步 [architecture-overview.md](design/architecture-overview.md) 与 [doc-sync-checklist](design/doc-sync-checklist.md)

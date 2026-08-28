@@ -9,6 +9,7 @@ auto_suggest: true
 # IM 服务端实施技能
 
 本技能是 **唯一入口**：任务编排（做什么）+ Elixir 开发循环（怎么写）。  
+**文档地图**（全项目）：[`agent.md` §文档地图](../../agent.md#文档地图) · [`docs/README.md`](../../docs/README.md) · [`module-map.md`](../../docs/module-map.md)  
 语言与框架惯例按需阅读 `elixir-essentials`、`testing-essentials`、`otp-essentials` 等。
 
 **语言**：向用户汇报、文档与代码 `@doc` 正文使用 **简体中文**（见 [`agent.md`](../../agent.md)「中文优先」）。
@@ -30,10 +31,11 @@ auto_suggest: true
 2. [`agent.md`](../../agent.md) — 硬约束、规模前提、一致性
 3. [`docs/implementation/elixir/roadmap.md`](../../docs/implementation/elixir/roadmap.md) — 阶段与验收
 4. [`docs/implementation/elixir/PROGRESS.md`](../../docs/implementation/elixir/PROGRESS.md) — **当前做到哪**
-5. [`docs/design/`](../../docs/design/) — 为什么（已确认模块）
-6. [`docs/implementation/monorepo-layout.md`](../../docs/implementation/monorepo-layout.md) — `apps/` + `deploy/` 布局
-7. [`docs/implementation/elixir/<module>.md`](../../docs/implementation/elixir/) — 怎么做（按模块）
-8. 其他 `.agents/skills/*` — 语言/框架惯例
+5. [`docs/specs-index.md`](../../docs/specs-index.md) — Kiro 阶段/特性 spec（`.kiro/specs/`）
+6. [`docs/design/`](../../docs/design/) — 为什么（已确认模块）
+7. [`docs/implementation/monorepo-layout.md`](../../docs/implementation/monorepo-layout.md) — `apps/` + `deploy/` 布局
+8. [`docs/implementation/elixir/<module>.md`](../../docs/implementation/elixir/) — 怎么做（按模块）
+9. 其他 `.agents/skills/*` — 语言/框架惯例
 
 **冲突处理**：协议 > agent.md > roadmap。发现不一致时先对齐文档与 proto，再写代码。
 
@@ -50,13 +52,30 @@ auto_suggest: true
 
 ```text
 - [ ] ① 已读 roadmap 验收、proto、implementation/elixir/<module>.md
+- [ ] ①b 本阶段/特性已有或已写 Kiro spec（见下）
 - [ ] ② PROGRESS 标为 in_progress，未跨阶段
 - [ ] ③ 落位与接口已确定（见「分层落位」）
 - [ ] ④ 测试先写且先失败（红）→ 最小实现（绿）→ 重构仍绿
 - [ ] ⑤ 已跑验证命令（见「验证层级」）
-- [ ] ⑥ PROGRESS / 设计文档已同步
+- [ ] ⑥ PROGRESS / 设计文档 / `.kiro/specs/.../tasks.md` 已同步
 - [ ] ⑦ 已向用户汇报（简体中文）
 ```
+
+### Kiro 格式 Spec（实现时必留）
+
+每个 Phase（或独立特性）在动手写代码前，于仓库根维护：
+
+```text
+.kiro/specs/<feature-or-phase-id>/
+  requirements.md   # 用户故事 + EARS（WHEN…THE SYSTEM SHALL…）
+  design.md         # 组件、API、序列图、测试策略
+  tasks.md          # 可勾选任务清单（与 roadmap ID 对齐）
+```
+
+- 实现过程中更新 `tasks.md` 勾选状态。
+- Spec **不替代** `proto` / `protocol.md`；冲突时以协议为准。
+- 全量 spec 目录索引：[specs-index.md](../../../docs/specs-index.md)。
+- 示例：[phase-1-protocol-adapter](../../../.kiro/specs/phase-1-protocol-adapter/)。
 
 ---
 
@@ -77,9 +96,10 @@ agent.md
 
 ## ② 选定唯一任务
 
-- **一次只做一个任务 ID**（如 `P1-01`），不要跨阶段。
+- **一次只做一个任务 ID**（如 `P1-01`）；同一会话内可在验收通过后**自动开始下一任务/下一 Phase**，无需用户逐次回复「继续」（用户若要求连续推进）。
+- 仍遵守：不并行混乱跨 Phase；每 Phase 先写/更新 Kiro spec。
 - PROGRESS 标为 `in_progress`。
-- 触及 roadmap「人工确认门禁」→ **停下询问用户**。
+- 触及 roadmap「人工确认门禁」或需改 proto → **停下询问用户**。
 
 ---
 
@@ -174,12 +194,13 @@ WS 命令处理器：解 Packet → `Dispatch` → `Reply`/`Push`。
 | 层级 | 命令 | 何时必做 |
 |------|------|----------|
 | **L0** | `mise run proto-check` | 改 proto 或生成代码 |
-| **L1** | `mise run test` | **每次**代码变更 |
+| **L1** | `mise run test`（需 `pg-forward` 或本机 5432） | **每次**代码变更 |
 | **L2** | `mise run check` | 准备标 done |
 | **L3** | `mise run ci` | 提交前 |
 | **L4** | `mise run release-deploy` + `release-smoke` | **阶段 2+** 功能 |
 
-本地依赖：`mise run k8s-up`。详见 [`release-deploy-test.md`](../../docs/implementation/elixir/release-deploy-test.md)。
+本地依赖：`mise run k8s-up` + `mise run pg-forward`（OrbStack Postgres → `localhost:15432`）。  
+`mise run test` **自动解析 `PGPORT`**（15432 优先，其次 5432）；勿在未 port-forward 时误判「DB 不可用」。见 [`local-dev-gotchas.md`](../../docs/implementation/elixir/local-dev-gotchas.md)。
 
 改 proto/行为时同步文档；**系统级变更须更新** [`architecture-overview.md`](../../docs/design/architecture-overview.md)。
 

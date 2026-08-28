@@ -1,0 +1,42 @@
+#!/bin/sh
+set -e
+cd "$(dirname "$0")/.."
+
+SCENARIO="${SCENARIO:-connection_load}"
+BASE_URL="${BASE_URL:-http://im.im-dev.svc.cluster.local:4000}"
+APP_KEY="${APP_KEY:?APP_KEY required}"
+USERS="${USERS:-100}"
+ITERATIONS="${ITERATIONS:-10}"
+POLLS="${POLLS:-20}"
+READ_EVERY="${READ_EVERY:-0}"
+PASSWORD="${PASSWORD:-password}"
+REPORT="${REPORT:-/tmp/loadtest-report.json}"
+
+export MIX_ENV=prod
+
+exec ./bin/loadtest eval "
+base = [
+  base_url: \"${BASE_URL}\",
+  app_key: \"${APP_KEY}\",
+  password: \"${PASSWORD}\",
+  users: ${USERS},
+  iterations: ${ITERATIONS},
+  report_path: \"${REPORT}\"
+]
+case \"${SCENARIO}\" do
+  \"unread_bump\" ->
+    opts = base ++ [polls: ${POLLS}, read_every: ${READ_EVERY}]
+    {:ok, _} = IM.LoadTest.Scenarios.UnreadBump.run(opts)
+  \"group_fanout\" ->
+    {:ok, _} = IM.LoadTest.Scenarios.GroupFanout.run(base)
+  \"room_broadcast\" ->
+    {:ok, _} = IM.LoadTest.Scenarios.RoomBroadcast.run(base)
+  \"channel_subscribe\" ->
+    {:ok, _} = IM.LoadTest.Scenarios.ChannelSubscribe.run(base)
+  \"message_flood\" ->
+    {:ok, _} = IM.LoadTest.Controller.run(Keyword.put(base, :scenario, :message_flood))
+  _ ->
+    {:ok, _} = IM.LoadTest.Controller.run(Keyword.put(base, :scenario, :connection_load))
+end
+:ok
+"

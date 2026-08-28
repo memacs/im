@@ -1,0 +1,71 @@
+# 定时 REST+WS 鉴权冒烟（见 release-smoke-auth.md）
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: im-smoke-auth
+  namespace: im-dev
+  labels:
+    app: im
+    component: smoke-auth
+spec:
+  schedule: "15 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      ttlSecondsAfterFinished: 86400
+      activeDeadlineSeconds: 120
+      template:
+        metadata:
+          labels:
+            app: im
+            component: smoke-auth
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            fsGroup: 65534
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: smoke
+              image: im:local
+              imagePullPolicy: IfNotPresent
+              command: ["/app/bin/smoke-auth"]
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+              envFrom:
+                - configMapRef:
+                    name: im
+                - secretRef:
+                    name: im-runtime
+              env:
+                - name: RELEASE_TMP
+                  value: /tmp
+                - name: SMOKE_APP_KEY
+                  value: app_demo
+                - name: SMOKE_PASSWORD
+                  value: smoke_secret
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
+          volumes:
+            - name: tmp
+              emptyDir:
+                sizeLimit: 64Mi

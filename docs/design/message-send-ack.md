@@ -50,6 +50,7 @@
 | 7 | `CMD_MSG_SEND` 失败只回 `CMD_ERROR`，**不关闭连接** |
 | 8 | 接收方设备**离线**且有 `push_token` 时，异步写 Kafka **`im.push`** 触发系统推送（见 [mobile-push.md](mobile-push.md)） |
 | 9 | 下行扇出 **整包只编码一次**，传递 `packet_binary`（见 [zero-copy-delivery.md](zero-copy-delivery.md)） |
+| 10 | 群聊 `write_fanout`：**异步**写其余成员 inbox；`SERVER_RECEIVED` 只保证 canonical 已落库（见 §3.2、[group.md](group.md) §6.2） |
 
 ---
 
@@ -85,19 +86,35 @@ flowchart TD
   B -->|已存在| C[返回原 msg_id + ACK_DOWN]
   B -->|新消息| D[校验权限/conv]
   D -->|失败| E[CMD_ERROR 不关连接]
-  D -->|成功| F[落库 message_bodies + user_inbox 写扩散]
-  F --> G[ACK_DOWN SERVER_RECEIVED]
-  F --> H[Delivery 推在线设备]
-  H --> I{设备离线且有 push_token?}
-  I -->|是| J[异步 im.push]
-  I -->|否| K[仅收件箱/离线拉取]
+  D -->|成功| F{chat_type?}
+  F -->|单聊| G[同步写 bodies + 双方 inbox]
+  F -->|群 write_fanout| H[同步写 bodies + 发送方 inbox]
+  F -->|群 read_fanout / 聊天室| I[同步写 bodies 或不落库]
+  G --> J[ACK_DOWN SERVER_RECEIVED]
+  H --> J
+  I --> J
+  H --> K[异步 GroupInboxFanout 写其余成员 inbox]
+  J --> L[Delivery 推在线设备]
+  L --> M{设备离线且有 push_token?}
+  M -->|是| N[异步 im.push]
+  M -->|否| O[收件箱 / conv_seq 补拉]
 ```
 
 单聊拉黑、群禁言等权限检查走 Redis 热缓存，不直查 PG；见 [permission-cache.md](permission-cache.md)。
 
 群聊 `CLIENT_RECEIVED`：任一在线成员首条 `ACK_UP` 即通知发送方；聊天室仅 `SERVER_RECEIVED`。详见下文 §5。
 
-**写扩散 / 读扩散**：单聊与小群（`write_fanout`）为 `message_bodies` + `user_inbox`；**大群**（`read_fanout`，成员数大于 threshold）**仅** `message_bodies`，离线按 `conv_seq` 拉取。小群可异步 fanout（`group_inbox_fanout_async`）。见 [database-design.md](database/database-design.md) §3、[group.md](group.md) §6。
+**写扩散 / 读扩散**：单聊同步写双方 inbox；小群 `write_fanout` 为 bodies + **异步**其余成员 inbox；大群 `read_fanout` **仅** `message_bodies`，离线按 `conv_seq` 拉取。见 [database-design.md](database/database-design.md) §3、[group.md](group.md) §6、下文 §3.2。
+
+### 3.2 群聊异步写扩散与 `SERVER_RECEIVED`（已确认）
+
+| 项 | 约定 |
+| --- | --- |
+| 同步阶段（阻塞 ACK） | 写 `message_bodies` + 发送方 `user_inbox`（或锚点行）；分配 `msg_id` / `conv_seq` |
+| 异步阶段 | Oban `GroupInboxFanout` 写其余目标成员 inbox；窗口默认 **5s**（`group_inbox_fanout_lag_ms` 监控） |
+| `SERVER_RECEIVED` 保证 | **canonical 已落库、发送方可凭 `msg_id`/`conv_seq` 检索**；**不**保证全体成员 inbox 已写完 |
+| 在线成员 | 阶段 A 后即可 PUSH，不等待 inbox 写扩散 |
+| 离线成员 | 见 [offline-pull.md](offline-pull.md) §3.2：全局拉取后须对活跃写扩散群做 `conv_seq` 补拉 |
 
 ---
 
@@ -156,12 +173,12 @@ flowchart TD
 
 | 档 | 行为 |
 | --- | --- |
-| `SERVER_RECEIVED` | 同单聊，发给发送方 |
+| `SERVER_RECEIVED` | 发给发送方；含义见 §3.2（canonical 已落库，**非**全员 inbox 写完） |
 | `CLIENT_RECEIVED` | **任一在线成员**首次 `ACK_UP` 后，向发送方推 **一条** `ACK_DOWN`；不等全员 |
-| 离线成员 | 上线后 `OFFLINE_PULL`；**不补**历史 `CLIENT_RECEIVED` 给原发送方 |
+| 离线成员 | 上线后 `OFFLINE_PULL`（含 `conv_seq` 补拉，见 [offline-pull.md](offline-pull.md) §3.2）；**不补**历史 `CLIENT_RECEIVED` 给原发送方 |
 | **全员离线** | 发送方**仅**收 `SERVER_RECEIVED`；直至任一成员上线并 `ACK_UP` 才推 `CLIENT_RECEIVED`；若始终无人上线则**永远停在第一档**（产品预期，非缺陷） |
 
-原因：全员 ACK 成本高；「已送达群（至少一人在线收到）」符合常见 IM 体验。
+原因：全员 ACK 成本高；「已送达群（至少一人在线收到）」符合常见 IM 体验。全员 inbox 同步写完再 ACK 会把大群发送 P99 打到数百毫秒～数秒，故与写扩散解耦。
 
 ### 聊天室
 

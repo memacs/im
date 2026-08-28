@@ -1,0 +1,44 @@
+# 对集群内 svc/im 跑压测 Job（需 IM 已部署且 internal provision 可用）
+# kubectl apply -f deploy/elixir/loadtest/k8s/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: im-loadtest-unread-bump
+  namespace: im-dev
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: loadtest
+          image: im-loadtest:local
+          imagePullPolicy: IfNotPresent
+          command: ["/app/bin/run_loadtest"]
+          env:
+            - name: APP_KEY
+              value: "app_demo"
+            - name: BASE_URL
+              value: "http://im.im-dev.svc.cluster.local:4000"
+            - name: SCENARIO
+              value: "unread_bump"
+            - name: USERS
+              value: "50"
+            - name: ITERATIONS
+              value: "30"
+            - name: POLLS
+              value: "20"
+            - name: READ_EVERY
+              value: "5"
+            - name: PASSWORD
+              value: "password"
+            - name: REPORT
+              value: "/tmp/loadtest-report.json"
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"

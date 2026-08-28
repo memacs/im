@@ -497,7 +497,7 @@ AUTH_REQ 校验 token / user_id 通过
 
 **解封**：清除 `banned_at`（管理 API）；不自动恢复旧 token，用户须重新 HTTP 登录。
 
-`KickNotify.reason` 增加约定值 **`device_banned`**（与 `admin_kick`、`token_expired` 并列，见 `protocol.md` §5）。
+`KickNotify.reason_code` 使用枚举 `KickReason`（含 `DEVICE_BANNED` / `ADMIN_KICK` / `TOKEN_EXPIRED` 等）；`reason` 字符串保留作兼容，见 `protocol.md` §5、`proto/auth.proto`。
 
 ### 9.7 与 `AuthResp` 的配置关系
 

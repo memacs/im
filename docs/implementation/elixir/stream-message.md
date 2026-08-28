@@ -4,11 +4,11 @@
 |------|------|
 | 语言 | Elixir |
 | 设计文档 | [stream-message.md](../../design/stream-message.md) |
-| Roadmap | Phase 7：P7-07（透传模式，纳入）；P7-08（消息模式，**deferred**） |
+| Roadmap | Phase 7：P7-07（透传模式）；P7-08（消息模式，**done**） |
 
-> **文档分级**：边缘模块 impl。v1 透传模式见设计文档；本文仅列模块与测试要点。
+> **文档分级**：边缘模块 impl。透传见设计文档；消息模式见 `.kiro/specs/p7-08-p8-09/`。
 
-> v1 仅实现透传模式；`MSG_STREAM` 落库路径见 roadmap「实现范围与 defer 决策」。
+> `MSG_STREAM`：`content` 为 `StreamContent` protobuf 字节，每块独立落库；`IM.Services.StreamManager` 校验序号与生命周期；`Offline.pull` 还原 `msg_type`。
 
 ---
 

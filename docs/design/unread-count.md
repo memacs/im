@@ -367,26 +367,21 @@ GET /conversations?include_unread=true
 
 ### 9.2 未读数推送（可选）
 
-**方案A: 已读回执携带未读数**
+**方案A: 已读回执携带未读数（v1 已定稿）**
+
+`proto/message.proto` 的 `MsgRead` 已含：
 
 ```protobuf
-message MsgRead {
-  ...
-  int32 unread_count = 8;  // 可选：已读后的未读数
-}
+optional int32 unread_count = 8;  // 已读后的会话未读数；optional 区分未携带与 0
 ```
 
-**方案B: 独立未读数推送**
+服务端在 `CMD_MSG_READ` 下行（及同用户多端同步）时填写；客户端以该字段刷新本地未读角标。
+
+**方案B: 独立未读数推送**（v1 **不做**）
 
 ```
-服务端 → 客户端：CMD_UNREAD_UPDATE
-{
-  "conv_id": "p:alice:bob",
-  "unread_count": 0
-}
+服务端 → 客户端：CMD_UNREAD_UPDATE  // 未定义命令字，仅作远期备选
 ```
-
-**建议**：本期使用方案A，已读回执携带未读数即可。
 
 ---
 

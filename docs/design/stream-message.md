@@ -85,7 +85,7 @@ sequenceDiagram
   Note over T: 不进历史、不计未读
 ```
 
-### 消息模式（deferred，proto 保留）
+### 消息模式（已实现 P7-08，proto 保留）
 
 ```mermaid
 flowchart TD

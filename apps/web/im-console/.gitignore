@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.DS_Store
+*.local
+coverage/
+# protobufjs 生成物：npm run proto / prebuild 产出
+src/protocol/generated.js
+src/protocol/generated.d.ts

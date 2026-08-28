@@ -2,7 +2,7 @@
 
 本目录存放 IM 系统的**多语言实现文档**，每种语言独立子目录。
 
-**活索引**：[design-decisions.md](../design-decisions.md)、[elixir/PROGRESS.md](elixir/PROGRESS.md)、[monorepo-layout.md](monorepo-layout.md)。
+**活索引**：[design-decisions.md](../design-decisions.md)、[elixir/PROGRESS.md](elixir/PROGRESS.md)、[module-map.md](../module-map.md)、[specs-index.md](../specs-index.md)、[monorepo-layout.md](monorepo-layout.md)。
 
 ---
 
@@ -10,8 +10,9 @@
 
 | 语言 | 状态 | 说明 |
 |------|------|------|
-| [Elixir](elixir/) | 设计完成，实现未开始（Phase 0） | Phoenix + 百万在线架构 |
-| [Web Console](web/web-console.md) | 设计完成，实现未开始（Phase 12） | 独立 SPA，**协议全能力**演示与联调 |
+| [Elixir](elixir/) | **Phase 0–13 完成**（见 [PROGRESS](elixir/PROGRESS.md)） | Phoenix + 百万在线架构 |
+| [Web Console](web/web-console.md) | **Phase 12 可演示**（`apps/web/im-console`） | 独立 SPA，协议能力演示与联调 |
+| [Web 实现索引](web/README.md) | — | 前端实现文档入口 |
 | [Java](java/) | 预留 | 待规划 |
 
 ---

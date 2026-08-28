@@ -217,7 +217,7 @@ flowchart LR
 | 2 | 节点内 PubSub 投递 yield / 小批 `handle_info`（实现细节） |
 | 3 | 调大出站 LOW 队列容量或加强丢弃策略 |
 
-**禁止**：复用 `IM.Cluster.GroupPusher` 或按成员列表扇出；`room.md` 实现草图中的大房间树状扇出 **不适用于** App Channel（设计侧聊天室亦以 PubSub `broadcast` 为准，见 [room.md](room.md) §5）。
+**禁止**：复用 `IM.Cluster.GroupPusher` 或按成员列表扇出。聊天室与 Channel 均已定稿为**一律 PubSub**（见 [room.md](room.md) §5）；树状扇出仅服务群聊。
 
 ---
 

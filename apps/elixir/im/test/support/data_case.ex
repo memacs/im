@@ -36,8 +36,14 @@ defmodule IM.DataCase do
   """
   @spec setup_sandbox(map()) :: :ok
   def setup_sandbox(tags) do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(IM.Repo, shared: not tags[:async])
+    shared = not tags[:async]
+    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(IM.Repo, shared: shared)
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
+
+    if shared do
+      Ecto.Adapters.SQL.Sandbox.mode(IM.Repo, {:shared, pid})
+    end
+
     :ok
   end
 end

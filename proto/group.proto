@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package im.protocol;
 
-// 设计意图见 docs/design/group.md；行为规范见 docs/design/protocol/protocol.md §18
+// 设计意图见 docs/design/group.md；行为规范见 docs/design/protocol/protocol.md §19
 
 // ============================================================================
 // 群成员角色

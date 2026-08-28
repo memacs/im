@@ -28,7 +28,7 @@
 
 | # | 决策 |
 | --- | --- |
-| 1 | 断线后**完整重连**：新 WebSocket → `AUTH_REQ` → `OFFLINE_PULL` 循环 → 恢复实时 PUSH |
+| 1 | 断线后**完整重连**：新 WebSocket → `AUTH_REQ` → 全局 `OFFLINE_PULL` → 活跃群 `conv_seq` 补拉（含写扩散异步窗口）→ 读扩散群拉取 → 恢复实时 PUSH（见 [offline-pull.md](offline-pull.md) §3.1–§3.2） |
 | 2 | 离线游标以**本地持久化**为准；首次登录 `cursor = 0` |
 | 3 | `OFFLINE_PULL` 与 `PUSH` 统一按 **`msg_id` 去重** |
 | 4 | 发送中消息：以 **`client_msg_id` 业务幂等**为准重试 SEND；已处理则收原 `ACK_DOWN`、不重复推给对端 |
@@ -85,9 +85,11 @@ sequenceDiagram
 [鉴权] CMD_AUTH_REQ（新 session_id）
     │ 失败 → CMD_ERROR + 关连接 → 回到 [断开]
     ▼
-[同步] OFFLINE_PULL 循环
-    │   cursor = local.inbox_seq（全量）或 local.conv_seq（单会话）
-    │   直至 has_more = false
+[同步] OFFLINE_PULL
+    │   1) 全局：cursor = local.inbox_seq，直至 has_more = false
+    │   2) 活跃 write_fanout 群：conv_id + conv_seq 补拉（异步 inbox 窗口）
+    │   3) read_fanout 群：conv_id + conv_seq 拉取
+    │   与 PUSH 按 msg_id 去重
     │   期间若收到 PUSH：msg_id 去重，不重复落库
     ▼
 [就绪] 可 SEND / ACK / READ / 透传等

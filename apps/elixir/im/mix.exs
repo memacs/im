@@ -30,17 +30,22 @@ defmodule IM.MixProject do
 
   def application do
     [
-      extra_applications: [:logger, :runtime_tools],
+      extra_applications: [:logger, :runtime_tools, :crypto],
       mod: {IM.Application, []}
     ]
   end
 
   # 测试环境额外编译 test/support（工厂、Case 模板）
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test) do
+    im_client_support = Path.expand("../im_client/test/support", __DIR__)
+    ["lib", "test/support", im_client_support]
+  end
+
   defp elixirc_paths(_), do: ["lib"]
 
   defp deps do
     [
+      {:im_proto, path: "../im_proto"},
       # Web / WebSocket 接入
       {:phoenix, "~> 1.8"},
       {:bandit, "~> 1.7"},
@@ -53,12 +58,23 @@ defmodule IM.MixProject do
       {:ecto_sql, "~> 3.13"},
       {:phoenix_ecto, "~> 4.6"},
       {:postgrex, ">= 0.0.0"},
+      # 后台任务（P5-11 / P7-09 / P7-10）
+      {:oban, "~> 2.19"},
+      # 缓存（P9-02）
+      {:redix, "~> 1.5"},
+      # Kafka 旁路 Producer（P9-03）
+      {:brod, "~> 4.4"},
+      # 集群（P9-01）
+      {:libcluster, "~> 3.5"},
       # 可观测性
       {:telemetry_metrics, "~> 1.1"},
       {:telemetry_poller, "~> 1.3"},
+      {:telemetry_metrics_prometheus_core, "~> 1.2"},
       # 开发与测试工具
       {:ex_doc, "~> 0.38", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.18", only: :test, runtime: false}
+      {:excoveralls, "~> 0.18", only: :test, runtime: false},
+      # 协议 E2E：仅测试环境依赖 im_client（IC-06 不做 compile-time 硬依赖）
+      {:im_client, path: "../im_client", only: :test}
     ]
   end
 
@@ -77,7 +93,13 @@ defmodule IM.MixProject do
       setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "test.cluster": ["ecto.create --quiet", "ecto.migrate --quiet", "test --only cluster_e2e"],
+      "test.trace": [
+        "ecto.create --quiet",
+        "ecto.migrate --quiet",
+        "cmd env TRACE_EXPORT=1 CLUSTER_E2E=1 mix test test/im_client/protocol/ --exclude trace_coverage"
+      ]
     ]
   end
 

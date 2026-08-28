@@ -3,6 +3,7 @@
 | 项 | 内容 |
 |------|------|
 | 语言 | Elixir |
+| **HTTP 接口参考** | [http-api-reference.md](http-api-reference.md)（逐端点 + 示例） |
 | 设计文档 | [dual-channel-api.md](../../design/dual-channel-api.md) |
 | 上下文 | [message-context.md](message-context.md) |
 | Roadmap | Phase 2（P2-10、P2-11）及各 Phase REST 适配 |

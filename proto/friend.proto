@@ -43,7 +43,7 @@ message FriendRequestNotify {
   string from_nickname = 3;   // 发起方昵称（可选）
   string from_avatar = 4;     // 发起方头像（可选）
   string message = 5;         // 申请消息
-  int64 timestamp = 6;        // 请求时间
+  int64 timestamp = 6;        // 请求时间（ms）
 }
 
 // ============================================================================
@@ -74,7 +74,7 @@ message FriendAcceptNotify {
   string nickname = 2;        // 接受方昵称（可选）
   string avatar = 3;          // 接受方头像（可选）
   string remark = 4;          // 对方给我的备注（可选）
-  int64 timestamp = 5;        // 接受时间
+  int64 timestamp = 5;        // 接受时间（ms）
 }
 
 // ============================================================================
@@ -101,7 +101,7 @@ message FriendRejectResp {
 message FriendRejectNotify {
   string user_id = 1;         // 拒绝方 user_id
   string nickname = 2;        // 拒绝方昵称（可选）
-  int64 timestamp = 3;        // 拒绝时间
+  int64 timestamp = 3;        // 拒绝时间（ms）
 }
 
 // ============================================================================
@@ -126,7 +126,7 @@ message FriendDeleteResp {
 // 被删除好友通知（推送给被删除方）。
 message FriendDeleteNotify {
   string user_id = 1;         // 删除方 user_id
-  int64 timestamp = 2;        // 删除时间
+  int64 timestamp = 2;        // 删除时间（ms）
 }
 
 // ============================================================================
@@ -151,7 +151,7 @@ message FriendBlockResp {
 // 被拉黑通知（推送给被拉黑方）。
 message FriendBlockNotify {
   string user_id = 1;         // 拉黑方 user_id
-  int64 timestamp = 2;        // 拉黑时间
+  int64 timestamp = 2;        // 拉黑时间（ms）
 }
 
 // ============================================================================
@@ -216,7 +216,7 @@ message FriendInfo {
   string avatar = 3;          // 头像
   string remark = 4;          // 备注名
   FriendStatus status = 5;    // 关系状态
-  int64 created_at = 6;       // 成为好友时间
+  int64 created_at = 6;       // 成为好友时间（ms）
   string ext = 7;             // 扩展字段（JSON）
 }
 
@@ -252,7 +252,7 @@ message FriendRequestInfo {
   string to_avatar = 7;       // 接收方头像
   string message = 8;         // 申请消息
   FriendRequestStatus status = 9;  // 请求状态
-  int64 timestamp = 10;       // 请求时间
+  int64 timestamp = 10;       // 请求时间（ms）
 }
 
 // ============================================================================

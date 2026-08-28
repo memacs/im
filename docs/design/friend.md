@@ -315,13 +315,15 @@ CMD_FRIEND_LIST_RESP
 
 ### 7.1 添加好友规则
 
-| 规则 | 说明 |
-|------|------|
-| **不能添加自己** | 返回错误 |
-| **已是好友** | 返回错误 |
-| **已拉黑对方** | 返回错误 |
-| **对方已拉黑你** | 返回错误 |
-| **重复请求** | 返回已有请求 |
+| 规则 | 说明 | 错误码 |
+|------|------|--------|
+| **不能添加自己** | `CMD_ERROR` | `CODE_FRIEND_SELF`（7001） |
+| **已是好友** | `CMD_ERROR` | `CODE_FRIEND_ALREADY`（7002） |
+| **已拉黑对方** | `CMD_ERROR` | `CODE_FRIEND_BLOCKED`（7003） |
+| **对方已拉黑你** | `CMD_ERROR` | `CODE_FRIEND_BLOCKED_BY_PEER`（7004） |
+| **重复请求** | **成功** RESP，回已有 `request_id`（幂等，不用错误码） | — |
+
+发消息被拉黑：热路径返回 `CODE_FRIEND_BLOCKED_BY_PEER`（7004），**不要**再复用 `CODE_MSG_NO_PERMISSION`（2002），以便客户端区分「无会话权限」与「被拉黑」。租户开启「须为好友才能单聊」且非好友时用 `CODE_FRIEND_NOT_FRIEND`（7006）。
 
 ### 7.2 发消息权限检查
 
@@ -330,10 +332,10 @@ CMD_FRIEND_LIST_RESP
 ```elixir
 def check_send_permission(app_key, from_user_id, to_user_id) do
   if IM.Permission.BlockCache.blocked?(app_key, to_user_id, from_user_id) do
-    {:error, :blocked}
+    {:error, {:friend, :blocked_by_peer}}  # → CODE_FRIEND_BLOCKED_BY_PEER (7004)
   else
     if require_friend_to_send?() and not friends?(from_user_id, to_user_id) do
-      {:error, :not_friend}
+      {:error, {:friend, :not_friend}}     # → CODE_FRIEND_NOT_FRIEND (7006)
     else
       :ok
     end
@@ -383,7 +385,7 @@ IM.Services.Friend（及 *Handler 子模块）
 | --- | --- |
 | `IM.Services.Friend` | 好友增删改查、请求处理、拉黑；**唯一业务实现** |
 | `IM.Delivery.Router` | 将 `*_PUSH` 扇出到目标用户在线设备；不关心好友业务 |
-| `IM.Services.SingleChat`（可选） | 发消息前调用 `Friend.check_send_permission/2`（P8-08 拉黑；P8-09 deferred） |
+| `IM.Services.SingleChat`（可选） | 发消息前调用 `Friend.check_send_permission/2`（P8-08 拉黑；P8-09 可选「须好友」由 `app_configs.friend.require_friend_to_send` 控制） |
 
 ### 8.1 接受好友请求（示例）
 
@@ -429,7 +431,7 @@ defmodule IM.Services.Friend do
   def list_friends(req, ctx), do: ListHandler.handle(req, ctx)
 
   def check_send_permission(from_user_id, to_user_id) do
-    # P8-08：拉黑拦截；P8-09「须好友才能单聊」为 deferred
+    # P8-08：拉黑拦截；P8-09：require_friend_to_send 为 true 时须互为好友
     if blocked?(to_user_id, from_user_id), do: {:error, :blocked}, else: :ok
   end
 end
@@ -443,7 +445,7 @@ end
 
 ## 9. 权限校验的位置
 
-**发消息时是否检查好友关系**：默认 **不强制好友**（P8-09 deferred）；**拉黑**在 P8-08 由 `IM.Services.Friend.check_send_permission/2` 在 `IM.Services.SingleChat` 发消息路径调用。
+**发消息时是否检查好友关系**：默认 **不强制好友**；开启 `app_configs.friend.require_friend_to_send` 后须互为好友（P8-09）。**拉黑**在 P8-08 由 `IM.Services.Friend.check_send_permission/2` 在 `IM.Services.Message` 发消息路径调用。
 
 ```elixir
 # IM.Services.SingleChat.send/2（示意）

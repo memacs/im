@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 多副本联调入口（P9-01b）：依赖 + IM ×2 + PDB + libcluster DNS
+resources:
+  - ../local
+  - pdb.yaml
+  - hpa.yaml
+
+patches:
+  - path: deployment-replicas.yaml
+  - path: configmap-cluster.yaml

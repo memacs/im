@@ -101,7 +101,7 @@ WS 收帧 (binary)
 |----|------|
 | `encode_push_packet/1` → `packet_binary` | 每设备 `Packet.encode` |
 | 进程消息携带 `packet_binary` | 携带 `%ChatMessage{}` 到 Socket 再 encode |
-| 大群树状扇出：**子树共享**同一份 `packet_binary` | 每批重新编码 |
+| 大群树状扇出（**仅群聊**）：**子树共享**同一份 `packet_binary` | 每批重新编码；聊天室走 PubSub，同样共享一份 `packet_binary` |
 
 ### 4.4 Kafka 旁路
 

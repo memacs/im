@@ -391,11 +391,28 @@ push(message, recipients, opts) -> {:ok, pushed_count} | {:error, reason}
 
 ### 7.2 大群：推送与存储
 
-**在线推送**（与存储模式无关）：
+**在线推送**（与存储模式无关；**仅群聊**）：
 
-- 成员数大于 `group_read_fanout_threshold`（默认 500）视为大群
-- 按节点分组，**树状扇出** + 批量 `CMD_MSG_PUSH_BATCH`
+- 成员数大于 `group_push_tree_threshold` / `group_read_fanout_threshold`（默认 **500**）视为大群
+- 按节点分组，**树状扇出** + 批量 `CMD_MSG_PUSH_BATCH` + 预编码一次
 - 避免单节点对万人循环推送
+
+**树状扇出默认参数**（权威细则与降级见 [group.md](group.md) §5.1）：
+
+| 参数 | 默认 |
+|------|------|
+| `tree_branching_factor` | 8 |
+| `tree_max_depth` | 4 |
+| `tree_rpc_timeout_ms` | 2000 |
+| `tree_recipients_chunk` | 200 |
+| `push_batch_max` | 50 |
+| `tree_slow_node_ms` | 500 |
+| `tree_slow_isolate_sec` | 30 |
+| `tree_retry_max` | 1 |
+
+实现：`IM.Cluster.GroupPusher` + `FanoutBatcher`（roadmap P5-06）。
+
+**聊天室在线推送**：**不**走本节树状扇出；一律 `Phoenix.PubSub.broadcast`（JOIN 时 subscribe topic）。见 [room.md](room.md) §5；实现 [implementation/elixir/room.md](../implementation/elixir/room.md)。
 
 **持久化**（按 `groups.storage_mode`）：
 

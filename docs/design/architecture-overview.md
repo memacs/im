@@ -13,8 +13,9 @@
 | 改主数据流或客户端旅程 | 登录流程、发消息 ACK 路径 |
 | 改存储/旁路在架构中的角色 | Kafka Topic、离线推送 |
 | 改单聊/群聊/聊天室边界 | 是否落库、是否离线拉取 |
+| 改容量假设或集群上限 | 连接/Pod、Tracker、libcluster、Snowflake `worker_id`（§11） |
 
-改完后自检：图中模块名、箭头方向、§6 模块表是否与最新设计一致。
+改完后自检：图中模块名、箭头方向、§6 模块表、§11 容量表是否与最新设计一致。
 
 各 **功能设计文档**（`docs/design/*.md`）须有独立 **`## 完整流程`** Mermaid 图；改行为时同步更新（见 [design/README.md](README.md) 文档模板）。
 
@@ -371,11 +372,73 @@ flowchart TB
 ```
 
 - 用户 A 连在 Pod-1，用户 B 连在 Pod-2：**Tracker** 能查到 B 的位置，跨 Pod 推送。
-- 大群消息：**树状扇出**推送；存储上 **读扩散**（仅 `message_bodies`），离线按 `conv_seq` 补拉（见 [group.md](group.md) §6.3）。
+- 大群消息：**树状扇出**推送（参数见 [group.md](group.md) §5.1）；存储上 **读扩散**（仅 `message_bodies`），离线按 `conv_seq` 补拉（见 [group.md](group.md) §6.3）。
+- 容量账本与硬上限见 **§11**。
 
 ---
 
-## 11. 协议与代码仓库（给研发）
+## 11. 容量规划（量化上限）
+
+生产按 **多 Access Pod + 共享 PG/Redis** 估算。下列为**规划默认值**（压测可修正）；实现与 HPA 不得无说明地突破「硬上限」列。
+
+### 11.1 连接与 Pod
+
+| 项 | 目标 / 公式 | 硬上限 / 约束 |
+|----|-------------|----------------|
+| 单 Access Pod 并发连接 | **30_000**（压测达标线，LT-10） | **50_000**（超则水平扩容，不继续垂直堆） |
+| 规划用每 Pod 连接 | **40_000**（目标与硬上限之间的容量账本） | — |
+| 集群在线连接 | `ceil(N_online / 40_000) × 1.2`（含 20% 头寸） | 受节点数、Tracker、Snowflake 约束（下表） |
+| 百万在线（示例） | `ceil(1e6 / 4e4) × 1.2 ≈ 30` Access Pod | 需同时满足 §11.2–§11.3 |
+
+长连接入口须启用 **sessionAffinity**（已有 K8s 约定），避免重连打散导致重复 Presence。
+
+### 11.2 Phoenix.Tracker
+
+| 项 | 规划值 | 说明 |
+|----|--------|------|
+| 模型 | 全网 Presence CRDT（初期） | 每节点持有（近似）全量在线视图 |
+| 单条 Presence 内存 | **约 200–500 B**（含 metas；实现后以 `:recon` / Observer 校准） | — |
+| 百万在线粗算 | **200–500 MB / 节点** 仅 Presence | 另加连接进程堆；Access 内存请求须按此留余量 |
+| 扩展路径 | 按 `app_key`（或哈希槽）**分片 Tracker** | 单集群持续 >50 万在线或 Tracker 合并延迟恶化时启用（Phase 9+） |
+| 推送查人 | 热路径只查 Tracker | Redis `im:conn:*` 仅可选辅助，不作为扇出主路径 |
+
+### 11.3 libcluster / BEAM 网格
+
+| 项 | 规划值 | 说明 |
+|----|--------|------|
+| 推荐 BEAM 节点数（全网格） | **≤ 64** | 全连接约 `N×(N-1)` 量级；更大时心跳与分布式 Erlang 压力陡增 |
+| 超过 64 | Gossip + DNS / 分区集群 / 按角色拆集群 | Access 与纯 Job 节点可分拓扑 |
+| 大群树状扇出 | 中继深度 ≤ `tree_max_depth`（默认 4），扇出度 8 | 见 [group.md](group.md) §5.1；与网格规模解耦但节点过多时优先加宽 |
+
+### 11.4 Snowflake `worker_id`
+
+| 项 | 值 | 约束 |
+|----|-----|------|
+| `worker_id` 空间 | **0..1023**（10 bit） | 见 [msg-id-snowflake.md](msg-id-snowflake.md) |
+| 同时持有租约的发号进程 | **≤ 1024** | 每个参与 `msg_id` 发号的 BEAM 节点（或发号进程）占 1 个 |
+| HPA | `maxReplicas`（发号角色）**≤ 1024** | 超限无法安全租约；应先拆集群或改发号拓扑 |
+| 租约丢失 | 走 PG 兜底命名空间（T=1） | 不阻塞发消息；需 Oban 对账 |
+
+### 11.5 存储与旁路（粗算）
+
+| 项 | 规划提示 |
+|----|----------|
+| 消息热数据 | 默认保留 `msg_ttl_days=7`；清理 Job 见 [message-ttl-cleanup.md](message-ttl-cleanup.md) |
+| 群写扩散 | ≤500 人 `write_fanout`；更大 `read_fanout` 仅写正文，控制 inbox 行膨胀 |
+| Redis 序号 | `conv_seq` / `inbox_seq` 权威 INCR；AOF/持久化必须开启（部署约定） |
+| Kafka | 旁路，不阻塞 ACK；积压按 consumer 扩容，不影响 §11.1 连接账本 |
+
+### 11.6 容量验收（压测挂钩）
+
+| 场景 | 验收 |
+|------|------|
+| 单节点连接 | 3–5 万稳定（P10-01 / LT-10） |
+| 5000 人群扇出 | 发消息 P99 **< 200ms**（P10-02 / LT-30） |
+| 扩到百万在线 | 按 §11.1 公式扩 Pod；Tracker 内存与 `worker_id` 租约数先做预算再压 |
+
+---
+
+## 12. 协议与代码仓库（给研发）
 
 **协议为准（硬约束）**：`proto/` + [`protocol/protocol.md`](protocol/protocol.md) 是所有实现代码的 **唯一行为契约**（含 Elixir 服务端、`im_client`、Web Console、loadtest）。代码与协议不一致时 **改代码**；确需改协议时 **须人工确认** 后再改 `proto` 与文档，最后才改实现。详见 [`agent.md`](../../agent.md)「协议为准」。
 
@@ -401,7 +464,7 @@ ver | cmd | seq | cid | trace_id | route_key | payload(Protobuf)
 
 ---
 
-## 12. 进一步阅读
+## 13. 进一步阅读
 
 | 想深入了解… | 文档 |
 |-------------|------|
@@ -409,5 +472,7 @@ ver | cmd | seq | cid | trace_id | route_key | payload(Protobuf)
 | 命令字与字段 | [protocol/protocol.md](protocol/protocol.md) |
 | 模块分层与代码结构 | [modular-architecture.md](modular-architecture.md) |
 | WS + REST 怎么对齐 | [dual-channel-api.md](dual-channel-api.md) |
+| 容量与集群上限 | 本文 §11；[msg-id-snowflake.md](msg-id-snowflake.md)；[group.md](group.md) §5.1 |
+| 消息 TTL 清理 | [message-ttl-cleanup.md](message-ttl-cleanup.md) |
 | 怎么落地实现 | [implementation/elixir/roadmap.md](../implementation/elixir/roadmap.md) |
 | 仓目录布局 | [implementation/monorepo-layout.md](../implementation/monorepo-layout.md) |

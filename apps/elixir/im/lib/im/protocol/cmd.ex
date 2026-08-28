@@ -1,29 +1,48 @@
 defmodule IM.Protocol.Cmd do
   @moduledoc """
-  `CmdType` 枚举数值与原子的互转，以及命令分区判定（连接/消息/ACK/…，区间约定见
-  `proto/common.proto` 的 `CmdType` 注释）。
+  `CmdType` 枚举数值与原子的互转。
 
-  实现委托给生成的 CmdType enum（Pb.Im.Protocol.CmdType），本模块只提供不会因未知数值崩溃的安全封装：
-  老服务端收到新客户端的未知 cmd 时必须优雅拒绝，而不是 raise。
-
-  P0-05 骨架：随 `IM.Protocol.Router` 在 P1 落地。
+  实现委托给生成的 `Pb.Im.Protocol.CmdType`；未知数值返回错误而非 raise，
+  以便老服务端优雅拒绝新客户端的未知 cmd。
   """
 
   alias IM.Domain.Error
+  alias Pb.Im.Protocol.CmdType
 
   @doc """
-  数值 → 原子。未知数值返回错误而非 raise。
+  数值 → 原子。未知数值返回 `{:error, %Error{code: :unknown_cmd}}`。
+
+  ## 示例
+
+      {:ok, :CMD_MSG_SEND} = IM.Protocol.Cmd.to_atom(100)
+      {:error, %{code: :unknown_cmd}} = IM.Protocol.Cmd.to_atom(65_535)
   """
   @spec to_atom(non_neg_integer()) :: {:ok, atom()} | {:error, Error.t()}
-  def to_atom(cmd) when is_integer(cmd) do
-    {:error, Error.not_implemented(cmd)}
+  def to_atom(cmd) when is_integer(cmd) and cmd >= 0 do
+    # protobuf_elixir：未知枚举值的 key/1 会原样返回整数，而非 nil
+    case CmdType.key(cmd) do
+      atom when is_atom(atom) ->
+        {:ok, atom}
+
+      _other ->
+        {:error, Error.new(:unknown_cmd, "unknown cmd: #{cmd}", ref_cmd: cmd)}
+    end
   end
 
   @doc """
-  原子 → 数值。
+  原子 → 数值。未知原子返回错误。
+
+  ## 示例
+
+      {:ok, 100} = IM.Protocol.Cmd.to_value(:CMD_MSG_SEND)
   """
   @spec to_value(atom()) :: {:ok, non_neg_integer()} | {:error, Error.t()}
   def to_value(cmd) when is_atom(cmd) do
-    {:error, Error.not_implemented()}
+    try do
+      {:ok, CmdType.value(cmd)}
+    rescue
+      FunctionClauseError ->
+        {:error, Error.new(:unknown_cmd, "unknown cmd atom: #{cmd}")}
+    end
   end
 end

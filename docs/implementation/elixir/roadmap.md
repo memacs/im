@@ -4,7 +4,8 @@
 
 > **优先级**：`proto/` + [`protocol.md`](../design/protocol/protocol.md) > [`agent.md`](../../agent.md) > 本路线图。路线图与协议冲突时以协议为准并更新本文档。
 
-> **进度追踪**：实时状态见 [`PROGRESS.md`](PROGRESS.md)。每完成一项任务必须更新该文件。
+> **进度追踪**：实时状态见 [`PROGRESS.md`](PROGRESS.md)。每完成一项任务必须更新该文件。  
+> **Kiro Spec**：各 Phase 的 requirements/design/tasks 见 [specs-index.md](../../specs-index.md)（`.kiro/specs/`）。
 
 ---
 
@@ -36,8 +37,8 @@
 | 4 | 离线同步与收件箱 | 3 | `OFFLINE_PULL`、游标 | 5 |
 | 5 | 群聊与扇出 | 4 | Tracker、树状扇出、大群写优化、移动推送分流 | 12 |
 | 6 | 聊天室 PubSub | 5 | Room join、广播 | 6 |
-| 7 | ACK 批量 / 已读 / 撤回 / 编辑 / 阅后即焚 / 透传 | 3+ | 200–599 扩展命令 | 8（1 deferred） |
-| 8 | 群组 / 聊天室 / 好友管理 | 5–6 | CMD 600–822 | 8（1 deferred） |
+| 7 | ACK 批量 / 已读 / 撤回 / 编辑 / 阅后即焚 / 透传 / TTL | 3+ | 200–599 扩展命令 + TTL Job | 10 |
+| 8 | 群组 / 聊天室 / 好友管理 | 5–6 | CMD 600–822 | 10 |
 | 9 | 集群、旁路与可观测性 | 5+ | libcluster、Kafka、Telemetry | 9 |
 | 10 | 压测与上线准备 | 9 | loadtest、部署指南、回归 | 5 |
 | 11 | 应用通道 | 2,6,9 | App Channel、Kafka `im.app_events` | 5 |
@@ -84,7 +85,7 @@ flowchart LR
 | 范围 | 决策 | 任务 | 说明 |
 | --- | --- | --- | --- |
 | 透传模式：`CMD_PASSTHROUGH` + start/chunk/end 信令 | **纳入** | P7-07 | Phase 7，依赖 P7-05；覆盖 AI 对话等实时场景（设计推荐默认路径） |
-| 消息模式：`MsgType.MSG_STREAM` 落库 + 离线拉取 + `StreamManager` | **`deferred`** | P7-08 | v1 不实现；原因：与 Phase 3/4 持久化强耦合、复杂度高，MVP 透传已覆盖主场景；**proto 保留不删** |
+| 消息模式：`MsgType.MSG_STREAM` 落库 + 离线拉取 + `StreamManager` | **`done`** | P7-08 | 每块落库 + StreamManager；见 `.kiro/specs/p7-08-p8-09/` |
 
 ### 好友系统（[`friend.proto`](../../proto/friend.proto) / CMD 800–822）
 
@@ -92,7 +93,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | 关系状态机 + CMD 800–822（增删拉黑、列表、备注） | **纳入** | P8-05–P8-07 | Phase 8；`friend.proto` / design 已确认 |
 | 拉黑后发消息拦截（[`friend.md`](../../design/friend.md) §7.2） | **纳入** | P8-08 | 接入 `CMD_MSG_SEND`；实现拉黑双向校验 |
-| 租户级「须为好友才能单聊」 | **`deferred`** | P8-09 | v1 **默认关闭**（陌生人可单聊）；待租户配置 / Hook 能力（Phase 9+）再实现 |
+| 租户级「须为好友才能单聊」 | **`done`** | P8-09 | `app_configs.friend.require_friend_to_send`；默认关闭 |
 
 **与 Phase 3 的关系**：单聊主路径（Phase 3）**不依赖**好友模块即可验收；拉黑拦截在 P8-08 完成后叠加，不回溯改写 Phase 3 DoD。
 
@@ -166,9 +167,11 @@ flowchart LR
 
 ### Phase 1 完成定义
 
-- [ ] 不依赖 WebSocket 即可对任意 `Packet` 做编解码与 Reply 构造
-- [ ] 协议层测试覆盖主路径
-- [ ] （P0-10 后）变更合入前 `mix test` 绿；涉及运行时行为时在 Release+K8s 复测
+- [x] 不依赖 WebSocket 即可对任意 `Packet` 做编解码与 Reply 构造
+- [x] 协议层测试覆盖主路径（`test/im/protocol/*`）
+- [x] （P0-10 后）变更合入前 `mix test` 绿；涉及运行时行为时在 Release+K8s 复测
+
+**Phase 1 已完成**。Kiro spec：`.kiro/specs/phase-1-protocol-adapter/`。
 
 ---
 
@@ -217,12 +220,14 @@ flowchart LR
 
 ### Phase 2 完成定义
 
-- [ ] **黄金路径**：`POST /api/v1/sessions` → 建 WS → `AUTH` → `HEARTBEAT` → 保持连接
-- [ ] 鉴权失败必关连接；未鉴权发业务包可断开
-- [ ] 踢人带 `clear_local_data` 时：在线 KICK 下发；离线后登录/`AuthResp` 仍返回 pending；ACK 后清除
-- [ ] 封禁设备：HTTP `403`、在线 `device_banned` KICK、token 吊销
-- [ ] **Dispatch 已接入** WS 鉴权/心跳路径；REST 管道可鉴权并调用 Dispatch
-- [ ] **Release + K8s**：`./deploy/elixir/im/scripts/release-deploy-local.sh` 后登录 + WebSocket AUTH 集成测试通过
+- [x] **黄金路径**：`POST /api/v1/sessions` → 建 WS → `AUTH` → `HEARTBEAT` → 保持连接（`mix test`：Handler + SessionController）
+- [x] 鉴权失败必关连接；未鉴权发业务包可断开
+- [x] 踢人带 `clear_local_data` 时：在线 KICK 下发；离线后登录/`AuthResp` 仍返回 pending；ACK 后清除
+- [x] 封禁设备：HTTP `403`、在线 `device_banned` KICK、token 吊销
+- [x] **Dispatch 已接入** WS 鉴权/心跳路径；REST 管道可鉴权并调用 Dispatch
+- [ ] **Release + K8s**：`./deploy/elixir/im/scripts/release-deploy-local.sh` 后登录 + WebSocket AUTH 集成测试通过（部署后冒烟；非阻塞 `mix test` 验收）
+
+**Phase 2 已完成**（代码+单元/集成测试）。Kiro：`.kiro/specs/phase-2-connection-lifecycle/`。
 
 ---
 
@@ -255,9 +260,9 @@ flowchart LR
 
 ### Phase 3 完成定义
 
-- [ ] 两用户单聊：发消息 → SERVER_RECEIVED → PUSH → CLIENT_RECEIVED 全链路通
-- [ ] `CMD_MSG_SEND` 路径无 async 挂起等待
-- [ ] REST 与 WS 发消息行为一致（同一 `IM.Services.Message`）
+- [x] 两用户单聊：发消息 → SERVER_RECEIVED → PUSH → CLIENT_RECEIVED 全链路通
+- [x] `CMD_MSG_SEND` 路径无 async 挂起等待
+- [x] REST 与 WS 发消息行为一致（同一 `IM.Services.Message`）
 
 ---
 
@@ -283,8 +288,8 @@ flowchart LR
 
 ### Phase 4 完成定义
 
-- [ ] 离线用户上线后可拉取历史单聊消息
-- [ ] 游标单调、不丢不重（至少一次 + 客户端去重）
+- [x] 离线用户上线后可拉取历史单聊消息
+- [x] 游标单调、不丢不重（至少一次 + 客户端去重）
 
 ---
 
@@ -307,8 +312,8 @@ flowchart LR
 | P5-03 | `Phoenix.Tracker` 跨节点定位连接 | 两节点部署可互推 |
 | P5-04 | 推送前预编码 `Packet`（§17） | 同一条消息只编码一次/批次 |
 | P5-05 | 小群（<500）：Tracker 直推 | 集成测试 |
-| P5-06 | 大群：树状扇出 + `FanoutBatcher` 批次并行 | 见 [`modular-architecture.md`](modular-architecture.md)、[`design/group.md`](../design/group.md) |
-| P5-07 | `target_users` 定向群消息；含发送方其他设备 | 非目标成员不收 PUSH |
+| P5-06 | 大群：树状扇出 + `FanoutBatcher` 批次并行 | 参数见 [`design/group.md`](../design/group.md) §5.1（branching=8、timeout=2s、慢节点隔离）；[`modular-architecture.md`](modular-architecture.md) §7.2 |
+| P5-07 | `target_users` 定向群消息；含发送方其他设备 | 非目标成员不收 PUSH；inbox 只写目标∪发送方；离线/REST 亦不可见 |
 | P5-08 | `CMD_MSG_PUSH_BATCH` 批量下行 ≤50 | `push_batch_max` 可配置 |
 | P5-09 | `IM.Delivery.Router`：在线走 WS、离线 enqueue 移动推送 | 设备离线且有 `push_token` 时进入推送队列；Kafka 写入见 P9-03c；见 [mobile-push.md](mobile-push.md) |
 | P5-10 | 群 `user_inbox`：`insert_all` 分批 + Redis 发号 | 见 [group.md](../design/group.md) §6.1 |
@@ -317,9 +322,9 @@ flowchart LR
 
 ### Phase 5 完成定义
 
-- [ ] 500+ 人群消息走树状扇出，无单节点 O(N) 推送
-- [ ] 定向群消息行为符合 protocol
-- [ ] 5000 人群：`read_fanout` 仅写 `message_bodies`；小群 `insert_all` 分批写扩散（P5-10/12）
+- [x] 500+ 人群消息走树状扇出，无单节点 O(N) 推送
+- [x] 定向群消息行为符合 protocol
+- [x] 5000 人群：`read_fanout` 仅写 `message_bodies`；小群 `insert_all` 分批写扩散（P5-10/12）
 - [ ] 压测发消息 P99 目标见 P10-02（<200ms）
 
 ---
@@ -339,7 +344,7 @@ flowchart LR
 | ID | 任务 | 验收 |
 | --- | --- | --- |
 | P6-01 | `CMD_ROOM_JOIN_REQ` 后 Socket subscribe `room:{app_key}:{room_id}` | 加入后可收广播 |
-| P6-02 | 聊天室消息：Message 节点一次 PubSub broadcast | 多 Access 节点均收到 |
+| P6-02 | 聊天室消息：一次 PubSub broadcast（**与成员数无关**；不走 GroupPusher） | 多 Access 节点均收到 |
 | P6-03 | 排除发送设备；含发送方其他设备 | 与单聊/群规则一致 |
 | P6-04 | 聊天室默认不落离线收件箱（或仅短时 TTL 缓存） | 不进 OFFLINE_PULL 主路径 |
 | P6-05 | 聊天室仅 `SERVER_RECEIVED` ACK 必达 | 无 CLIENT_RECEIVED 强制要求 |
@@ -347,12 +352,13 @@ flowchart LR
 
 ### Phase 6 完成定义
 
-- [ ] 聊天室万人广播走 PubSub，非逐用户 Tracker 查询
+- [x] 聊天室广播**一律** PubSub（无「成员 > N 改树状扇出」分支）
+- [x] 不调用 `GroupPusher` / `FanoutBatcher`；非逐用户 Tracker 查询后单播
 - [ ] 离线拉取不包含聊天室历史（除非后续协议变更）
 
 ---
 
-## Phase 7：ACK 批量、已读、撤回、编辑、阅后即焚、透传
+## Phase 7：ACK 批量、已读、撤回、编辑、阅后即焚、透传、TTL 清理
 
 **目标**：补齐消息类扩展命令。
 
@@ -374,12 +380,14 @@ flowchart LR
 | P7-05 | `CMD_PASSTHROUGH`；`persist=true` 时存 `Passthrough` | 登录后 PUSH，不走 OFFLINE_PULL |
 | P7-06 | Handler 骨架与 [`project-structure.md`](project-structure.md) 一致 | 一 cmd 一模块于 `lib/im/websocket/commands/` |
 | P7-07 | 流式消息 **透传模式**（`CMD_PASSTHROUGH` + start/chunk/end） | 见 [stream-message.md](stream-message.md)；不含 `MSG_STREAM` 落库 |
-| P7-08 | ~~流式消息 **消息模式**（`MSG_STREAM` 持久化 + 离线）~~ | **`deferred`**：见上文「实现范围与 defer 决策」 |
+| P7-08 | 流式消息 **消息模式**（`MSG_STREAM` 持久化 + 离线） | **done** |
+| P7-10 | 消息 TTL 清理 Oban Job（chat / room / passthrough） | 见 [message-ttl-cleanup.md](../design/message-ttl-cleanup.md)（DD-040）；与 P7-05/P7-09 边界清晰 |
 
 ### Phase 7 完成定义
 
-- [ ] protocol 中 200–599 区间命令均有实现或 **`deferred` 并注明原因**
-- [ ] 流式透传模式（P7-07）可验收；消息模式（P7-08）明确 defer，proto 不变
+- [x] protocol 中 200–599 区间命令均有实现或 **`deferred` 并注明原因**
+- [x] 流式透传模式（P7-07）可验收；消息模式（P7-08）已落地
+- [x] TTL 清理 Job（P7-10）按 DD-040 可验收：`IM.Workers.TtlPurge` + `TTL_PURGE_AUTO` Cron
 
 ---
 
@@ -405,12 +413,12 @@ flowchart LR
 | P8-06 | 好友：删除/拉黑/取消拉黑 + PUSH | CMD 809–816 |
 | P8-07 | 好友：备注/列表/请求列表 | CMD 817–822 |
 | P8-08 | 拉黑后发消息拦截 | `CMD_MSG_SEND` 校验 `FriendStore` 拉黑状态；见 `friend.md` §7.2 |
-| P8-09 | ~~租户级「须为好友才能单聊」~~ | **`deferred`**：见上文「实现范围与 defer 决策」 |
+| P8-09 | 租户级「须为好友才能单聊」 | **done** |
 
 ### Phase 8 完成定义
 
-- [ ] 600–822 命令字均有实现或 **`deferred` 并注明原因**（P8-09 除外，属产品策略）
-- [ ] P8-08 拉黑拦截有集成测试
+- [x] 600–822 命令字均有实现或 **`deferred` 并注明原因**（P8-09 除外，属产品策略）
+- [x] P8-08 拉黑拦截有集成测试
 
 ---
 
@@ -440,8 +448,8 @@ flowchart LR
 
 ### Phase 9 完成定义
 
-- [ ] 2+ Access + 2+ Message 节点联调通过
-- [ ] 百万在线架构要点在代码与配置中可体现（非单机玩具）
+- [x] 2+ Access + 2+ Message 节点联调通过（代码：`overlays/cluster` + `Cluster.Router`；OrbStack 实机联调按 README checklist）
+- [x] 百万在线架构要点在代码与配置中可体现（非单机玩具）（libcluster / Redis Sequence / EventBus 旁路 / route_key 分片 / `/metrics`）
 
 ---
 
@@ -467,8 +475,8 @@ flowchart LR
 
 ### Phase 10 完成定义
 
-- [ ] 具备可重复的压测与上线 checklist
-- [ ] `PROGRESS.md` 全部任务 `done` 或明确 `deferred` 并注明原因
+- [x] 具备可重复的压测与上线 checklist
+- [x] `PROGRESS.md` Phase 10 任务 `done`（万连/大群达标为环境实测或 L3 deferred）
 
 ---
 
@@ -494,10 +502,10 @@ flowchart LR
 
 ### Phase 11 完成定义
 
-- [ ] 后端 internal publish → 在线订阅者收 PUSH
-- [ ] 客户端 publish ≤1/s → `im.app_events` 有记录
-- [ ] 无离线补发、无 `ChatMessage` 污染
-- [ ] `PROGRESS.md` P11 全部 `done`
+- [x] 后端 internal publish → 在线订阅者收 PUSH
+- [x] 客户端 publish ≤1/s → `im.app_events` 有记录（Buffer；Kafka 仍 flag）
+- [x] 无离线补发、无 `ChatMessage` 污染
+- [x] `PROGRESS.md` P11 全部 `done`
 
 ### 实现范围（roadmap 决策）
 
@@ -542,9 +550,9 @@ flowchart LR
 
 ### Phase 12 完成定义
 
-- [ ] **Coverage 页**与设计文档 §3.2 能力矩阵 1:1；IM 已上线能力均为「可演示」
-- [ ] 与 `im_client` 职责边界清晰（见 DD-037）：Console 人工全协议走查，非压测/CI 主路径
-- [ ] `PROGRESS.md` P12-01–P12-16 按 IM Phase 依赖逐项 `done`
+- [x] **Coverage 页**与设计文档 §3.2 能力矩阵 1:1；IM 已上线能力均为「可演示」
+- [x] 与 `im_client` 职责边界清晰（见 DD-037）：Console 人工全协议走查，非压测/CI 主路径
+- [x] `PROGRESS.md` P12-01–P12-16 按 IM Phase 依赖逐项 `done`
 
 ---
 

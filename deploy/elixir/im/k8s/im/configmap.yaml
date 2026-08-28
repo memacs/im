@@ -15,6 +15,16 @@ data:
   # 集群内 Service DNS — 与 deps 栈一致
   # 注意：DATABASE_URL 含密码，放在 Secret im-runtime 中，不在此处
   REDIS_URL: "redis://redis.im-dev.svc.cluster.local:6379"
+  # Kafka 旁路（默认关；有 broker 时设 EVENT_BUS_ENABLED=true + EVENT_BUS_PRODUCER=brod）
+  KAFKA_BROKERS: ""
+  EVENT_BUS_ENABLED: "false"
+  EVENT_BUS_PRODUCER: "memory"
+  KAFKA_CLIENT_ID: "im_kafka"
+  # ── Oban Cron（默认关；生产按需开启）────────────────────────────────────────
+  # UNREAD_FLUSH_AUTO: "true"          # 未读 Redis → PG，默认 */5 * * * *
+  # UNREAD_FLUSH_CRON: "*/5 * * * *"
+  # PERMISSION_RECONCILE_AUTO: "true"  # 缓存对账，默认 0 */6 * * *
+  # TTL_PURGE_AUTO: "true"             # 消息 TTL 清理
   # ── 分布式 Erlang（overlays/local 单副本默认值）────────────────────────────
   # 单副本：im@127.0.0.1 + distribution=name 即可本地联调。
   # 多副本（Phase 9 / P9-01b）：勿所有 Pod 共用同一 RELEASE_NODE；见
@@ -23,5 +33,10 @@ data:
   #   — 或 StatefulSet + headless Service 稳定 DNS
   #   — libcluster 使用 K8s 标签发现，RELEASE_COOKIE 来自 Secret
   RELEASE_DISTRIBUTION: "name"
+  # 单副本默认；多副本见 overlays/cluster（RELEASE_NODE_MODE=pod_ip）
   RELEASE_NODE: "im@127.0.0.1"
   IM_NODE_ROLE: "access"
+  # libcluster：空=不组网；kubernetes 用 im-headless DNS
+  CLUSTER_STRATEGY: ""
+  CLUSTER_SERVICE: "im-headless"
+  CLUSTER_APP_NAME: "im"

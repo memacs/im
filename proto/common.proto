@@ -26,7 +26,7 @@ enum ProtoVersion {
 //   600–699  群组管理
 //   700–799  聊天室管理
 //   800–822  好友管理
-//   900–909  应用通道（App Channel，见 channel.proto）
+//   900–906  应用通道（App Channel，见 channel.proto；907–909 预留）
 //   1000+    预留扩展
 enum CmdType {
   CMD_UNSPECIFIED = 0;
@@ -179,6 +179,16 @@ enum ErrorCode {
   CODE_CHANNEL_NO_PERMISSION = 6002;  // 无订阅/发布权限
   CODE_CHANNEL_RATE_LIMITED = 6003;   // 通道级或连接级限速（可选返回；默认静默丢）
 
+  // ----- 好友类错误 (7000–7999) -----
+  // 重复发起好友请求：返回已有 request_id 的成功 RESP，不用错误码（见 friend.md §7.1）
+  CODE_FRIEND_SELF = 7001;              // 不能添加自己
+  CODE_FRIEND_ALREADY = 7002;           // 已是好友
+  CODE_FRIEND_BLOCKED = 7003;           // 已拉黑对方（操作方视角）
+  CODE_FRIEND_BLOCKED_BY_PEER = 7004;   // 被对方拉黑（含单聊发消息被拒）
+  CODE_FRIEND_REQUEST_NOT_FOUND = 7005; // 好友请求不存在或已处理
+  CODE_FRIEND_NOT_FRIEND = 7006;        // 非好友（租户开启「须为好友才能单聊」时）
+  CODE_FRIEND_NO_PERMISSION = 7007;     // 其它好友操作无权限
+
   // ----- 服务端错误 (9000–9999) -----
   CODE_INTERNAL_ERROR = 9000;      // 服务内部错误
 }
@@ -188,7 +198,7 @@ enum ErrorCode {
 // ============================================================================
 // 所有失败统一由此返回。Packet.seq 回传触发失败的请求 seq，便于客户端匹配。
 message ErrorBody {
-  int32 code = 1;      // ErrorCode 枚举值，非 0
+  ErrorCode code = 1;  // 非 CODE_OK；wire 上仍为 varint，与旧 int32 数值兼容
   string msg = 2;      // 人类可读的错误描述（调试用）
   uint32 ref_cmd = 3;  // 触发失败的原命令字（CmdType 枚举值）
   string ref_cid = 4;  // 可选：原请求的 cid，便于业务侧关联

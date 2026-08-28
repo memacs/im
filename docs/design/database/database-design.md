@@ -165,6 +165,8 @@ CREATE TABLE user_inbox_2026_07 PARTITION OF user_inbox
 PostgreSQL(热) → PostgreSQL只读(温) → 对象存储(冷) → 删除(过期)
 ```
 
+**TTL 清理 Job（MVP）**：热数据超过租户 `msg_ttl_days`（默认 7）后由 Oban **硬删除**；温/冷归档为可选扩展。权威规格见 [message-ttl-cleanup.md](../message-ttl-cleanup.md)（DD-040）。
+
 #### 中间件选择
 
 | 方案 | 说明 |
@@ -298,6 +300,7 @@ CREATE INDEX idx_app_configs_category ON app_configs (app_key, category);
 | `push` | `fcm_enabled` | boolean | 是否启用 FCM |
 | `security` | `token_ttl_sec` | integer | Token 有效期 |
 | `security` | `rate_limit_send` | integer | 发消息频率限制（次/分钟） |
+| `friend` | `require_friend_to_send` | boolean | 须为好友才能单聊（默认 false，P8-09） |
 | `device` | `max_devices_per_platform` | json | 各平台最大同时在线设备数，见 [auth.md](../auth.md) §8 |
 | `device` | `device_limit_policy` | string | `reject` \| `kick_oldest_on_platform`（默认） |
 
@@ -370,7 +373,11 @@ CREATE TABLE group_read_cursors (
 SELECT b.*
 FROM message_bodies b
 WHERE b.app_key = $1 AND b.conv_id = $2 AND b.conv_seq > $3
-  AND (b.target_users IS NULL OR b.target_users @> jsonb_build_array($4::text))  -- JSON 数组包含当前 user_id
+  AND (
+    b.target_users IS NULL
+    OR b.target_users @> jsonb_build_array($4::text)  -- 定向目标
+    OR b.from_uid = $4                                 -- 发送方多端可见
+  )
 ORDER BY b.conv_seq ASC
 LIMIT 50;
 ```
@@ -436,6 +443,11 @@ CREATE INDEX idx_user_inbox_conv ON user_inbox (app_key, user_id, conv_id, conv_
 
 `target_users` 为 **JSON 字符串数组**（如 `["u1","u2"]`）；判断可见性用 `@>` / `jsonb_build_array`，**禁止**对数组使用 `?`（`?` 仅用于 object 的 key）。
 
+**定向消息写扩散**（`target_users` 非空，与 [protocol.md](../protocol/protocol.md) / [group.md](../group.md) §6.1 一致）：
+- `message_bodies` 仍只写 1 行（记录 `target_users`）
+- `user_inbox` **只插入** `target_users` ∪ {发送方}；非目标成员无行，故全局 `OFFLINE_PULL` 自然不可见
+- 会话内拉取 / 读扩散 SQL 仍须带 `@>` 过滤（防御性；也覆盖发送方不在 `target_users` 数组里、但应可见的情况——此时过滤条件应为「在 `target_users` 中 **或** `from = 当前用户`」）
+
 **离线拉取（全量收件箱，`conv_id` 空）**：
 
 ```sql
@@ -454,7 +466,11 @@ SELECT b.*, i.inbox_seq
 FROM user_inbox i
 JOIN message_bodies b ON b.app_key = i.app_key AND b.msg_id = i.msg_id
 WHERE i.app_key = $1 AND i.user_id = $2 AND i.conv_id = $3 AND i.conv_seq > $4
-  AND (b.target_users IS NULL OR b.target_users @> jsonb_build_array($2::text))
+  AND (
+    b.target_users IS NULL
+    OR b.target_users @> jsonb_build_array($2::text)
+    OR b.from_uid = $2
+  )
 ORDER BY i.conv_seq ASC
 LIMIT 50;
 ```
@@ -600,7 +616,7 @@ CREATE TABLE rooms (
     
     -- 消息配置
     persist_msg     BOOLEAN NOT NULL DEFAULT FALSE,    -- 聊天室默认不持久化
-    msg_ttl_sec     INTEGER NOT NULL DEFAULT 604800,   -- 消息持久化 TTL（秒）；默认 7 天；仅 persist_msg=true 时有效
+    msg_ttl_sec     INTEGER NOT NULL DEFAULT 300,      -- 消息短时缓存 TTL（秒）；默认 300；仅 persist_msg=true 时有效
     
     -- 元数据
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -617,12 +633,12 @@ CREATE INDEX idx_rooms_owner ON rooms (app_key, owner_uid);
 | 字段 | 说明 |
 |------|------|
 | `persist_msg` | 是否持久化到 `message_bodies`；默认 false |
-| `msg_ttl_sec` | 消息 TTL，默认 7 天（604800 秒）；过期后自动清理 |
+| `msg_ttl_sec` | 消息短时缓存 TTL，默认 **300** 秒；过期后自动清理；与 `protocol.md` / `room.proto` 一致 |
 
 **持久化行为**（`persist_msg=true`）：
 - 消息仅写入 `message_bodies`（**不写** `user_inbox`、不写扩散）
 - **不进离线拉取主路径**（用户需通过 REST API 主动查询历史）
-- 设置 TTL，过期后由分区删除或定时清理任务移除
+- 设置 TTL，过期后由 `IM.Jobs.RoomMessageTtlPurge` 分批移除（见 [message-ttl-cleanup.md](../message-ttl-cleanup.md) §5.2）
 - 查询历史消息：REST API `GET /rooms/{room_id}/messages?start_time=&end_time=`
 
 **不持久化行为**（`persist_msg=false`，默认）：
@@ -755,6 +771,31 @@ CREATE INDEX idx_access_tokens_expires
 
 ---
 
+### 10.2 审计日志表 (audit_logs)
+
+鉴权等审计事件（append-only，仅 `created_at`；见 observability DD-028 / auth-module §8）。由 `IM.Audit` 异步写入，**不**走 stdout 高频日志。
+
+```sql
+CREATE TABLE audit_logs (
+    id              BIGSERIAL PRIMARY KEY,
+    event           VARCHAR(64) NOT NULL,              -- auth_login / auth_failed …
+    app_key         VARCHAR(64),
+    user_id         VARCHAR(64),
+    device_id       VARCHAR(64),
+    strategy        VARCHAR(32),
+    result          VARCHAR(16) NOT NULL,              -- success / failure
+    reason          VARCHAR(256),
+    client_ip       VARCHAR(64),
+    user_agent      VARCHAR(256),
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_audit_logs_app_created ON audit_logs (app_key, created_at);
+CREATE INDEX idx_audit_logs_event_created ON audit_logs (event, created_at);
+```
+
+---
+
 ### 11. 透传消息暂存表 (passthrough_messages)
 
 用于 `persist=true` 的透传消息离线暂存。
@@ -785,7 +826,7 @@ CREATE INDEX idx_passthrough_user ON passthrough_messages (app_key, user_id, cre
 CREATE INDEX idx_passthrough_expires ON passthrough_messages (expires_at);
 ```
 
-**过期清理**：定时任务 `DELETE ... WHERE expires_at < NOW()`；**禁止**在 partial index 谓词中使用 `NOW()`（volatile，建索引会失败）。
+**过期清理**：`IM.Jobs.PassthroughTtlPurge` 每小时分批 `DELETE ... WHERE expires_at < NOW()`（见 [message-ttl-cleanup.md](../message-ttl-cleanup.md) §5.3）。**禁止**在 partial index 谓词中使用 `NOW()`（volatile，建索引会失败）。
 
 **TTL 管理说明**：
 
@@ -801,11 +842,6 @@ CREATE INDEX idx_passthrough_expires ON passthrough_messages (expires_at);
 | typing / typing_stop | 30 | 打字提示短期有效 |
 | stream_signal | 300 | 信令 5 分钟有效 |
 | 其他业务 | 604800 | 默认 7 天 |
-
-**过期清理**：
-
-- 定时任务：每小时扫描 `expires_at < NOW()` 的记录并删除
-- 或使用 PostgreSQL 分区按天/周自动清理
 
 ---
 

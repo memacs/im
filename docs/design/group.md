@@ -29,6 +29,7 @@
 | 6 | 失败 `CMD_ERROR`（3001–3005），**不关连接** |
 | 7 | 成员变更 PUSH **不**自动插入系统聊天消息（业务可自行发消息） |
 | 8 | **大群读扩散**：成员数大于 `group_read_fanout_threshold`（默认 **500**）时，`storage_mode = read_fanout`，**仅写** `message_bodies`，不写全员 `user_inbox`；离线按 **`conv_seq`** 拉取（见 §6.3） |
+| 9 | **大群在线推送**：树状扇出参数见 §5.1（扇出度 8、RPC 2s、慢节点隔离 30s）；**仅群聊** |
 
 ---
 
@@ -45,7 +46,7 @@ sequenceDiagram
   O->>S: CMD_GROUP_CREATE_REQ
   S->>S: 写 groups + members；conv_id=g:{group_id}
   S-->>O: CMD_GROUP_CREATE_RESP (group_id, conv_id)
-  S-->>M: CMD_GROUP_MEMBER_PUSH (seq=0) 入群通知
+  S-->>M: CMD_GROUP_JOIN_PUSH (seq=0) 入群通知
 ```
 
 ### 典型管理操作（邀请 / 踢人）
@@ -115,10 +116,81 @@ flowchart TD
 
 | 点 | 说明 |
 | --- | --- |
-| 大群广播 | 大群广播走预编码 + 树状扇出（见 [modular-architecture.md](modular-architecture.md)） |
+| 大群广播 | 大群广播走预编码 + 树状扇出（§5.1；[modular-architecture.md](modular-architecture.md) §7.2） |
 | `route_key` | Message 节点按 `group_id` 分片，避免单点 |
 | 成员列表 | 不随每次 PUSH 携带全量成员；客户端按需 REST 拉取 |
 | **群禁言检查** | `group_members.muted_until` 权威在 PG；发消息热路径用 Redis `ZSET`（`im:mute:{app}:{group_id}`），见 [permission-cache.md](permission-cache.md) §3.2 |
+| **范围** | 树状扇出 **仅群聊**；聊天室一律 PubSub（见 [room.md](room.md) §5） |
+
+### 5.1 大群树状扇出参数（已确认）
+
+当在线投递目标节点数（或在线成员规模）触发大群路径时，由 `IM.Cluster.GroupPusher` 执行树状扇出。成员数阈值与读扩散一致：大于 `group_read_fanout_threshold`（默认 **500**）走树状；小群可 Tracker 直推（见 roadmap P5-05/P5-06）。
+
+#### 5.1.1 可配置参数
+
+| 参数 | 默认 | 说明 |
+|------|------|------|
+| `group_push_tree_threshold` | **500** | 在线成员数（或等价规模信号）大于此值走树状；可与 `group_read_fanout_threshold` 同值 |
+| `tree_branching_factor` | **8** | 每个树节点最多扇出的子节点数 |
+| `tree_max_depth` | **4** | 深度上限；`8^4 = 4096` 节点覆盖，超出则加宽首层而非加深 |
+| `tree_rpc_timeout_ms` | **2000** | 父→子节点 RPC（`:erpc` / 本地 call）超时 |
+| `tree_recipients_chunk` | **200** | 单次 RPC 携带的收件人（user_id 或本地 pid 引用）上限 |
+| `push_batch_max` | **50** | 叶节点对本机 socket 使用 `CMD_MSG_PUSH_BATCH` 的条数上限（既有配置） |
+| `tree_coordinator_parallelism` | **8** | 协调者首层并发 Task 数（通常 = branching_factor） |
+| `tree_slow_node_ms` | **500** | 叶节点本机写出 P99 或单批耗时超过此值 → 记慢节点 |
+| `tree_slow_isolate_sec` | **30** | 慢节点隔离时长；期内不再作为树中继，其本地连接改走 §5.1.3 降级 |
+| `tree_retry_max` | **1** | RPC 超时/失败时换父或直连叶节点的重试次数（不含首次） |
+
+租户可用 `app_configs` 覆盖阈值类参数；超时/隔离类建议 **全局**（`runtime` / env），避免租户误配拖垮集群。
+
+#### 5.1.2 算法步骤
+
+```text
+1. 预编码：整包 Packet 二进制只生成一份（packet_binary），全树共享（见 zero-copy-delivery.md）
+2. 在线成员 → Tracker 解析 → 按 BEAM node 分组：%{node => [presence...]}
+3. 若目标节点数 ≤ tree_branching_factor：
+     协调者并行 RPC 各叶节点（深度 1）
+   否则：
+     将节点集按 branching_factor 切块，选中继节点构成树；递归下发
+     「节点子集 + packet_binary + 该 subset 内的 recipients」
+4. 叶节点：按 push_batch_max 对本机连接写出 PUSH / PUSH_BATCH；禁止再 encode
+5. 任一层 RPC 超时：按 tree_retry_max 重试；仍失败 → 该节点收件人计入 missed，走降级
+```
+
+```mermaid
+flowchart TD
+  enc[encode 一次 packet_binary] --> grp[Tracker 按 node 分组]
+  grp --> decide{目标节点数 ≤ branching?}
+  decide -->|是| direct[协调者并行 RPC 各叶]
+  decide -->|否| tree[按 branching 建树下发]
+  direct --> leaf[叶：PUSH_BATCH 写本地 socket]
+  tree --> leaf
+  leaf --> slow{批耗时 > slow_node_ms?}
+  slow -->|是| iso[隔离 tree_slow_isolate_sec]
+  slow -->|否| done[完成]
+  iso --> deg[降级路径 §5.1.3]
+```
+
+#### 5.1.3 慢节点与失败降级
+
+| 情况 | 行为 |
+|------|------|
+| RPC 超时 / 节点不可达 | 计入 `im_group_tree_fanout_miss_total`；**不**阻塞发送方已得的 `SERVER_RECEIVED` |
+| 节点在隔离窗内 | 不选作中继；若收件人只在该节点：本轮跳过在线推送 |
+| 漏推的在线用户 | 依赖客户端会话同步 / `OFFLINE_PULL`（`inbox_seq` 或 `conv_seq`）补齐；与异步 inbox 窗口同一补拉纪律 |
+| 优先级 | 高优先消息可对 missed 做 **1 次** 协调者直连叶节点补推；普通/低优先不补推 |
+
+**监控**（验收必有）：
+
+| 指标 | 含义 |
+|------|------|
+| `im_group_tree_fanout_duration_ms` | 端到端扇出耗时 |
+| `im_group_tree_fanout_nodes` | 参与节点数 |
+| `im_group_tree_fanout_depth` | 实际树深 |
+| `im_group_tree_fanout_miss_total` | 漏推/超时收件人次数 |
+| `im_group_tree_slow_node_total` | 进入隔离的次数 |
+
+**压测锚点**：5000 人群发消息 P99 **< 200ms**（roadmap P10-02 / LT-30），树状路径必须启用上述参数默认值可复现。
 
 ---
 
@@ -137,7 +209,7 @@ flowchart TD
 | 链路 | 5000 人压力 | 现有设计 |
 |------|-------------|----------|
 | **在线推送** | 5000 socket 写出 | 树状扇出 + `PUSH_BATCH` + 预编码一次（§5、[modular-architecture.md](modular-architecture.md) §7.2） |
-| **入库写扩散** | ~5000 INSERT + **同步** `SERVER_RECEIVED` ACK | 主瓶颈；本节优化 |
+| **入库写扩散** | ~5000 INSERT；若同步完成再 ACK 则发送 P99 崩 | 主瓶颈；§6.2 异步解耦（已确认） |
 
 ```mermaid
 flowchart LR
@@ -163,28 +235,29 @@ flowchart LR
 | 3 | **发号走 Redis** | `conv_seq` / `inbox_seq` 用 `INCR`，避免 PG 序列热点（见 database-design §序列号） |
 | 4 | **成员列表缓存** | 发消息读 `im:group_members:{app_key}:{group_id}`（Redis），不查 PG |
 | 5 | **未读数热路径** | 写消息 `HINCRBY im:unread:{app_key}:{user_id}`；`conversations.unread_count` 异步批量刷库（见 [unread-count.md](unread-count.md) §11.1） |
-| 6 | **`target_users` 减量** | 定向消息只写目标成员 inbox，不全员 5000 行 |
+| 6 | **`target_users` 减量（协议语义）** | 定向消息 inbox **只写** `target_users` ∪ {发送方}，不全员 5000 行；非目标成员离线/REST 也不可见（见 [protocol.md](protocol/protocol.md) §定向消息、[message-model.md](message-model.md) §6） |
 
-**验收**：5000 人群单条消息写库 P99 可测；存储量随正文拆表显著下降。
+**验收**：5000 人群单条消息写库 P99 可测；存储量随正文拆表显著下降；定向 @3 人时 inbox 行数 ≈ 4（3 目标 + 发送方）。
 
-### 6.2 P1：ACK 与写扩散解耦（需实现约定）
+### 6.2 P1：ACK 与写扩散解耦（**已确认**）
 
-降低「5000 行写完才 ACK」对发送方延迟的影响：
+降低「5000 行写完才 ACK」对发送方延迟的影响。权威语义见 [message-send-ack.md](message-send-ack.md) §3.2、[offline-pull.md](offline-pull.md) §3.2。
 
 | 阶段 | 同步/异步 | 动作 |
 |------|-----------|------|
 | **A** | **同步**（阻塞 `SERVER_RECEIVED`） | 写 canonical（`message_bodies` + 发送方 `user_inbox` 或锚点行）；分配 `msg_id` / `conv_seq` |
-| **B** | **异步**（Oban `IM.Jobs.GroupInboxFanout`） | 批量写扩散其余成员 `user_inbox`；更新 Redis 未读 |
+| **B** | **异步**（Oban `IM.Jobs.GroupInboxFanout`） | 批量写扩散：**普通消息**写其余全员；**定向消息**只写其余 `target_users`（发送方已在 A）；更新 Redis 未读 |
 
 | 角色 | 行为 |
 |------|------|
-| 在线成员 | 阶段 A 后即可 **PUSH**（不等待 B） |
-| 离线成员 | 上线 `OFFLINE_PULL` 时若 inbox 未就绪，按 **`conv_seq` 补拉**（`conv_seq > user_group_watermark`） |
+| 在线目标成员 | 阶段 A 后即可 **PUSH**（不等待 B） |
+| 离线目标成员 | 上线后：全局 `OFFLINE_PULL` + 对本群 **`conv_seq` 补拉**（`conv_seq > 本地 watermark`）；补拉是 SDK **必做**，不是可选优化 |
+| 非目标成员 | 无 inbox、无 PUSH；不参与补拉 |
 | 幂等 | `msg_id` + `user_id` 唯一约束；Job 可安全重试 |
 
 **监控**：`im_group_inbox_fanout_lag_ms`（写扩散滞后）、`im_group_inbox_fanout_pending`。
 
-与 [message-send-ack.md](message-send-ack.md) 关系：仍保证 `SERVER_RECEIVED` 表示「服务端已受理且可检索」；成员 inbox 最终一致窗口须 **< 可配置阈值**（建议默认 5s，压测标定）。
+`SERVER_RECEIVED` =「canonical 已落库、发送方可检索」；**不等于**「全体成员 inbox 已写完」。成员 inbox 最终一致窗口须 **< 可配置阈值**（建议默认 **5s**，压测标定；超时告警而非阻塞 ACK）。
 
 ### 6.3 大群读扩散（`read_fanout`，已确认）
 
@@ -256,7 +329,7 @@ flowchart TD
 
 **与 §6.2 异步写扩散的关系**：`read_fanout` 群**不走** `GroupInboxFanout` Job（无 inbox 可写）；小群仍可用 §6.2 解耦 ACK 与 inbox 写入。
 
-**定向群消息**（`target_users`）：`read_fanout` 下仍只写一条 `message_bodies`（含 `target_users`）；离线拉取 SQL 侧过滤非目标用户（与 [offline-pull.md](offline-pull.md) 一致）。
+**定向群消息**（`target_users`）：`read_fanout` 下仍只写一条 `message_bodies`（含 `target_users`）；按 `conv_seq` 拉取与 REST 历史须在 SQL 侧过滤，**仅** `target_users` ∪ {发送方} 可见（与 [offline-pull.md](offline-pull.md)、[protocol.md](protocol/protocol.md) 一致）。
 
 **监控**：`im_group_storage_mode{mode}`、`im_group_read_pull_total`；读扩散群写库 QPS 应接近单聊量级（1 INSERT/msg）。
 

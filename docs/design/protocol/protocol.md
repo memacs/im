@@ -372,8 +372,9 @@ sequenceDiagram
 
 | 字段 | 说明 |
 | --- | --- |
-| `reason` | duplicate_login / device_limit / device_banned / admin_kick / token_expired 等 |
-| `kicker` | 可选；`device_limit` / `duplicate_login` 时填触发方 `DeviceResource` |
+| `reason_code` | **权威**枚举 `KickReason`（`DUPLICATE_LOGIN` / `DEVICE_LIMIT` / `DEVICE_BANNED` / `ADMIN_KICK` / `TOKEN_EXPIRED`）；服务端必填 |
+| `reason` | 兼容短字符串（与 `reason_code` 同义）；新客户端以 `reason_code` 为准 |
+| `kicker` | 可选；`DEVICE_LIMIT` / `DUPLICATE_LOGIN` 时填触发方 `DeviceResource` |
 | `timestamp` | 踢人时间 ms |
 | `clear_local_data` | 为 `true` 时 SDK **须清除本地 IM 数据**（消息、会话缓存等）；见 auth.md §9.8 |
 
@@ -466,7 +467,7 @@ sequenceDiagram
 | **发送时** | 设置 `target_users` 列表（user_id 数组） |
 | **推送行为** | 仅向 `target_users` 中**在线**用户推送；其他成员不收实时 PUSH |
 | **发送方其他设备** | **始终**向发送方除发起 SEND 设备外的其他在线设备 PUSH（见 [§13](#13-多端同步)） |
-| **历史消息** | 仍写入会话历史；默认全员可通过离线拉取/REST 查看（见下表） |
+| **历史消息** | 写入 `message_bodies`（记录 `target_users`）；**仅** `target_users` + 发送方可经离线拉取 / REST 看到 |
 | **ACK 语义** | 首个在线 **`target_users` 成员** `ACK_UP` 后通知发送方 `CLIENT_RECEIVED` |
 
 **典型场景**：
@@ -474,14 +475,17 @@ sequenceDiagram
 - `定向通知`：仅管理员可见的系统消息
 - `敏感消息`：特定人员可见的机密内容
 
-**存储与可见性**（默认策略）：
+**存储与可见性**（v1 唯一策略，与 [group.md](../group.md) §6.1 / [offline-pull.md](../offline-pull.md) 一致）：
 
-| 项目 | 默认行为 |
+| 项目 | 行为 |
 | --- | --- |
-| 存储 | 单聊/群聊：`message_bodies` + `user_inbox` 写扩散（正文 1 份，inbox 仅 `msg_id`）；离线统一 JOIN 拉取 |
-| 离线拉取 | **默认不过滤**：`OFFLINE_PULL` 与全员消息相同，未收 PUSH 的成员仍可拉取 |
-| REST / 历史查询 | **默认全员可见**；应用可配置为仅 `target_users` 可查 |
+| 正文存储 | 写一条 `message_bodies`（含 `target_users`） |
+| inbox 写扩散 | **只写** `target_users` ∪ {发送方} 的 `user_inbox`，不全员扩散（5000 人群 @3 人只写约 4 行） |
+| 离线拉取 | 非目标成员 inbox 中无此行，自然拉不到；读扩散群见下 |
+| REST / 历史查询 | **仅** `target_users` ∪ {发送方} 可见；查询侧须按 `target_users` 过滤 |
+| 读扩散群 | 无 inbox 行；按 `conv_seq` 拉 `message_bodies` 时 SQL 过滤非目标用户 |
 | 聊天室 | 定向消息不进 `OFFLINE_PULL`；短时缓存可选记录 `target_users` |
+| 需要全员可见 | **不要**设 `target_users`（发普通群消息） |
 
 ### 消息优先级 MsgPriority
 
@@ -639,7 +643,7 @@ sequenceDiagram
 
 | 状态 | 含义 |
 | --- | --- |
-| `ACK_SERVER_RECEIVED` | 服务端已收并持久化（聊天室为已受理） |
+| `ACK_SERVER_RECEIVED` | **单聊**：bodies + 双方 inbox 已同步落库。**群聊 write_fanout**：canonical（bodies + 发送方 inbox）已落库，其余成员 inbox **异步**最终一致（见 [message-send-ack.md](../message-send-ack.md) §3.2）。**群聊 read_fanout / 聊天室**：已受理（读扩散仅 bodies；聊天室默认可不落库） |
 | `ACK_CLIENT_RECEIVED` | 对端客户端已收 |
 | `ACK_READ` | 已读（推荐走 `CMD_MSG_READ`） |
 
@@ -770,7 +774,8 @@ sequenceDiagram
 2. 群聊为当前用户收件箱视角，非群全量历史
 3. 失败：`CMD_ERROR`，**不关闭连接**
 4. 空结果：`messages=[]`，`has_more=false`
-5. 群聊**定向消息**（`target_users` 非空）：**默认**与全员消息相同进入收件箱与拉取结果；仅当应用配置「仅定向用户可见」时，查询/`OFFLINE_PULL` 侧按 `target_users` 过滤
+5. 群聊**定向消息**（`target_users` 非空）：inbox **只写** `target_users` ∪ {发送方}；非目标成员不进全局 `OFFLINE_PULL`；读扩散 / REST 查询侧按 `target_users` 过滤
+6. 群聊 `write_fanout` 异步写 inbox：全局拉取后 SDK **必须**对活跃群做 `conv_id` + `conv_seq` 补拉，否则可能漏消息（见 [offline-pull.md](../offline-pull.md) §3.2）
 
 ## 12. 透传指令
 
@@ -835,6 +840,7 @@ sequenceDiagram
 | `conv_seq` | 已读到的最大 conv_seq（**推荐**） |
 | `msg_id` | 读到的最大 msg_id（可选） |
 | `timestamp` | 已读时间（ms） |
+| `unread_count` | 可选（`optional`）：已读后该会话未读数；见 [unread-count.md](../unread-count.md) §9.2 |
 
 ### 规则
 
@@ -867,14 +873,18 @@ sequenceDiagram
 ### 流程
 
 ```text
-断线 → 退避重连 → WebSocket Connect → AUTH_REQ → OFFLINE_PULL 循环 → 恢复实时 PUSH
+断线 → 退避重连 → WebSocket Connect → AUTH_REQ
+  → OFFLINE_PULL 全局循环
+  → 活跃 write_fanout 群 conv_seq 补拉（§11 规则 6）
+  → read_fanout 群 conv_seq 拉取
+  → 恢复实时 PUSH
 ```
 
 ### 规则
 
 1. 每设备**独立**游标；首次登录 `cursor = 0`，否则用本地持久化的 `inbox_seq` / `conv_seq`
 2. `OFFLINE_PULL` 与 `PUSH` 统一按 **`msg_id` 去重**
-3. 重连完成（`has_more=false`）后再发业务包
+3. 重连完成（全局 + 会话补拉均 `has_more=false`）后再发业务包
 4. 发送中消息：用相同 `client_msg_id` 重试 SEND；服务端幂等返回原 `ACK_DOWN`，不重复 PUSH 给对端
 5. 心跳超时与网络断连走**同一重连流程**
 
@@ -885,7 +895,8 @@ sequenceDiagram
 1. **失败一律** `CMD_ERROR` + `ErrorBody`；`Packet.seq` 回传原请求 `seq`
 2. **成功响应不带错误码**（信封无 `code` 字段；业务 RESP/ACK 也不放 `code`）
 3. `ErrorBody.ref_cmd` 标明失败的原命令；可选 `ref_cid` 关联业务幂等 ID
-4. `CMD_KICK` 仍为独立踢人通知；若需同时带错误语义，可再发 `CMD_ERROR`（`CODE_KICKED`），或仅依赖 `KickNotify.reason`
+4. `CMD_KICK` 仍为独立踢人通知；若需同时带错误语义，可再发 `CMD_ERROR`（`CODE_KICKED`），或仅依赖 `KickNotify.reason_code`（兼容读 `reason` 字符串）
+5. `ErrorBody.code` 类型为 `ErrorCode` 枚举（wire 仍为 varint，与旧 `int32` 数值兼容）
 
 ### 错误码表
 
@@ -916,7 +927,16 @@ sequenceDiagram
 | 6001 | `CODE_CHANNEL_NOT_FOUND` | 应用通道不存在或未配置 |
 | 6002 | `CODE_CHANNEL_NO_PERMISSION` | 无通道订阅/发布权限 |
 | 6003 | `CODE_CHANNEL_RATE_LIMITED` | 应用通道限速（可选；默认静默丢） |
+| 7001 | `CODE_FRIEND_SELF` | 不能添加自己 |
+| 7002 | `CODE_FRIEND_ALREADY` | 已是好友 |
+| 7003 | `CODE_FRIEND_BLOCKED` | 已拉黑对方 |
+| 7004 | `CODE_FRIEND_BLOCKED_BY_PEER` | 被对方拉黑（含单聊发消息被拒） |
+| 7005 | `CODE_FRIEND_REQUEST_NOT_FOUND` | 好友请求不存在或已处理 |
+| 7006 | `CODE_FRIEND_NOT_FRIEND` | 非好友（租户开启须好友才能单聊时） |
+| 7007 | `CODE_FRIEND_NO_PERMISSION` | 其它好友操作无权限 |
 | 9000 | `CODE_INTERNAL_ERROR` | 服务内部错误 |
+
+好友**重复请求**：返回已有 `request_id` 的成功 `RESP`，**不**走 `CMD_ERROR`（见 [friend.md](../friend.md) §7.1）。
 
 ## 18. 关键设计决策
 
@@ -1001,7 +1021,7 @@ sequenceDiagram
 | 成功响应 | `CMD_ROOM_CREATE_RESP` 或对应 `*_PUSH` **回传请求 `seq`** |
 | 广播通知 | 向相关在线成员推 `*_PUSH`，`Packet.seq = 0` |
 | 失败 | `CMD_ERROR`（4001–4005 等），**不关连接** |
-| 持久化 | 默认 `persist_msg=false`；`msg_ttl_sec` 默认 **300**（可配置） |
+| 持久化 | 默认 `persist_msg=false`；开启后 `msg_ttl_sec` 默认 **300** 秒短时缓存（`0` = 不缓存） |
 
 ### 命令与行为
 
@@ -1016,7 +1036,7 @@ sequenceDiagram
 
 ### RoomCreateReq / RoomCreateResp
 
-`room_id` 可选；`persist_msg` 默认 `false`；`msg_ttl_sec` 为消息短时缓存 TTL（秒），`0` 表示不缓存。
+`room_id` 可选；`persist_msg` 默认 `false`；`msg_ttl_sec` 为消息短时缓存 TTL（秒），默认 **300**，`0` 表示不缓存；仅 `persist_msg=true` 时有效。
 
 ### 与消息链路关系
 
@@ -1060,9 +1080,9 @@ sequenceDiagram
 
 `data` 字段推荐 JSON，字段语义与 [`proto/message.proto`](../../../proto/message.proto) 中 `StreamContent` 对齐。
 
-### 消息模式（deferred）
+### 消息模式（已实现，P7-08）
 
-`MsgType.MSG_STREAM` + `StreamContent` 落库、离线拉取路径 **v1 不实现**（见 roadmap P7-08）；**proto 保留**。
+`MsgType.MSG_STREAM` + `StreamContent` 落库、离线拉取路径 **已实现**（`IM.Services.StreamManager`）；透传模式仍用 `CMD_PASSTHROUGH`。
 
 ## 23. 消息上下文（MessageContext）
 
@@ -1103,7 +1123,7 @@ HTTP 入口 **必填** `X-Trace-Id`；WS 根请求 `Packet.trace_id` 建议填�
 | 多租户 | 操作者与目标须在连接 `app_key` 下 |
 | 成功响应 | 对应 `*_RESP` **回传请求 `seq`** |
 | 通知推送 | `*_PUSH`，`Packet.seq = 0` |
-| 失败 | `CMD_ERROR`（如 `CODE_MSG_NO_PERMISSION`），**不关连接** |
+| 失败 | `CMD_ERROR`（好友段 **7001–7007**，见 §17），**不关连接** |
 
 ### 关系状态
 
@@ -1131,7 +1151,7 @@ HTTP 入口 **必填** `X-Trace-Id`；WS 根请求 `Packet.trace_id` 建议填�
 
 ### 与消息链路关系
 
-- v1 **默认不强制好友才能单聊**（陌生人可发消息；见 roadmap P8-09 deferred）
+- v1 **默认不强制好友才能单聊**（`app_configs.friend.require_friend_to_send` 默认 `false`；设为 `true` 时须好友，P8-09）
 - **拉黑拦截**（P8-08）：`CMD_MSG_SEND` 前校验 `FriendStore` 拉黑状态；被拉黑方发消息返回 `CODE_MSG_NO_PERMISSION`
 - 好友 REST 路径与 WS 命令对等，经 `Dispatch` → `IM.Services.Friend`
 
