@@ -8,6 +8,7 @@ Phoenix + OTP 主 IM 服务：WebSocket 二进制协议、REST 双通道、消�
 | 部署产物 | `deploy/elixir/im/`（Dockerfile + K8s） |
 | **功能介绍动画** | [在线 ↗](https://memacs.github.io/im/intro/) · [GIF](../../web/im-console/public/intro/intro.gif) · [本地 `/intro`](http://localhost:5173/intro) |
 | 代码布局 | [project-structure.md](../../../docs/implementation/elixir/project-structure.md) |
+| 启动 / 监督树 | [application-startup.md](../../../docs/implementation/elixir/application-startup.md) |
 | 功能对照 | [module-map.md](../../../docs/module-map.md) |
 | 进度 | [PROGRESS.md](../../../docs/implementation/elixir/PROGRESS.md) |
 | Kiro Spec | [specs-index.md](../../../docs/specs-index.md)（Phase 1–12） |

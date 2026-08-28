@@ -109,7 +109,7 @@ apps/elixir/im/
 
 在 **`apps/elixir/im/`** 下：
 
-- [x] `lib/im/application.ex` 启动 `IM.Repo`、`Phoenix.PubSub`、`IMWeb.Endpoint`（P0-01）
+- [x] `lib/im/application.ex` 启动 `IM.Repo`、`Phoenix.PubSub`、`IMWeb.Endpoint`（P0-01）；完整监督树见 [application-startup.md](application-startup.md)
 - [x] `lib/im_web/router.ex` 注册 `GET /health/live`、`/health/ready`、`/health`（见下）
 - [x] `test/im_web/controllers/health_controller_test.exs` 覆盖成功与 503 路径
 - [x] `lib/im/protocol/*.ex` 占位（`codec`、`router`、`reply`、`push`、`cmd`）

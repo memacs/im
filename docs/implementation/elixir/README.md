@@ -16,6 +16,7 @@
 | [specs-index.md](../../specs-index.md) | **Kiro Spec 索引**（`.kiro/specs/` 阶段规格） |
 | [roadmap.md](roadmap.md) | 分阶段任务与验收 |
 | [project-structure.md](project-structure.md) | `apps/elixir/im/lib/` 模块树 |
+| [application-startup.md](application-startup.md) | **OTP 启动顺序与 `IM.Supervisor` 监督树** |
 | [monorepo-layout.md](../monorepo-layout.md) | **单仓 apps + deploy 布局（权威）** |
 | [design-decisions.md](../../design-decisions.md) | 已确认设计模块索引 |
 
