@@ -17,6 +17,7 @@
 ├─ WS 时序         docs/design/protocol/protocol.md + protocol-e2e-message-sequences.md
 ├─ 启动 / 配置     apps/README.md → apps/<app>/README.md
 ├─ 部署 / K8s      deploy/README.md → deploy/elixir/im/k8s/README.md
+├─ K8s Pod 排障    .agents/skills/im-k8s-debug/SKILL.md（RPC + trace 日志）
 ├─ CPU 火焰图      docs/implementation/elixir/flamegraph.md → mise run flamegraph
 └─ 活状态          design-decisions.md · architecture-overview.md · PROGRESS.md
 ```
@@ -327,7 +328,7 @@ deploy/                # 与 apps 对应的部署清单
 | **`git@github.com:j-morgan6/elixir-phoenix-guide.git`** | `elixir-essentials`、`ecto-*`、`phoenix-*`、`otp-essentials`、`testing-essentials`、`oban-essentials`、`deployment-gotchas`、`code-quality`、`security-essentials`、`telemetry-essentials` |
 | **`git@github.com:redis/agent-skills.git`** | `redis-*`、`iris-development`；IM 业务 Redis 键仍以 [`database-design.md`](docs/design/database/database-design.md) §二、[`permission-cache.md`](docs/design/permission-cache.md) 为准 |
 | **`git@github.com:LukasNiessen/kubernetes-skill.git`** | `kubernetes-skill`；IM 部署清单以 [`deploy/`](deploy/) 与 [`release-deploy-test.md`](docs/implementation/elixir/release-deploy-test.md) 为准 |
-| **本仓库自研** | `im-implementation`、`design-postgres-tables` |
+| **本仓库自研** | `im-implementation`、`design-postgres-tables`、`im-flamegraph`、`im-k8s-debug` |
 
 ### 快速匹配
 
@@ -352,6 +353,8 @@ deploy/                # 与 apps 对应的部署清单
 | 安全（输入、日志、token） | [`security-essentials`](.agents/skills/security-essentials/SKILL.md) |
 | 指标、日志、Telemetry | [`telemetry-essentials`](.agents/skills/telemetry-essentials/SKILL.md) |
 | Release、部署配置 | [`deployment-gotchas`](.agents/skills/deployment-gotchas/SKILL.md) |
+| **K8s IM Pod 排障、trace、RPC、日志** | [`im-k8s-debug`](.agents/skills/im-k8s-debug/SKILL.md) |
+| **CPU 火焰图 / perf 热点** | [`im-flamegraph`](.agents/skills/im-flamegraph/SKILL.md) |
 | K8s 清单、Helm、Kustomize、`deploy/` | 上游 [`kubernetes-skill`](.agents/skills/kubernetes-skill/SKILL.md)（见 [skills/README](.agents/skills/README.md)） |
 | Oban 后台任务 | [`oban-essentials`](.agents/skills/oban-essentials/SKILL.md) |
 | 重构、去重、复杂度 | [`code-quality`](.agents/skills/code-quality/SKILL.md) |
