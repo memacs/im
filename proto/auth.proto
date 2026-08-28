@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package im.protocol;
+
+import "common.proto";
+
+// ============================================================================
+// DeviceResource - 设备资源
+// ============================================================================
+// 表示客户端连接设备的信息，由客户端上传的信息和服务端生成的信息组合而成。
+message DeviceResource {
+  string device_id = 1;    // 设备唯一标识（客户端上传）
+  string session_id = 2;   // 会话 ID（服务端生成）
+  string platform = 3;     // 平台：ios / android / web / desktop（客户端上传）
+  string os = 4;           // 操作系统：iOS 15.0 / Android 12 / Windows 11（客户端上传）
+  string sdk_ver = 5;      // SDK 版本号（客户端上传）
+  string device_name = 6;  // 设备名称：iPhone 14 Pro / Samsung Galaxy S22（客户端上传，可选）
+  string device_model = 7; // 设备型号：iPhone14,2 / SM-G991B（客户端上传，可选）
+  string network = 8;      // 网络类型：wifi / 4g / 5g / unknown（客户端上传，可选）
+  string client_ip = 9;    // 客户端 IP（服务端检测）
+  int64 connected_at = 10; // 连接时间（服务端生成）
+}
+
+// ============================================================================
+// AuthReq - CMD_AUTH_REQ payload
+// ============================================================================
+// WebSocket 建连后首包必须为鉴权请求；失败返回 CMD_ERROR 后关闭连接。
+// 设计意图见 docs/design/auth.md。
+message AuthReq {
+  string app_key = 1;        // 必填；应用标识，多租户隔离
+  string user_id = 2;        // 必填；业务用户 ID，与 token 交叉校验
+  string token = 3;          // 必填；短期 token（REST 登录获取）；不进 URL
+  string device_id = 4;      // 必填；设备唯一标识；用于多端与互踢
+  string platform = 5;       // 必填；客户端平台：ios / android / web / desktop
+  string sdk_ver = 6;        // 必填；SDK 版本号；用于兼容与灰度
+  string os = 7;             // 可选；操作系统及版本：iOS 15.0 / Android 12 / Windows 11
+  string device_name = 8;    // 可选；设备名称：iPhone 14 Pro / Samsung Galaxy S22
+  string device_model = 9;   // 可选；设备型号：iPhone14,2 / SM-G991B
+  string network = 10;       // 可选；网络类型：wifi / 4g / 5g / unknown
+  // 客户端支持的 payload 压缩算法，按优先级从高到低排列；须包含 PAYLOAD_COMPRESSION_NONE 作为兜底
+  repeated PayloadCompression compression_offered = 11;
+}
+
+// ============================================================================
+// AuthResp - CMD_AUTH_RESP payload
+// ============================================================================
+// 鉴权成功响应。失败使用 CMD_ERROR + CODE_UNAUTHORIZED，随后关闭连接。
+message AuthResp {
+  DeviceResource device = 1;        // 设备资源信息（包含 session_id、device_id 等）
+  int64 server_time = 2;            // 服务端时间（ms）；用于对时
+  int32 heartbeat_interval_sec = 3; // 心跳间隔（秒）；默认 30
+  string user_id = 4;               // 以服务端校验结果为准的 user_id
+  int32 push_batch_max = 5;         // 批量下行单包消息上限；默认 50，服务端可配置
+  int32 recall_window_sec = 6;      // 撤回时间窗（秒）；默认 120，服务端可配置
+  int32 edit_window_sec = 7;        // 编辑时间窗（秒）；默认 120，服务端可配置
+  int32 offline_pull_limit = 8;     // 离线拉取单页条数；默认 50，硬上限 200
+  bool clear_local_data = 9;        // 是否清除 SDK 本地数据（见 auth.md §9.8）；默认 false
+  // 本会话协商的 Packet.payload 压缩算法；v1 实现固定为 NONE
+  PayloadCompression payload_compression = 10;
+  bool burn_after_read_enabled = 11; // 是否允许发阅后即焚消息；默认 true；见 burn-after-read.md
+  int32 burn_ttl_sec_default = 12;   // 阅后即焚默认读后延迟（秒）；默认 0（立即）
+  int32 burn_ttl_sec_max = 13;       // burn_ttl_sec 上限；默认 3600
+}
+
+// ============================================================================
+// HeartbeatReq - CMD_HEARTBEAT_REQ payload
+// ============================================================================
+// 鉴权成功后发送；未鉴权阶段不发心跳。设计意图见 docs/design/heartbeat.md。
+message HeartbeatReq {
+  int64 client_time = 1; // 可选；客户端本地时间（ms）；用于 RTT 测量与时钟偏差估算
+}
+
+// ============================================================================
+// HeartbeatResp - CMD_HEARTBEAT_RESP payload
+// ============================================================================
+message HeartbeatResp {
+  int64 server_time = 1; // 服务端时间（ms）
+}
+
+// ============================================================================
+// KickNotify - CMD_KICK payload
+// ============================================================================
+// 服务端主动踢下线通知。
+//
+// reason 约定（字符串，非枚举）：
+//   duplicate_login  - 同 device_id 新连接顶替旧连接
+//   device_limit     - 同平台在线设备数超限，按策略踢出（见 auth.md §8）
+//   device_banned    - 设备被封禁（见 auth.md §9.6）
+//   admin_kick       - 管理端踢人
+//   token_expired    - token 过期
+//
+// clear_local_data：为 true 时 SDK 须清除本地 IM 数据（消息库、会话缓存等），见 auth.md §9.8
+message KickNotify {
+  string reason = 1;           // 踢人原因
+  DeviceResource kicker = 2;   // 触发互踢的对端设备信息（可选，duplicate_login 时提供）
+  int64 timestamp = 3;         // 踢人时间（ms）
+  bool clear_local_data = 4;   // 是否清除 SDK 本地数据；默认 false
+}

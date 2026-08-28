@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package im.protocol;
+
+// 设计意图见 docs/design/group.md；行为规范见 docs/design/protocol/protocol.md §18
+
+// ============================================================================
+// 群成员角色
+// ============================================================================
+enum GroupMemberRole {
+  GROUP_MEMBER_ROLE_UNSPECIFIED = 0;
+  GROUP_MEMBER_ROLE_MEMBER = 1;  // 普通成员
+  GROUP_MEMBER_ROLE_ADMIN = 2;   // 管理员
+  GROUP_MEMBER_ROLE_OWNER = 3;   // 群主
+}
+
+// ============================================================================
+// GroupCreateReq - CMD_GROUP_CREATE_REQ payload
+// ============================================================================
+// 成员数限制：默认 5000，上限 10000，可通过 app_configs 覆盖
+message GroupCreateReq {
+  string group_id = 1;            // 可选；不填则服务端生成
+  string name = 2;                // 群名
+  string announcement = 3;        // 群公告（可选）
+  int32 max_members = 4;          // 最大成员数（可选；默认使用应用配置；上限 10000）
+  repeated string member_uids = 5; // 初始成员 user_id 列表
+  map<string, string> ext = 6;    // 扩展字段
+}
+
+// ============================================================================
+// GroupCreateResp - CMD_GROUP_CREATE_RESP payload
+// ============================================================================
+message GroupCreateResp {
+  string group_id = 1;            // 群 ID（服务端生成或回传）
+  string name = 2;                // 群名
+  string conv_id = 3;             // 会话 ID
+  int64 created_at = 4;           // 创建时间（ms）
+}
+
+// ============================================================================
+// GroupOperateReq - 通用群操作请求
+// ============================================================================
+// 用于：解散群、加入群、退群
+message GroupOperateReq {
+  string group_id = 1;            // 群 ID
+  string reason = 2;              // 原因（可选）
+}
+
+// ============================================================================
+// GroupOperatePush - 通用群操作通知
+// ============================================================================
+// 用于：解散群通知
+message GroupOperatePush {
+  string group_id = 1;            // 群 ID
+  string conv_id = 2;             // 会话 ID
+  string operator_uid = 3;        // 操作者 user_id
+  string reason = 4;              // 原因（可选）
+  int64 timestamp = 5;            // 操作时间（ms）
+}
+
+// ============================================================================
+// GroupMemberPush - 群成员变更通知
+// ============================================================================
+// 用于：加入群、退群、踢人、邀请入群
+message GroupMemberPush {
+  string group_id = 1;            // 群 ID
+  string conv_id = 2;             // 会话 ID
+  string operator_uid = 3;        // 操作者 user_id
+  repeated string member_uids = 4; // 变更的成员 user_id 列表
+  int64 timestamp = 5;            // 操作时间（ms）
+}
+
+// ============================================================================
+// GroupKickReq - CMD_GROUP_KICK_REQ payload
+// ============================================================================
+message GroupKickReq {
+  string group_id = 1;            // 群 ID
+  repeated string member_uids = 2; // 被踢成员 user_id 列表
+  string reason = 3;              // 原因（可选）
+}
+
+// ============================================================================
+// GroupInviteReq - CMD_GROUP_INVITE_REQ payload
+// ============================================================================
+message GroupInviteReq {
+  string group_id = 1;            // 群 ID
+  repeated string member_uids = 2; // 邀请的成员 user_id 列表
+}
+
+// ============================================================================
+// GroupAdminReq - CMD_GROUP_SET_ADMIN_REQ / CMD_GROUP_REMOVE_ADMIN_REQ payload
+// ============================================================================
+message GroupAdminReq {
+  string group_id = 1;            // 群 ID
+  string member_uid = 2;          // 成员 user_id
+}
+
+// ============================================================================
+// GroupAdminPush - 设置/移除管理员通知
+// ============================================================================
+message GroupAdminPush {
+  string group_id = 1;            // 群 ID
+  string conv_id = 2;             // 会话 ID
+  string operator_uid = 3;        // 操作者 user_id
+  string member_uid = 4;          // 被操作的成员 user_id
+  GroupMemberRole new_role = 5;   // 新角色
+  int64 timestamp = 6;            // 操作时间（ms）
+}
+
+// ============================================================================
+// GroupTransferReq - CMD_GROUP_TRANSFER_REQ payload
+// ============================================================================
+message GroupTransferReq {
+  string group_id = 1;            // 群 ID
+  string new_owner_uid = 2;       // 新群主 user_id
+}
+
+// ============================================================================
+// GroupTransferPush - 转让群主通知
+// ============================================================================
+message GroupTransferPush {
+  string group_id = 1;            // 群 ID
+  string conv_id = 2;             // 会话 ID
+  string old_owner_uid = 3;       // 原群主 user_id
+  string new_owner_uid = 4;       // 新群主 user_id
+  int64 timestamp = 5;            // 操作时间（ms）
+}
+
+// ============================================================================
+// GroupUpdateReq - CMD_GROUP_UPDATE_REQ payload
+// ============================================================================
+message GroupUpdateReq {
+  string group_id = 1;            // 群 ID
+  string name = 2;                // 群名（可选；不填则不更新）
+  string announcement = 3;        // 群公告（可选）
+  int32 max_members = 4;          // 最大成员数（可选）
+  map<string, string> ext = 5;    // 扩展字段
+}
+
+// ============================================================================
+// GroupUpdatePush - 更新群信息通知
+// ============================================================================
+message GroupUpdatePush {
+  string group_id = 1;            // 群 ID
+  string conv_id = 2;             // 会话 ID
+  string operator_uid = 3;        // 操作者 user_id
+  string name = 4;                // 新群名（可选）
+  string announcement = 5;        // 新公告（可选）
+  int64 timestamp = 6;            // 操作时间（ms）
+}

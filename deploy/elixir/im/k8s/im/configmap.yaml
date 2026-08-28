@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: im
+  namespace: im-dev
+  labels:
+    app: im
+data:
+  MIX_ENV: "prod"
+  PHX_SERVER: "true"
+  PORT: "4000"
+  # 集群内 Service DNS — 与 deps 栈一致
+  DATABASE_URL: "ecto://im:im_dev_only@postgres.im-dev.svc.cluster.local:5432/im_dev"
+  REDIS_URL: "redis://redis.im-dev.svc.cluster.local:6379"
+  # ── 分布式 Erlang（overlays/local 单副本默认值）────────────────────────────
+  # 单副本：im@127.0.0.1 + distribution=name 即可本地联调。
+  # 多副本（Phase 9 / P9-01b）：勿所有 Pod 共用同一 RELEASE_NODE；见
+  #   deploy/elixir/im/k8s/README.md §「分布式 Erlang 与多副本」
+  #   — 每 Pod 用 status.podIP 构造 im@<POD_IP>（Deployment env 覆盖本项）
+  #   — 或 StatefulSet + headless Service 稳定 DNS
+  #   — libcluster 使用 K8s 标签发现，RELEASE_COOKIE 来自 Secret
+  RELEASE_DISTRIBUTION: "name"
+  RELEASE_NODE: "im@127.0.0.1"
+  IM_NODE_ROLE: "access"

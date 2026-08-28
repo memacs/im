@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package im.protocol;
+
+import "message.proto";
+
+// ============================================================================
+// OfflinePullReq - CMD_OFFLINE_PULL_REQ payload
+// ============================================================================
+// 鉴权成功后拉增量，直到 has_more=false，再进入实时 PUSH。
+// 仅单聊/群聊；不含聊天室。设计意图见 docs/design/offline-pull.md。
+//
+// 游标双模式：
+//   - conv_id 非空：cursor = 该会话 conv_seq，拉 conv_seq > cursor（单会话）
+//   - conv_id 为空：cursor = 用户 inbox_seq，拉 inbox_seq > cursor（跨会话全量）
+message OfflinePullReq {
+  string conv_id = 1; // 空 = 用户全量收件箱增量；非空 = 单会话增量
+  int64 cursor = 2;   // 游标；conv_id 非空时为 conv_seq，为空时为 inbox_seq
+  int32 limit = 3;    // 单页条数；默认 AuthResp.offline_pull_limit（50），硬上限 200
+}
+
+// ============================================================================
+// OfflinePullResp - CMD_OFFLINE_PULL_RESP payload
+// ============================================================================
+// messages 按 inbox_seq（全量）或 conv_seq（单会话）升序。
+// next_cursor 语义与请求游标模式一致。
+message OfflinePullResp {
+  repeated ChatMessage messages = 1; // 消息列表；升序排列
+  int64 next_cursor = 2;             // 下一页游标；用于下一次请求
+  bool has_more = 3;                 // 是否还有更多；true 时用 next_cursor 继续请求
+}

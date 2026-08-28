@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package im.protocol;
+
+// 设计意图见 docs/design/room.md；行为规范见 docs/design/protocol/protocol.md §19
+
+// ============================================================================
+// RoomCreateReq - CMD_ROOM_CREATE_REQ payload
+// ============================================================================
+// 成员数限制：默认 10000，上限 50000，可通过 app_configs 覆盖
+message RoomCreateReq {
+  string room_id = 1;             // 可选；不填则服务端生成
+  string name = 2;                // 聊天室名称
+  int32 max_members = 3;          // 最大成员数（可选；默认使用应用配置；上限 50000）
+  bool persist_msg = 4;           // 是否持久化消息（默认 false）
+  int32 msg_ttl_sec = 5;          // 消息持久化 TTL（秒）；默认 7 天 = 604800；仅 persist_msg=true 时有效
+  map<string, string> ext = 6;    // 扩展字段
+}
+
+// ============================================================================
+// RoomCreateResp - CMD_ROOM_CREATE_RESP payload
+// ============================================================================
+message RoomCreateResp {
+  string room_id = 1;             // 聊天室 ID（服务端生成或回传）
+  string name = 2;                // 聊天室名称
+  string conv_id = 3;             // 会话 ID
+  int64 created_at = 4;           // 创建时间（ms）
+}
+
+// ============================================================================
+// RoomOperateReq - 通用聊天室操作请求
+// ============================================================================
+// 用于：解散聊天室、加入聊天室、离开聊天室
+message RoomOperateReq {
+  string room_id = 1;             // 聊天室 ID
+  string reason = 2;              // 原因（可选）
+}
+
+// ============================================================================
+// RoomOperatePush - 通用聊天室操作通知
+// ============================================================================
+// 用于：解散聊天室通知
+message RoomOperatePush {
+  string room_id = 1;             // 聊天室 ID
+  string conv_id = 2;             // 会话 ID
+  string operator_uid = 3;        // 操作者 user_id
+  string reason = 4;              // 原因（可选）
+  int64 timestamp = 5;            // 操作时间（ms）
+}
+
+// ============================================================================
+// RoomMemberPush - 聊天室成员变更通知
+// ============================================================================
+// 用于：加入聊天室、离开聊天室、踢出聊天室
+message RoomMemberPush {
+  string room_id = 1;             // 聊天室 ID
+  string conv_id = 2;             // 会话 ID
+  string operator_uid = 3;        // 操作者 user_id
+  repeated string member_uids = 4; // 变更的成员 user_id 列表
+  int64 timestamp = 5;            // 操作时间（ms）
+}
+
+// ============================================================================
+// RoomKickReq - CMD_ROOM_KICK_REQ payload
+// ============================================================================
+message RoomKickReq {
+  string room_id = 1;             // 聊天室 ID
+  repeated string member_uids = 2; // 被踢成员 user_id 列表
+  string reason = 3;              // 原因（可选）
+}
+
+// ============================================================================
+// RoomUpdateReq - CMD_ROOM_UPDATE_REQ payload
+// ============================================================================
+message RoomUpdateReq {
+  string room_id = 1;             // 聊天室 ID
+  string name = 2;                // 名称（可选；不填则不更新）
+  int32 max_members = 3;          // 最大成员数（可选）
+  bool persist_msg = 4;           // 是否持久化消息（可选）
+  int32 msg_ttl_sec = 5;          // 消息缓存 TTL（可选）
+  map<string, string> ext = 6;    // 扩展字段
+}
+
+// ============================================================================
+// RoomUpdatePush - 更新聊天室信息通知
+// ============================================================================
+message RoomUpdatePush {
+  string room_id = 1;             // 聊天室 ID
+  string conv_id = 2;             // 会话 ID
+  string operator_uid = 3;        // 操作者 user_id
+  string name = 4;                // 新名称（可选）
+  int64 timestamp = 5;            // 操作时间（ms）
+}

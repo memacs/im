@@ -1,0 +1,235 @@
+syntax = "proto3";
+
+package im.event;
+
+import "common.proto";
+
+// ============================================================================
+// Kafka 事件总线 — 五 Topic 统一信封
+// ============================================================================
+// 设计意图见 docs/design/kafka-event-bus.md §2.10
+// 序列化：Kafka value 默认 Protobuf 二进制（UpstreamEvent 等）
+//
+// 「重要字段 + 完整 body 按需解码」：
+//   - 元数据：本 message 的标量字段（event_id / app_key / cmd / …）
+//   - 完整业务体：payload（bytes）= Packet.payload，消费方仅在需要时 decode
+//   - 可选：Kafka Record Headers 重复少量索引字段，便于无 PB 工具过滤
+// 见 docs/design/kafka-event-bus.md §2.10.6
+//   im.upstream   → UpstreamEvent
+//   im.session    → SessionEvent
+//   im.downstream → DownstreamEvent
+//   im.push       → PushNotificationBatchEvent（离线设备系统推送，见 mobile-push.md）
+//   im.app_events → AppEvent（应用通道上下行，见 app-channel.md）
+
+// ----- 上行 im.upstream -----
+
+message UpstreamEvent {
+  string event_id = 1;
+  int64 timestamp = 2;        // ms
+  string app_key = 3;
+  string trace_id = 4;
+  EventSource source = 5;
+  IngressType ingress = 6;
+  uint32 cmd = 7;             // im.protocol.CmdType 枚举值
+  string user_id = 8;
+  string device_id = 9;
+  string route_key = 10;
+  // 完整业务体（与 Packet.payload 相同）。消费方可只解析字段 1–10，跳过本字段。
+  bytes payload = 11;
+}
+
+enum EventSource {
+  EVENT_SOURCE_UNSPECIFIED = 0;
+  EVENT_SOURCE_WEBSOCKET = 1;
+  EVENT_SOURCE_HTTP = 2;
+  EVENT_SOURCE_KAFKA = 3;
+  EVENT_SOURCE_INTERNAL = 4;
+}
+
+enum IngressType {
+  INGRESS_UNSPECIFIED = 0;
+  INGRESS_WS = 1;
+  INGRESS_REST = 2;
+  INGRESS_INTERNAL = 3;
+}
+
+// ----- 会话 im.session -----
+
+message SessionEvent {
+  string event_id = 1;
+  int64 timestamp = 2;
+  string app_key = 3;
+  string trace_id = 4;
+  SessionEventType event_type = 5;
+  string user_id = 6;
+  string device_id = 7;
+  string platform = 8;
+  string session_id = 9;
+  string remote_ip = 10;
+  string node = 11;
+  string reason = 12;         // logout 时使用
+}
+
+enum SessionEventType {
+  SESSION_EVENT_UNSPECIFIED = 0;
+  SESSION_LOGIN = 1;
+  SESSION_LOGOUT = 2;
+  SESSION_HEARTBEAT = 3;
+}
+
+// ----- 下行 im.downstream -----
+
+message DownstreamEvent {
+  string event_id = 1;
+  int64 timestamp = 2;
+  string app_key = 3;
+  string trace_id = 4;
+  uint32 cmd = 5;
+  im.protocol.ChatType chat_type = 6;
+  string conv_id = 7;
+  string msg_id = 8;
+  FanoutInfo fanout = 9;
+  // 推送目标；aggregated 模式下为空
+  repeated PushTarget targets = 10;
+  bytes payload = 11;         // Packet.payload 或 PUSH_BATCH 序列化体
+}
+
+message FanoutInfo {
+  FanoutMode mode = 1;
+  uint32 recipient_count = 2;   // 逻辑接收人数（含离线写扩散成员时可为群成员总数）
+  uint32 online_count = 3;      // 本次实际推送在线人数
+  // 定向消息：显式目标用户（群/室 target_users）
+  repeated string target_users = 4;
+  // 扇出受众明细（聊天室 aggregated 时见 kafka-event-bus.md §2.6.1）
+  FanoutAudience audience = 5;
+}
+
+// 一次下行推送的「谁发给谁」；聊天室每波扇出 1 条 DownstreamEvent 时填写
+message FanoutAudience {
+  string from_user_id = 1;              // 上行发送方（MSG 的 from）
+  string from_device_id = 2;            // 发送设备（协议层排除自推）
+  repeated string recipient_user_ids = 3; // 本次实际推送到的 user_id 列表（去重）
+  bool recipient_list_truncated = 4;    // true 表示列表因超限被截断，须结合 online_count
+  uint32 recipient_list_max = 5;        // 写入时的配置上限（便于消费方理解截断）
+}
+
+enum FanoutMode {
+  FANOUT_UNSPECIFIED = 0;
+  FANOUT_DIRECT = 1;            // 单聊 / 小群：可按设备展开
+  FANOUT_GROUP_AGGREGATED = 2;  // 大群：一条 Kafka 代表整波推送
+  FANOUT_ROOM_AGGREGATED = 3;   // 聊天室聚合
+  FANOUT_BATCH = 4;             // CMD_MSG_PUSH_BATCH
+}
+
+message PushTarget {
+  string user_id = 1;
+  string device_id = 2;
+  bool online = 3;
+}
+
+// ----- 离线推送 im.push -----
+
+// 同一条消息（同一 msg_id）的离线设备推送任务聚合为一条 Kafka 记录（超限分块）。
+// 推送服务消费后仍按 targets 逐设备调 APNs/FCM。
+// 设计意图见 docs/design/mobile-push.md
+
+message PushNotificationBatchEvent {
+  string event_id = 1;
+  int64 timestamp = 2;              // ms
+  string app_key = 3;
+  string trace_id = 4;
+
+  // 消息引用（本批 targets 共用）
+  string msg_id = 10;
+  string conv_id = 11;
+  im.protocol.ChatType chat_type = 12;
+  string from_user_id = 13;
+  string from_nickname = 14;        // 可选，展示用
+
+  // 系统通知栏展示（推送服务可直接使用，无需再 decode payload）
+  PushDisplay display = 15;
+
+  // 可选：ChatMessage 等 PB 字节，供富推送 / 静默唤醒拉取
+  bytes payload = 16;
+
+  // 本批离线设备（含 push_token）；单聊可为 1 个元素
+  repeated PushNotificationTarget targets = 20;
+
+  // 同 msg_id 目标数超过 push_batch_targets_max 时分块
+  uint32 batch_index = 30;          // 从 0 起
+  uint32 batch_total = 31;          // 总分块数
+}
+
+message PushNotificationTarget {
+  string user_id = 1;
+  string device_id = 2;
+  string platform = 3;              // ios / android
+  string push_token = 4;
+  PushChannel channel = 5;
+  // 幂等：同一 msg 对同一设备只应投递一次
+  string idempotency_key = 6;       // 建议 "{app_key}:{user_id}:{device_id}:{msg_id}"
+}
+
+// 已废弃：v1 起 im.push 统一使用 PushNotificationBatchEvent（targets 可为单元素）。
+// 保留 message 编号供历史文档引用，新代码勿写入。
+message PushNotificationEvent {
+  option deprecated = true;
+  string event_id = 1;
+  int64 timestamp = 2;
+  string app_key = 3;
+  string trace_id = 4;
+  string user_id = 5;
+  string device_id = 6;
+  string platform = 7;
+  string push_token = 8;
+  PushChannel channel = 9;
+  string msg_id = 10;
+  string conv_id = 11;
+  im.protocol.ChatType chat_type = 12;
+  string from_user_id = 13;
+  string from_nickname = 14;
+  PushDisplay display = 15;
+  bytes payload = 16;
+  string idempotency_key = 17;
+}
+
+enum PushChannel {
+  PUSH_CHANNEL_UNSPECIFIED = 0;
+  PUSH_CHANNEL_APNS = 1;
+  PUSH_CHANNEL_FCM = 2;
+  PUSH_CHANNEL_HMS = 3;             // 预留华为
+}
+
+message PushDisplay {
+  string title = 1;
+  string body = 2;
+  uint32 badge = 3;
+  bool silent = 4;                  // true = 静默推送，仅唤醒
+  map<string, string> extras = 5;   // 自定义 KV，如 conv_id / msg_id
+}
+
+// ----- 应用通道 im.app_events -----
+
+// 应用通道业务事件（与 IM 协议 cmd 镜像分离）。
+// 设计意图见 docs/design/app-channel.md
+message AppEvent {
+  string event_id = 1;
+  int64 timestamp = 2;              // ms
+  string app_key = 3;
+  string trace_id = 4;
+  string channel_id = 5;            // 租户内通道 ID，如 fleet:gps
+  AppEventDirection direction = 6;
+  string user_id = 7;               // 上行时必填
+  string device_id = 8;             // 上行时必填
+  string caller_service = 9;        // 下行内部广播时填
+  string content_type = 10;
+  bytes payload = 11;
+  string client_event_id = 12;      // 上行时客户端可选幂等键
+  uint32 dropped_before_kafka = 13; // 本 channel 聚合丢弃计数（监控用，可选）
+}
+
+enum AppEventDirection {
+  APP_EVENT_DIRECTION_UNSPECIFIED = 0;
+  APP_EVENT_UP = 1;                 // 客户端 CMD_CHANNEL_PUBLISH
+  APP_EVENT_DOWN = 2;               // 后端 internal publish → CMD_CHANNEL_PUSH
+}

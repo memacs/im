@@ -1,0 +1,181 @@
+# IM 仓库 — 工具版本与常用任务（与 Docker 镜像 elixir:1.19.5-otp-28 对齐；OTP ≥ 28.1）
+# Mix 项目在 apps/elixir/im；见 docs/implementation/monorepo-layout.md
+
+[tools]
+erlang = "28.1"
+elixir = "1.19.5-otp-28"
+protoc = "29.3"
+
+[env]
+MIX_ENV = "dev"
+IM_APP_DIR = "apps/elixir/im"
+
+# ── Proto（仓库根）────────────────────────────────────────────────────────────
+
+[tasks.proto-check]
+description = "校验 proto 语法"
+run = "protoc -I proto --descriptor_set_out=/dev/null proto/*.proto"
+
+# ── Mix：apps/elixir/im ───────────────────────────────────────────────────────
+
+[tasks."im:deps-get"]
+description = "mix deps.get（IM 主服务）"
+run = "cd apps/elixir/im && mix deps.get"
+
+[tasks."im:deps-compile"]
+description = "mix deps.compile"
+run = "cd apps/elixir/im && mix deps.compile"
+
+[tasks."im:setup"]
+description = "首次初始化：proto + IM 依赖"
+depends = ["proto-check", "im:deps-get", "im:deps-compile"]
+
+[tasks."im:compile"]
+description = "mix compile"
+depends = ["im:deps-get"]
+run = "cd apps/elixir/im && mix compile"
+
+[tasks."im:test"]
+description = "mix test"
+depends = ["im:compile"]
+run = "cd apps/elixir/im && mix test"
+
+[tasks."im:format"]
+description = "mix format"
+run = "cd apps/elixir/im && mix format"
+
+[tasks."im:format-check"]
+description = "mix format --check-formatted（CI 用）"
+run = "cd apps/elixir/im && mix format --check-formatted"
+
+[tasks."im:server"]
+description = "mix phx.server（仅开发调试）"
+depends = ["im:compile"]
+run = "cd apps/elixir/im && mix phx.server"
+
+[tasks."im:release"]
+description = "mix release（MIX_ENV=prod）"
+env = { MIX_ENV = "prod" }
+depends = ["im:deps-get"]
+run = "cd apps/elixir/im && mix do compile, release"
+
+# 兼容旧任务名（指向 im:*）
+[tasks.deps-get]
+depends = ["im:deps-get"]
+
+[tasks.deps-compile]
+depends = ["im:deps-compile"]
+
+[tasks.setup]
+depends = ["im:setup"]
+
+[tasks.compile]
+depends = ["im:compile"]
+
+[tasks.test]
+depends = ["im:test"]
+
+[tasks.format]
+depends = ["im:format"]
+
+[tasks.format-check]
+depends = ["im:format-check"]
+
+[tasks.server]
+depends = ["im:server"]
+
+[tasks.release]
+depends = ["im:release"]
+
+[tasks.clean]
+description = "mix clean"
+run = "cd apps/elixir/im && mix clean"
+
+[tasks.test-watch]
+description = "mix test.watch"
+run = "cd apps/elixir/im && mix test.watch"
+
+[tasks.test-failed]
+description = "mix test --failed"
+depends = ["im:compile"]
+run = "cd apps/elixir/im && mix test --failed"
+
+[tasks.console]
+description = "iex -S mix"
+depends = ["im:compile"]
+run = "cd apps/elixir/im && iex -S mix"
+
+[tasks.ecto-create]
+depends = ["im:compile"]
+run = "cd apps/elixir/im && mix ecto.create"
+
+[tasks.ecto-migrate]
+depends = ["im:compile"]
+run = "cd apps/elixir/im && mix ecto.migrate"
+
+[tasks.ecto-setup]
+depends = ["im:compile"]
+run = "cd apps/elixir/im && mix ecto.setup"
+
+[tasks.ecto-reset]
+depends = ["im:compile"]
+run = "cd apps/elixir/im && mix ecto.reset"
+
+# ── 本地 CI ───────────────────────────────────────────────────────────────────
+
+[tasks.check]
+description = "提交前：proto + IM compile + test"
+depends = ["proto-check", "im:compile", "im:test"]
+
+[tasks.ci]
+description = "CI 等价：proto + format + compile + test"
+depends = ["proto-check", "im:format-check", "im:compile", "im:test"]
+
+# ── Kubernetes（deploy/elixir/im/k8s）─────────────────────────────────────────
+
+[tasks.k8s-up]
+description = "启动本地 K8s 依赖（redis + postgres）"
+run = "kubectl apply -k deploy/elixir/im/k8s/"
+
+[tasks.k8s-down]
+description = "删除本地 K8s 依赖"
+run = "kubectl delete -k deploy/elixir/im/k8s/"
+
+[tasks.k8s-status]
+description = "查看 im-dev 命名空间 Pod/Service"
+run = "kubectl -n im-dev get pods,svc"
+
+[tasks.k8s-full]
+description = "部署全栈（依赖 + IM Release 清单，不构建镜像）"
+run = "kubectl apply -k deploy/elixir/im/k8s/overlays/local/"
+
+[tasks.k8s-logs]
+description = "跟踪 IM Pod 日志"
+run = "kubectl -n im-dev logs -f deployment/im"
+
+[tasks.k8s-port-forward]
+description = "将 IM 服务转发到本机 4000"
+run = "kubectl -n im-dev port-forward svc/im 4000:4000"
+
+# ── Release 镜像 + K8s 验收 ───────────────────────────────────────────────────
+
+[tasks.release-build]
+description = "docker build IM Release 镜像"
+run = "docker build -f deploy/elixir/im/Dockerfile -t im:local ."
+
+[tasks.release-deploy]
+description = "构建 Release 镜像并部署到本地 K8s"
+run = "./deploy/elixir/im/scripts/release-deploy-local.sh"
+
+[tasks.release-deploy-skip-build]
+description = "仅重新部署 K8s（跳过 docker build）"
+env = { IM_SKIP_BUILD = "1" }
+run = "./deploy/elixir/im/scripts/release-deploy-local.sh"
+
+[tasks.release-smoke]
+description = "冒烟：/health（需先 k8s-port-forward）"
+run = "curl -sf http://localhost:4000/health"
+
+[tasks.verify]
+description = "完整验收：check + Release 构建部署"
+depends = ["check", "release-deploy"]

@@ -1,0 +1,267 @@
+syntax = "proto3";
+
+package im.protocol;
+
+// ============================================================================
+// FriendStatus - 好友关系状态
+// ============================================================================
+enum FriendStatus {
+  FRIEND_STATUS_UNSPECIFIED = 0;
+  FRIEND_STATUS_NONE = 1;           // 无关系（陌生人）
+  FRIEND_STATUS_PENDING = 2;        // 待处理（等待对方同意）
+  FRIEND_STATUS_ACCEPTED = 3;       // 已是好友
+  FRIEND_STATUS_BLOCKED = 4;        // 已拉黑
+  FRIEND_STATUS_DELETED = 5;        // 已删除
+}
+
+// ============================================================================
+// FriendAddReq - CMD_FRIEND_ADD_REQ payload
+// ============================================================================
+// 添加好友请求。
+message FriendAddReq {
+  string to_user_id = 1;      // 目标用户 ID
+  string message = 2;         // 申请消息（可选）
+  string remark = 3;          // 好友备注（可选，对方同意后生效）
+}
+
+// ============================================================================
+// FriendAddResp - CMD_FRIEND_ADD_RESP payload
+// ============================================================================
+// 添加好友响应。
+message FriendAddResp {
+  string request_id = 1;      // 好友请求 ID
+  FriendStatus status = 2;    // 当前状态
+}
+
+// ============================================================================
+// FriendRequestNotify - CMD_FRIEND_REQUEST_PUSH payload
+// ============================================================================
+// 好友请求通知（推送给接收方）。
+message FriendRequestNotify {
+  string request_id = 1;      // 请求 ID
+  string from_user_id = 2;    // 发起方 user_id
+  string from_nickname = 3;   // 发起方昵称（可选）
+  string from_avatar = 4;     // 发起方头像（可选）
+  string message = 5;         // 申请消息
+  int64 timestamp = 6;        // 请求时间
+}
+
+// ============================================================================
+// FriendAcceptReq - CMD_FRIEND_ACCEPT_REQ payload
+// ============================================================================
+// 接受好友请求。
+message FriendAcceptReq {
+  string request_id = 1;      // 好友请求 ID
+  string from_user_id = 2;    // 发起方 user_id
+  string remark = 3;          // 备注名（可选）
+}
+
+// ============================================================================
+// FriendAcceptResp - CMD_FRIEND_ACCEPT_RESP payload
+// ============================================================================
+// 接受好友响应。
+message FriendAcceptResp {
+  string friend_user_id = 1;  // 好友 user_id
+  FriendStatus status = 2;    // 当前状态
+}
+
+// ============================================================================
+// FriendAcceptNotify - CMD_FRIEND_ACCEPT_PUSH payload
+// ============================================================================
+// 好友请求被接受通知（推送给发起方）。
+message FriendAcceptNotify {
+  string user_id = 1;         // 接受方 user_id
+  string nickname = 2;        // 接受方昵称（可选）
+  string avatar = 3;          // 接受方头像（可选）
+  string remark = 4;          // 对方给我的备注（可选）
+  int64 timestamp = 5;        // 接受时间
+}
+
+// ============================================================================
+// FriendRejectReq - CMD_FRIEND_REJECT_REQ payload
+// ============================================================================
+// 拒绝好友请求。
+message FriendRejectReq {
+  string request_id = 1;      // 好友请求 ID
+  string from_user_id = 2;    // 发起方 user_id
+}
+
+// ============================================================================
+// FriendRejectResp - CMD_FRIEND_REJECT_RESP payload
+// ============================================================================
+// 拒绝好友响应。
+message FriendRejectResp {
+  string friend_user_id = 1;  // 被拒绝方 user_id
+}
+
+// ============================================================================
+// FriendRejectNotify - CMD_FRIEND_REJECT_PUSH payload
+// ============================================================================
+// 好友请求被拒绝通知（推送给发起方）。
+message FriendRejectNotify {
+  string user_id = 1;         // 拒绝方 user_id
+  string nickname = 2;        // 拒绝方昵称（可选）
+  int64 timestamp = 3;        // 拒绝时间
+}
+
+// ============================================================================
+// FriendDeleteReq - CMD_FRIEND_DELETE_REQ payload
+// ============================================================================
+// 删除好友。
+message FriendDeleteReq {
+  string friend_user_id = 1;  // 要删除的好友 user_id
+}
+
+// ============================================================================
+// FriendDeleteResp - CMD_FRIEND_DELETE_RESP payload
+// ============================================================================
+// 删除好友响应。
+message FriendDeleteResp {
+  string friend_user_id = 1;  // 已删除的好友 user_id
+}
+
+// ============================================================================
+// FriendDeleteNotify - CMD_FRIEND_DELETE_PUSH payload
+// ============================================================================
+// 被删除好友通知（推送给被删除方）。
+message FriendDeleteNotify {
+  string user_id = 1;         // 删除方 user_id
+  int64 timestamp = 2;        // 删除时间
+}
+
+// ============================================================================
+// FriendBlockReq - CMD_FRIEND_BLOCK_REQ payload
+// ============================================================================
+// 拉黑用户。
+message FriendBlockReq {
+  string user_id = 1;         // 要拉黑的用户 ID
+}
+
+// ============================================================================
+// FriendBlockResp - CMD_FRIEND_BLOCK_RESP payload
+// ============================================================================
+// 拉黑响应。
+message FriendBlockResp {
+  string user_id = 1;         // 已拉黑的用户 ID
+}
+
+// ============================================================================
+// FriendBlockNotify - CMD_FRIEND_BLOCK_PUSH payload
+// ============================================================================
+// 被拉黑通知（推送给被拉黑方）。
+message FriendBlockNotify {
+  string user_id = 1;         // 拉黑方 user_id
+  int64 timestamp = 2;        // 拉黑时间
+}
+
+// ============================================================================
+// FriendUnblockReq - CMD_FRIEND_UNBLOCK_REQ payload
+// ============================================================================
+// 取消拉黑。
+message FriendUnblockReq {
+  string user_id = 1;         // 要取消拉黑的用户 ID
+}
+
+// ============================================================================
+// FriendUnblockResp - CMD_FRIEND_UNBLOCK_RESP payload
+// ============================================================================
+// 取消拉黑响应。
+message FriendUnblockResp {
+  string user_id = 1;         // 已取消拉黑的用户 ID
+}
+
+// ============================================================================
+// FriendSetRemarkReq - CMD_FRIEND_SET_REMARK_REQ payload
+// ============================================================================
+// 设置好友备注。
+message FriendSetRemarkReq {
+  string friend_user_id = 1;  // 好友 user_id
+  string remark = 2;          // 备注名
+}
+
+// ============================================================================
+// FriendSetRemarkResp - CMD_FRIEND_SET_REMARK_RESP payload
+// ============================================================================
+// 设置备注响应。
+message FriendSetRemarkResp {
+  string friend_user_id = 1;  // 好友 user_id
+  string remark = 2;          // 新备注名
+}
+
+// ============================================================================
+// FriendListReq - CMD_FRIEND_LIST_REQ payload
+// ============================================================================
+// 获取好友列表。
+message FriendListReq {
+  int32 limit = 1;            // 每页数量，默认 100，上限 500
+  string cursor = 2;          // 游标，首次请求为空
+}
+
+// ============================================================================
+// FriendListResp - CMD_FRIEND_LIST_RESP payload
+// ============================================================================
+// 好友列表响应。
+message FriendListResp {
+  repeated FriendInfo friends = 1;  // 好友列表
+  string next_cursor = 2;           // 下一页游标，为空表示无更多
+  bool has_more = 3;                // 是否有更多
+}
+
+// ============================================================================
+// FriendInfo - 好友信息
+// ============================================================================
+message FriendInfo {
+  string user_id = 1;         // 用户 ID
+  string nickname = 2;        // 昵称
+  string avatar = 3;          // 头像
+  string remark = 4;          // 备注名
+  FriendStatus status = 5;    // 关系状态
+  int64 created_at = 6;       // 成为好友时间
+  string ext = 7;             // 扩展字段（JSON）
+}
+
+// ============================================================================
+// FriendRequestListReq - CMD_FRIEND_REQUEST_LIST_REQ payload
+// ============================================================================
+// 获取好友请求列表。
+message FriendRequestListReq {
+  int32 limit = 1;            // 每页数量，默认 50，上限 200
+  string cursor = 2;          // 游标
+}
+
+// ============================================================================
+// FriendRequestListResp - CMD_FRIEND_REQUEST_LIST_RESP payload
+// ============================================================================
+// 好友请求列表响应。
+message FriendRequestListResp {
+  repeated FriendRequestInfo requests = 1;  // 请求列表
+  string next_cursor = 2;                   // 下一页游标
+  bool has_more = 3;                        // 是否有更多
+}
+
+// ============================================================================
+// FriendRequestInfo - 好友请求信息
+// ============================================================================
+message FriendRequestInfo {
+  string request_id = 1;      // 请求 ID
+  string from_user_id = 2;    // 发起方 user_id
+  string from_nickname = 3;   // 发起方昵称
+  string from_avatar = 4;     // 发起方头像
+  string to_user_id = 5;      // 接收方 user_id
+  string to_nickname = 6;     // 接收方昵称
+  string to_avatar = 7;       // 接收方头像
+  string message = 8;         // 申请消息
+  FriendRequestStatus status = 9;  // 请求状态
+  int64 timestamp = 10;       // 请求时间
+}
+
+// ============================================================================
+// FriendRequestStatus - 好友请求状态
+// ============================================================================
+enum FriendRequestStatus {
+  FRIEND_REQUEST_STATUS_UNSPECIFIED = 0;
+  FRIEND_REQUEST_STATUS_PENDING = 1;    // 待处理
+  FRIEND_REQUEST_STATUS_ACCEPTED = 2;   // 已接受
+  FRIEND_REQUEST_STATUS_REJECTED = 3;   // 已拒绝
+  FRIEND_REQUEST_STATUS_EXPIRED = 4;    // 已过期
+}

@@ -1,0 +1,48 @@
+# deploy/elixir/im/Dockerfile
+# IM Release 镜像 — 与线上构建一致（elixir:1.19.5-otp-28 多阶段；OTP ≥ 28.1，见根目录 mise.toml）
+# 构建上下文：仓库根目录
+# 本地：docker build -f deploy/elixir/im/Dockerfile -t im:local .
+# 部署：kubectl apply -k deploy/elixir/im/k8s/overlays/local/
+
+# ---------- build：编译 Release ----------
+FROM elixir:1.19.5-otp-28 AS build
+
+RUN apt-get update -y && apt-get install -y build-essential git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+ENV MIX_ENV=prod
+
+COPY apps/elixir/im/mix.exs apps/elixir/im/mix.lock ./
+RUN mix local.hex --force && mix local.rebar --force
+RUN mix deps.get --only prod
+RUN mix deps.compile
+
+COPY apps/elixir/im/config config
+COPY apps/elixir/im/lib lib
+COPY apps/elixir/im/priv priv
+COPY proto proto
+
+RUN mix compile
+RUN mix release
+
+# ---------- runtime：最小运行镜像 ----------
+FROM debian:bookworm-slim AS runtime
+
+RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses6 locales ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+RUN chown nobody:nogroup /app
+USER nobody:nogroup
+
+ENV HOME=/app
+ENV LANG=C.UTF-8
+
+COPY --from=build --chown=nobody:nogroup /app/_build/prod/rel/im ./
+
+EXPOSE 4000
+
+CMD ["/app/bin/im", "start"]

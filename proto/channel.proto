@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package im.protocol;
+
+// ============================================================================
+// 应用通道（App Channel）
+// ============================================================================
+// 业务事件广播与上报，与 ChatMessage / 聊天室分离。
+// 设计意图见 docs/design/app-channel.md
+//
+// QoS：尽力而为、仅在线投递；允许丢包；无离线补发；不进会话列表。
+// 命令字 900–909，见 common.proto CmdType。
+
+// ============================================================================
+// ChannelSubscribeReq - CMD_CHANNEL_SUBSCRIBE_REQ payload
+// ============================================================================
+message ChannelSubscribeReq {
+  repeated string channel_ids = 1; // 要订阅的通道 ID；单次建议 ≤20
+}
+
+// ============================================================================
+// ChannelSubscribeResp - CMD_CHANNEL_SUBSCRIBE_RESP payload
+// ============================================================================
+message ChannelSubscribeResp {
+  repeated string subscribed = 1;   // 订阅成功
+  repeated ChannelSubscribeError failed = 2;
+}
+
+message ChannelSubscribeError {
+  string channel_id = 1;
+  int32 code = 2;    // ErrorCode 枚举值
+  string msg = 3;
+}
+
+// ============================================================================
+// ChannelUnsubscribeReq - CMD_CHANNEL_UNSUBSCRIBE_REQ payload
+// ============================================================================
+message ChannelUnsubscribeReq {
+  repeated string channel_ids = 1;
+}
+
+// ============================================================================
+// ChannelUnsubscribeResp - CMD_CHANNEL_UNSUBSCRIBE_RESP payload
+// ============================================================================
+message ChannelUnsubscribeResp {
+  repeated string unsubscribed = 1;
+}
+
+// ============================================================================
+// ChannelPublish - CMD_CHANNEL_PUBLISH payload（客户端上行）
+// ============================================================================
+// 客户端仅可上行；不可向 Channel 内其他客户端广播。
+// 限速：默认每连接 1 条/秒（见 app-channel.md）；超限静默丢弃。
+message ChannelPublish {
+  string channel_id = 1;       // 必填；格式 {namespace}:{name}，租户 app_key 由连接上下文注入
+  string content_type = 2;     // 如 application/json、application/x-protobuf
+  bytes payload = 3;           // 业务载荷
+  string client_event_id = 4;  // 可选；客户端幂等/去重，服务端不保证持久化
+}
+
+// ============================================================================
+// ChannelPublishAck - CMD_CHANNEL_PUBLISH_ACK payload
+// ============================================================================
+// 表示 IM 已受理（通过限速与 ACL）；不表示 Kafka 已持久化。
+message ChannelPublishAck {
+  string channel_id = 1;
+  string event_id = 2;         // 服务端生成的 event_id（写入 Kafka 时一致）
+  bool accepted = 3;             // false 表示被限速/拒绝（通常直接丢弃不回 ACK）
+}
+
+// ============================================================================
+// ChannelPush - CMD_CHANNEL_PUSH payload（服务端下行广播）
+// ============================================================================
+// 仅后端 internal API 触发；Packet.seq = 0。
+message ChannelPush {
+  string channel_id = 1;
+  string content_type = 2;
+  bytes payload = 3;
+  string event_id = 4;           // 服务端事件 ID
+  int64 server_time = 5;         // ms
+  string caller_service = 6;       // 内部发布方服务名（可选，审计用）
+}

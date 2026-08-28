@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: im
+  namespace: im-dev
+  labels:
+    app: im
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 4000
+      targetPort: http
+  selector:
+    app: im

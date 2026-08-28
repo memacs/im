@@ -1,0 +1,10 @@
+.git
+.github
+.agents
+docs
+gen
+_build
+deps
+.elixir_ls
+*.md
+!priv

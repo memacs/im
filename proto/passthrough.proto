@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package im.protocol;
+
+import "common.proto";
+
+// ============================================================================
+// Passthrough - CMD_PASSTHROUGH payload
+// ============================================================================
+// 透传指令，上行与下行共用此命令。
+// 设计意图见 docs/design/passthrough.md。
+//
+// 特点：
+//   - 不进会话历史
+//   - 不触发未读数
+//   - 无 ACK / 无成功 RESP
+//   - 失败才 CMD_ERROR，不关闭连接
+//
+// persist=true 行为：
+//   - 服务端暂存 Passthrough 业务体（不写入 ChatMessage 表）
+//   - 目标用户登录后，服务端主动 PUSH，不走 OFFLINE_PULL
+//   - 建议设置 TTL（如 7 天）避免长期未登录用户数据积压
+//
+// 流式消息支持（AI对话等场景）：
+//   推荐使用 action 值：stream_start / stream_data / stream_end / stream_cancel / stream_error
+//   data 字段使用 JSON 格式：
+//     {
+//       "stream_id": "uuid-xxx",
+//       "sequence": 1,
+//       "chunk": "Hello",
+//       "content_type": "text/markdown",
+//       "status": "ongoing"
+//     }
+//   详细设计见 docs/design/stream-message.md
+message Passthrough {
+  ChatType chat_type = 1; // 会话类型：单聊 / 群 / 聊天室
+  string from = 2;        // 发送方 user_id
+  string to = 3;          // 接收目标：单聊=对端 uid；群=group_id；聊天室=room_id
+  string action = 4;      // 业务动作名；推荐值：typing / typing_stop / stream_start / stream_data / stream_end / stream_cancel / stream_error
+  bytes data = 5;         // 业务自定义载荷
+  bool persist = 6;       // false（默认）= 仅在线投递；true = 离线暂存，目标上线后服务端主动 PUSH
+  string conv_id = 7;     // 会话 ID；格式规则同 ChatMessage.conv_id
+  int32 ttl_sec = 8;      // 持久化 TTL（秒）；默认 7 天 = 604800；上限 7 天；仅 persist=true 时有效
+}

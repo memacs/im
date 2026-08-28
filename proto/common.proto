@@ -1,0 +1,242 @@
+syntax = "proto3";
+
+package im.protocol;
+
+// ============================================================================
+// 协议版本
+// ============================================================================
+// 当前实现为 1。Packet.ver 与之不匹配时返回 CMD_ERROR + CODE_PROTO_VERSION_UNSUPPORTED。
+enum ProtoVersion {
+  PROTO_VERSION_UNSPECIFIED = 0;
+  PROTO_VERSION_V1 = 1;
+}
+
+// ============================================================================
+// 命令字 CmdType
+// ============================================================================
+// 设计意图见 docs/design/cmd-type.md
+//
+// 区间约定：
+//   1–99     连接与会话
+//   100–199  消息收发
+//   200–299  ACK / 已读
+//   300–399  离线与同步
+//   400–499  撤回 / 编辑 / 阅后即焚
+//   500–599  透传
+//   600–699  群组管理
+//   700–799  聊天室管理
+//   800–822  好友管理
+//   900–909  应用通道（App Channel，见 channel.proto）
+//   1000+    预留扩展
+enum CmdType {
+  CMD_UNSPECIFIED = 0;
+
+  // ----- 连接与会话 -----
+  CMD_AUTH_REQ = 1;         // 鉴权请求；payload = AuthReq
+  CMD_AUTH_RESP = 2;        // 鉴权成功响应；payload = AuthResp；失败用 CMD_ERROR
+  CMD_HEARTBEAT_REQ = 3;    // 心跳请求；payload = HeartbeatReq
+  CMD_HEARTBEAT_RESP = 4;   // 心跳响应；payload = HeartbeatResp
+  CMD_KICK = 5;             // 被踢下线通知；payload = KickNotify
+  CMD_ERROR = 6;            // 统一失败响应；payload = ErrorBody；成功响应不带错误码
+
+  // ----- 消息收发 -----
+  CMD_MSG_SEND = 100;       // 发送消息；payload = MsgSendReq
+  CMD_MSG_PUSH = 101;       // 服务端推送单条消息；payload = ChatMessage；seq = 0
+  CMD_MSG_PUSH_BATCH = 102; // 服务端批量推送消息；payload = MsgPushBatch；seq = 0
+
+  // ----- ACK / 已读 -----
+  CMD_MSG_ACK_UP = 200;         // 客户端上报 ACK；payload = MsgAck
+  CMD_MSG_ACK_DOWN = 201;       // 服务端下发 ACK；payload = MsgAck
+  CMD_MSG_READ = 202;           // 已读回执；payload = MsgRead
+  CMD_MSG_ACK_BATCH_UP = 203;   // 客户端批量上报 ACK；payload = MsgAckBatchUp
+  CMD_MSG_ACK_BATCH_DOWN = 204; // 服务端批量下发 ACK；payload = MsgAckBatchDown
+
+  // ----- 离线与同步 -----
+  CMD_OFFLINE_PULL_REQ = 300;  // 离线拉取请求；payload = OfflinePullReq
+  CMD_OFFLINE_PULL_RESP = 301; // 离线拉取响应；payload = OfflinePullResp
+
+  // ----- 撤回 / 编辑 / 阅后即焚 -----
+  CMD_MSG_RECALL_REQ = 400;  // 撤回请求；payload = MsgRecall
+  CMD_MSG_RECALL_PUSH = 401; // 撤回推送/成功确认；payload = MsgRecall
+  CMD_MSG_EDIT_REQ = 402;    // 编辑请求；payload = MsgEdit
+  CMD_MSG_EDIT_PUSH = 403;   // 编辑推送/成功确认；payload = MsgEdit
+  CMD_MSG_BURN_PUSH = 404;   // 阅后即焚销毁通知；payload = MsgBurn；仅下行，见 docs/design/burn-after-read.md
+
+  // ----- 透传 -----
+  CMD_PASSTHROUGH = 500;     // 透传指令；payload = Passthrough；上行/下行共用
+
+  // ----- 好友管理 -----
+  CMD_FRIEND_ADD_REQ = 800;          // 添加好友请求；payload = FriendAddReq
+  CMD_FRIEND_ADD_RESP = 801;         // 添加好友响应；payload = FriendAddResp
+  CMD_FRIEND_REQUEST_PUSH = 802;     // 好友请求通知；payload = FriendRequestNotify
+  CMD_FRIEND_ACCEPT_REQ = 803;       // 接受好友请求；payload = FriendAcceptReq
+  CMD_FRIEND_ACCEPT_RESP = 804;      // 接受好友响应；payload = FriendAcceptResp
+  CMD_FRIEND_ACCEPT_PUSH = 805;      // 好友请求被接受通知；payload = FriendAcceptNotify
+  CMD_FRIEND_REJECT_REQ = 806;       // 拒绝好友请求；payload = FriendRejectReq
+  CMD_FRIEND_REJECT_RESP = 807;      // 拒绝好友响应；payload = FriendRejectResp
+  CMD_FRIEND_REJECT_PUSH = 808;      // 好友请求被拒绝通知；payload = FriendRejectNotify
+  CMD_FRIEND_DELETE_REQ = 809;       // 删除好友；payload = FriendDeleteReq
+  CMD_FRIEND_DELETE_RESP = 810;      // 删除好友响应；payload = FriendDeleteResp
+  CMD_FRIEND_DELETE_PUSH = 811;      // 被删除好友通知；payload = FriendDeleteNotify
+  CMD_FRIEND_BLOCK_REQ = 812;        // 拉黑用户；payload = FriendBlockReq
+  CMD_FRIEND_BLOCK_RESP = 813;       // 拉黑响应；payload = FriendBlockResp
+  CMD_FRIEND_BLOCK_PUSH = 814;       // 被拉黑通知；payload = FriendBlockNotify
+  CMD_FRIEND_UNBLOCK_REQ = 815;      // 取消拉黑；payload = FriendUnblockReq
+  CMD_FRIEND_UNBLOCK_RESP = 816;     // 取消拉黑响应；payload = FriendUnblockResp
+  CMD_FRIEND_SET_REMARK_REQ = 817;   // 设置好友备注；payload = FriendSetRemarkReq
+  CMD_FRIEND_SET_REMARK_RESP = 818;  // 设置备注响应；payload = FriendSetRemarkResp
+  CMD_FRIEND_LIST_REQ = 819;         // 获取好友列表；payload = FriendListReq
+  CMD_FRIEND_LIST_RESP = 820;        // 好友列表响应；payload = FriendListResp
+  CMD_FRIEND_REQUEST_LIST_REQ = 821; // 获取好友请求列表；payload = FriendRequestListReq
+  CMD_FRIEND_REQUEST_LIST_RESP = 822;// 好友请求列表响应；payload = FriendRequestListResp
+
+  // ----- 群组管理 -----
+  CMD_GROUP_CREATE_REQ = 600;       // 创建群；payload = GroupCreateReq
+  CMD_GROUP_CREATE_RESP = 601;      // 创建群响应；payload = GroupCreateResp
+  CMD_GROUP_DISMISS_REQ = 602;      // 解散群；payload = GroupOperateReq
+  CMD_GROUP_DISMISS_PUSH = 603;     // 解散群通知；payload = GroupOperatePush
+  CMD_GROUP_JOIN_REQ = 604;         // 加入群；payload = GroupOperateReq
+  CMD_GROUP_JOIN_PUSH = 605;        // 加入群通知；payload = GroupMemberPush
+  CMD_GROUP_LEAVE_REQ = 606;        // 退群；payload = GroupOperateReq
+  CMD_GROUP_LEAVE_PUSH = 607;       // 退群通知；payload = GroupMemberPush
+  CMD_GROUP_KICK_REQ = 608;         // 踢人；payload = GroupKickReq
+  CMD_GROUP_KICK_PUSH = 609;        // 踢人通知；payload = GroupMemberPush
+  CMD_GROUP_INVITE_REQ = 610;       // 邀请入群；payload = GroupInviteReq
+  CMD_GROUP_INVITE_PUSH = 611;      // 邀请入群通知；payload = GroupMemberPush
+  CMD_GROUP_SET_ADMIN_REQ = 612;    // 设置管理员；payload = GroupAdminReq
+  CMD_GROUP_SET_ADMIN_PUSH = 613;   // 设置管理员通知；payload = GroupAdminPush
+  CMD_GROUP_REMOVE_ADMIN_REQ = 614; // 移除管理员；payload = GroupAdminReq
+  CMD_GROUP_REMOVE_ADMIN_PUSH = 615; // 移除管理员通知；payload = GroupAdminPush
+  CMD_GROUP_TRANSFER_REQ = 616;     // 转让群主；payload = GroupTransferReq
+  CMD_GROUP_TRANSFER_PUSH = 617;    // 转让群主通知；payload = GroupTransferPush
+  CMD_GROUP_UPDATE_REQ = 618;       // 更新群信息；payload = GroupUpdateReq
+  CMD_GROUP_UPDATE_PUSH = 619;      // 更新群信息通知；payload = GroupUpdatePush
+
+  // ----- 聊天室管理 -----
+  CMD_ROOM_CREATE_REQ = 700;        // 创建聊天室；payload = RoomCreateReq
+  CMD_ROOM_CREATE_RESP = 701;       // 创建聊天室响应；payload = RoomCreateResp
+  CMD_ROOM_DISMISS_REQ = 702;       // 解散聊天室；payload = RoomOperateReq
+  CMD_ROOM_DISMISS_PUSH = 703;      // 解散聊天室通知；payload = RoomOperatePush
+  CMD_ROOM_JOIN_REQ = 704;          // 加入聊天室；payload = RoomOperateReq
+  CMD_ROOM_JOIN_PUSH = 705;         // 加入聊天室通知；payload = RoomMemberPush
+  CMD_ROOM_LEAVE_REQ = 706;         // 离开聊天室；payload = RoomOperateReq
+  CMD_ROOM_LEAVE_PUSH = 707;        // 离开聊天室通知；payload = RoomMemberPush
+  CMD_ROOM_KICK_REQ = 708;          // 踢出聊天室；payload = RoomKickReq
+  CMD_ROOM_KICK_PUSH = 709;         // 踢出聊天室通知；payload = RoomMemberPush
+  CMD_ROOM_UPDATE_REQ = 710;        // 更新聊天室信息；payload = RoomUpdateReq
+  CMD_ROOM_UPDATE_PUSH = 711;       // 更新聊天室信息通知；payload = RoomUpdatePush
+
+  // ----- 应用通道（App Channel）-----
+  CMD_CHANNEL_SUBSCRIBE_REQ = 900;   // 订阅通道；payload = ChannelSubscribeReq
+  CMD_CHANNEL_SUBSCRIBE_RESP = 901;  // 订阅响应；payload = ChannelSubscribeResp
+  CMD_CHANNEL_UNSUBSCRIBE_REQ = 902; // 取消订阅；payload = ChannelUnsubscribeReq
+  CMD_CHANNEL_UNSUBSCRIBE_RESP = 903;// 取消订阅响应；payload = ChannelUnsubscribeResp
+  CMD_CHANNEL_PUBLISH = 904;         // 客户端上行；payload = ChannelPublish
+  CMD_CHANNEL_PUBLISH_ACK = 905;     // 上行受理确认；payload = ChannelPublishAck
+  CMD_CHANNEL_PUSH = 906;            // 服务端下行广播；payload = ChannelPush；seq = 0
+}
+
+// ============================================================================
+// 错误码 ErrorCode
+// ============================================================================
+// 仅出现在 CMD_ERROR 的 ErrorBody.code 中；成功响应不使用错误码字段。
+enum ErrorCode {
+  CODE_OK = 0; // 保留；成功走对应业务 RESP/ACK，不发 CMD_ERROR
+
+  // ----- 连接类错误 (1000–1999) -----
+  CODE_UNAUTHORIZED = 1001;              // 未鉴权 / token 无效
+  CODE_KICKED = 1002;                    // 被踢下线（也可配合 CMD_KICK）
+  CODE_PROTO_VERSION_UNSUPPORTED = 1003; // 协议版本不支持
+  CODE_DEVICE_LIMIT_EXCEEDED = 1004;   // 该平台在线设备数已达上限（见 auth.md §8）
+
+  // ----- 消息类错误 (2000–2999) -----
+  CODE_MSG_INVALID = 2001;        // 消息内容非法
+  CODE_MSG_NO_PERMISSION = 2002;  // 无发送权限
+  CODE_MSG_RECALL_DENIED = 2003;  // 撤回超时 / 不可撤回
+  CODE_CONV_NOT_FOUND = 2004;     // 目标会话不存在
+  CODE_MSG_EDIT_DENIED = 2005;    // 编辑超时 / 不可编辑
+  CODE_MSG_BURN_DENIED = 2006;    // 阅后即焚不允许（租户关闭 / 非单聊 / 参数非法）
+
+  // ----- 群组类错误 (3000–3999) -----
+  CODE_GROUP_NOT_FOUND = 3001;      // 群不存在
+  CODE_GROUP_NO_PERMISSION = 3002;  // 无群操作权限
+  CODE_GROUP_MEMBER_LIMIT = 3003;   // 群成员数量超限
+  CODE_GROUP_ALREADY_MEMBER = 3004; // 已是群成员
+  CODE_GROUP_NOT_MEMBER = 3005;     // 非群成员
+
+  // ----- 聊天室类错误 (4000–4999) -----
+  CODE_ROOM_NOT_FOUND = 4001;      // 聊天室不存在
+  CODE_ROOM_NO_PERMISSION = 4002;  // 无聊天室操作权限
+  CODE_ROOM_MEMBER_LIMIT = 4003;   // 聊天室成员数量超限
+  CODE_ROOM_ALREADY_MEMBER = 4004; // 已在聊天室中
+  CODE_ROOM_NOT_MEMBER = 4005;     // 不在聊天室中
+
+  // ----- 限流类错误 (5000–5999) -----
+  CODE_RATE_LIMITED = 5001;        // 频率限制
+
+  // ----- 应用通道类错误 (6000–6999) -----
+  CODE_CHANNEL_NOT_FOUND = 6001;      // 通道不存在或未配置
+  CODE_CHANNEL_NO_PERMISSION = 6002;  // 无订阅/发布权限
+  CODE_CHANNEL_RATE_LIMITED = 6003;   // 通道级或连接级限速（可选返回；默认静默丢）
+
+  // ----- 服务端错误 (9000–9999) -----
+  CODE_INTERNAL_ERROR = 9000;      // 服务内部错误
+}
+
+// ============================================================================
+// ErrorBody - CMD_ERROR payload
+// ============================================================================
+// 所有失败统一由此返回。Packet.seq 回传触发失败的请求 seq，便于客户端匹配。
+message ErrorBody {
+  int32 code = 1;      // ErrorCode 枚举值，非 0
+  string msg = 2;      // 人类可读的错误描述（调试用）
+  uint32 ref_cmd = 3;  // 触发失败的原命令字（CmdType 枚举值）
+  string ref_cid = 4;  // 可选：原请求的 cid，便于业务侧关联
+}
+
+// ============================================================================
+// ChatType - 会话类型
+// ============================================================================
+enum ChatType {
+  CHAT_TYPE_UNSPECIFIED = 0;
+  CHAT_PRIVATE = 1;  // 单聊；持久化 + 离线拉取 + 双阶段 ACK
+  CHAT_GROUP = 2;    // 群聊；持久化 + 离线拉取 + 双阶段 ACK
+  CHAT_ROOM = 3;     // 聊天室；默认不持久化 + 不走离线拉取 + 仅 SERVER_RECEIVED 必达
+}
+
+// ============================================================================
+// PayloadCompression - Packet.payload 压缩算法
+// ============================================================================
+// 鉴权时协商（AuthReq / AuthResp）；单包可覆盖（Packet.compression）。
+// 设计意图见 docs/design/payload-compression.md
+enum PayloadCompression {
+  PAYLOAD_COMPRESSION_UNSPECIFIED = 0; // Packet：继承本会话 AuthResp 协商结果；AuthReq 空列表视为仅 NONE
+  PAYLOAD_COMPRESSION_NONE = 1;        // 不压缩；payload 为 Protobuf 原始字节
+  PAYLOAD_COMPRESSION_GZIP = 2;        // gzip（RFC 1952）；预留，v1 实现可仅协商为 NONE
+  PAYLOAD_COMPRESSION_LZ4 = 3;         // LZ4 frame；预留，v1 实现可仅协商为 NONE
+}
+
+// ============================================================================
+// Packet - 统一封包
+// ============================================================================
+// 所有业务装进 Packet，经 WebSocket 二进制帧传输。
+// 设计意图见 docs/design/packet.md
+//
+// 约定：
+//   - 客户端 → 服务端：seq 必填且单调递增；需要幂等的写操作填 cid；可按目标填 route_key 供网关分流
+//   - 服务端 → 客户端（成功响应）：回传同一 seq，payload 为业务体，不带错误码
+//   - 服务端 → 客户端（失败）：一律 CMD_ERROR + ErrorBody，seq 回传原请求
+//   - 服务端 → 客户端（推送）：seq = 0，用业务 ID（如 msg_id）标识，不用 seq 做匹配
+//   - route_key：网关/后端一致性哈希与分流键，不替代业务字段（如 ChatMessage.to）
+//   - compression：payload 压缩方式；鉴权前及 CMD_AUTH_* 必须为 NONE；见 payload-compression.md
+message Packet {
+  uint32 ver = 1;        // 协议版本，当前 = 1；不匹配返回 CODE_PROTO_VERSION_UNSUPPORTED
+  uint32 cmd = 2;        // 命令字，见 CmdType；决定 payload 如何解析
+  uint64 seq = 3;        // 客户端单调递增请求序号；用于请求-响应匹配；推送包 = 0
+  int64 ts = 4;          // 发送时间戳 ms；用于排障与粗测 RTT；不用于消息排序
+  string cid = 5;        // 请求级幂等 ID（网关层去重）；与 ChatMessage.client_msg_id（消息级幂等）职责分离
+  string trace_id = 6;   // 链路追踪 ID；根请求入站确定，衍生 ACK/PUSH/ERROR 必须继承同一值（见 docs/design/message-context.md §7.4）
+  bytes payload = 7;     // 业务体；由 cmd 决定具体 message 类型；可能经 compression 压缩
+  string route_key = 8;  // 网关分流键；单聊建议填对端 user_id，群填 group_id，聊天室填 room_id
+  PayloadCompression compression = 9; // payload 压缩算法；UNSPECIFIED 表示使用会话协商值
+}

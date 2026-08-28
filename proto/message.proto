@@ -1,0 +1,301 @@
+syntax = "proto3";
+
+package im.protocol;
+
+import "common.proto";
+
+// ============================================================================
+// MsgType - 消息内容类型
+// ============================================================================
+// ChatMessage.content 字段按此类型解析对应的 *Content message。
+enum MsgType {
+  MSG_TYPE_UNSPECIFIED = 0;
+  MSG_TEXT = 1;      // 文本；content = TextContent
+  MSG_IMAGE = 2;     // 图片；content = ImageContent（文件经 HTTP 上传，此处仅传元数据）
+  MSG_AUDIO = 3;     // 语音；content = AudioContent
+  MSG_VIDEO = 4;     // 视频；content = VideoContent
+  MSG_FILE = 5;      // 文件；content = FileContent
+  MSG_LOCATION = 6;  // 位置；content = LocationContent
+  MSG_CUSTOM = 7;    // 自定义结构化消息；content = CustomContent
+  MSG_STREAM = 8;    // 流式消息（AI对话等）；content = StreamContent
+}
+
+// ============================================================================
+// 消息内容定义
+// ============================================================================
+
+// 文本消息内容
+message TextContent {
+  string text = 1;  // 文本内容
+}
+
+// 图片消息内容（文件经独立 HTTP 上传，IM 长连接不传二进制大包）
+message ImageContent {
+  string url = 1;           // 图片 URL
+  string thumbnail_url = 2; // 缩略图 URL（可选）
+  string file_name = 3;     // 文件名
+  int64 file_size = 4;      // 文件大小（bytes）
+  int32 width = 5;          // 图片宽度（px）
+  int32 height = 6;         // 图片高度（px）
+  string mime_type = 7;     // MIME 类型，如 image/jpeg
+}
+
+// 语音消息内容
+message AudioContent {
+  string url = 1;           // 语音文件 URL
+  string file_name = 2;     // 文件名
+  int64 file_size = 3;      // 文件大小（bytes）
+  int32 duration_ms = 4;    // 时长（ms）
+  string mime_type = 5;     // MIME 类型，如 audio/aac
+}
+
+// 视频消息内容
+message VideoContent {
+  string url = 1;           // 视频文件 URL
+  string thumbnail_url = 2; // 缩略图 URL（可选）
+  string file_name = 3;     // 文件名
+  int64 file_size = 4;      // 文件大小（bytes）
+  int32 duration_ms = 5;    // 时长（ms）
+  int32 width = 6;          // 视频宽度（px）
+  int32 height = 7;         // 视频高度（px）
+  string mime_type = 8;     // MIME 类型，如 video/mp4
+}
+
+// 文件消息内容
+message FileContent {
+  string url = 1;       // 文件 URL
+  string file_name = 2; // 文件名
+  int64 file_size = 3;  // 文件大小（bytes）
+  string mime_type = 4; // MIME 类型
+}
+
+// 位置消息内容
+message LocationContent {
+  double latitude = 1;   // 纬度
+  double longitude = 2;  // 经度
+  string address = 3;    // 地址描述
+  string name = 4;       // 地点名称（可选）
+}
+
+// 自定义消息内容
+message CustomContent {
+  string custom_type = 1; // 业务自定义类型名，用于区分不同业务场景
+  bytes data = 2;         // 业务自定义载荷（建议使用 JSON 序列化）
+}
+
+// ============================================================================
+// StreamContent - 流式消息内容
+// ============================================================================
+// 用于 AI 对话、实时协作等流式输出场景。
+// 通过 stream_id 关联同一流的所有块，sequence 保证顺序。
+message StreamContent {
+  string stream_id = 1;      // 流唯一标识（UUID）；同一流的所有块使用相同 stream_id
+  StreamStatus status = 2;   // 流状态
+  int32 sequence = 3;        // 块序号（从 1 开始）；用于排序和完整性校验
+  string chunk = 4;          // 内容块（文本/代码片段等）
+  string content_type = 5;   // 内容类型：text/plain / text/markdown / text/code 等
+  map<string, string> metadata = 6; // 元数据（如 model、tokens、finish_reason 等）
+}
+
+// ============================================================================
+// StreamStatus - 流状态
+// ============================================================================
+enum StreamStatus {
+  STREAM_STATUS_UNSPECIFIED = 0;
+  STREAM_STATUS_START = 1;    // 流开始
+  STREAM_STATUS_ONGOING = 2;  // 流进行中
+  STREAM_STATUS_END = 3;      // 流正常结束
+  STREAM_STATUS_CANCEL = 4;   // 流取消/中断
+  STREAM_STATUS_ERROR = 5;    // 流错误
+}
+
+// ============================================================================
+// MsgPriority - 消息投递优先级
+// ============================================================================
+// 业务语义，与会话排序位点 conv_seq 无关。影响投递队列顺序与提醒强度。
+enum MsgPriority {
+  MSG_PRIORITY_NORMAL = 0; // 默认；正常投递与提醒
+  MSG_PRIORITY_HIGH = 1;   // 高优先；优先投递 / 可走高优推送通道 / 批量下行靠前
+  MSG_PRIORITY_LOW = 2;    // 低优先；可延迟合并投递 / 可不触发强提醒
+}
+
+// ============================================================================
+// ChatMessage - 统一聊天消息体
+// ============================================================================
+// 三种会话类型（单聊/群聊/聊天室）共用此结构。
+// 设计意图见 docs/design/message-model.md
+//
+// conv_id 格式：
+//   | chat_type      | conv_id 格式         | 示例        |
+//   |----------------|---------------------|-------------|
+//   | CHAT_PRIVATE   | p:{uid_lo}:{uid_hi} | p:alice:bob |
+//   | CHAT_GROUP     | g:{group_id}        | g:grp_123   |
+//   | CHAT_ROOM      | r:{room_id}         | r:room_456  |
+// 单聊双方 uid 按字典序排列，lo ≤ hi，保证双方生成相同 conv_id。
+//
+// 定向消息（target_users 非空）：
+//   - 仅群聊/聊天室支持；单聊忽略此字段
+//   - 指定后仅向列表中的用户推送，其他成员不收消息
+//   - 用途：@提醒、定向通知、敏感消息可见性控制等
+message ChatMessage {
+  // ----- 标识 -----
+  string msg_id = 1;          // 服务端分配的全局唯一消息 ID；发送时可空，由服务端回填
+  string client_msg_id = 2;   // 消息级幂等 ID（业务层去重）；与 Packet.cid（请求级幂等，网关层去重）职责分离
+
+  // ----- 路由 -----
+  ChatType chat_type = 3;     // 会话类型：单聊/群聊/聊天室
+  string from = 4;            // 发送方 user_id
+  string to = 5;              // 接收目标：单聊=对端 uid；群=group_id；聊天室=room_id
+  string conv_id = 12;        // 会话 ID；与 OfflinePullReq.conv_id 对齐；服务端校验，见 docs/design/message-model.md
+
+  // ----- 定向投递 -----
+  repeated string target_users = 16; // 定向用户列表；仅群聊/聊天室有效；非空时仅向指定用户推送
+
+  // ----- 内容 -----
+  MsgType msg_type = 6;       // 消息类型；决定 content 如何解析
+  bytes content = 7;          // 消息内容；按 msg_type 解析为对应 *Content message
+
+  // ----- 时间与排序 -----
+  int64 server_time = 8;      // 服务端时间（ms）；仅用于展示与排障，不用于排序（排序用 conv_seq）
+  int64 conv_seq = 9;         // 会话内单调排序位点（服务端分配）；用于单会话离线拉取游标与展示排序
+  int64 inbox_seq = 15;       // 用户收件箱单调位点（服务端分配）；用于全量离线拉取游标；群聊时每个成员独立
+
+  // ----- 投递控制 -----
+  MsgPriority priority = 11;  // 投递优先级；客户端可设，服务端可按策略改写；不影响展示顺序
+
+  // ----- 状态 -----
+  bool recalled = 13;         // 是否已撤回；true 时展示层渲染「已撤回」，content 可忽略
+  uint32 edit_version = 14;   // 编辑版本；0=未编辑，≥1=已编辑（展示「已编辑」标记）
+
+  // ----- 阅后即焚（见 docs/design/burn-after-read.md） -----
+  bool burn_after_read = 17;  // 发送时设为 true 表示阅后即焚；仅单聊 v1 支持
+  int32 burn_ttl_sec = 18;  // 对端已读后延迟销毁秒数；0=立即；上限见 AuthResp.burn_ttl_sec_max
+  bool burned = 19;         // 是否已销毁；true 时 content 为空，展示「阅后即焚」占位
+
+  // ----- 扩展 -----
+  map<string, string> ext = 10; // 业务扩展 KV；无法表达复杂结构时可用 MSG_CUSTOM
+}
+
+// ============================================================================
+// MsgSendReq - CMD_MSG_SEND payload
+// ============================================================================
+// 幂等：Packet.cid 与 message.client_msg_id 同时使用，职责分离。
+// 失败返回 CMD_ERROR，不关闭连接。设计意图见 docs/design/message-send-ack.md。
+//
+// 定向消息：
+//   - 设置 message.target_users 后，群聊/聊天室消息仅推送给指定用户
+//   - 单聊消息忽略 target_users 字段（本身就是一对一）
+//   - 定向消息仍会记录到会话历史（群成员可见性由业务层控制）
+//   - 未在 target_users 中的成员：不收实时推送，但可通过离线拉取/历史消息查看
+message MsgSendReq {
+  ChatMessage message = 1; // msg_id / server_time / conv_seq / inbox_seq 由服务端填充
+}
+
+// ============================================================================
+// MsgPushBatch - CMD_MSG_PUSH_BATCH payload
+// ============================================================================
+// 服务端批量下行推送。单包条数上限见 AuthResp.push_batch_max（默认 50）；超出由服务端拆分。
+message MsgPushBatch {
+  repeated ChatMessage messages = 1; // 消息列表；按 priority HIGH→NORMAL→LOW，同级 conv_seq 升序
+}
+
+// ============================================================================
+// AckStatus - ACK 状态
+// ============================================================================
+// 配合 CMD_MSG_ACK_UP / CMD_MSG_ACK_DOWN / CMD_MSG_ACK_BATCH_UP / CMD_MSG_ACK_BATCH_DOWN 使用。
+enum AckStatus {
+  ACK_STATUS_UNSPECIFIED = 0;
+  ACK_SERVER_RECEIVED = 1;  // 服务端已收并持久化（或聊天室已受理）；ACK_DOWN 第 1 档，必达发送方
+  ACK_CLIENT_RECEIVED = 2;  // 对端客户端已收；接收方 ACK_UP 上报，服务端 ACK_DOWN 第 2 档，必达发送方
+  ACK_READ = 3;             // 已读；保留枚举值，本期请使用 CMD_MSG_READ，见 docs/design/read-receipt.md
+}
+
+// ============================================================================
+// MsgAck - CMD_MSG_ACK_UP / CMD_MSG_ACK_DOWN payload
+// ============================================================================
+// 双阶段 ACK（必达）：发送方先收 ACK_DOWN(SERVER_RECEIVED)，对端 ACK_UP 后再收 ACK_DOWN(CLIENT_RECEIVED)。
+// 方向由 cmd 区分。
+message MsgAck {
+  string msg_id = 1;         // 消息 ID
+  string client_msg_id = 2;  // 客户端幂等 ID；用于关联
+  AckStatus status = 3;      // ACK 状态
+  int64 conv_seq = 4;        // 服务端落库位点；回传给发送方
+}
+
+// ============================================================================
+// MsgAckBatchUp - CMD_MSG_ACK_BATCH_UP payload
+// ============================================================================
+// 客户端批量上报 ACK（如收到 PUSH_BATCH 后），减少往返次数。服务端逐条处理，幂等。
+message MsgAckBatchUp {
+  repeated MsgAck acks = 1; // ACK 列表
+}
+
+// ============================================================================
+// MsgAckBatchDown - CMD_MSG_ACK_BATCH_DOWN payload
+// ============================================================================
+// 服务端批量下发 ACK（如群消息送达通知），减少往返次数。
+message MsgAckBatchDown {
+  repeated MsgAck acks = 1; // ACK 列表
+}
+
+// ============================================================================
+// MsgRead - CMD_MSG_READ payload
+// ============================================================================
+// 会话级已读回执。设计意图见 docs/design/read-receipt.md。
+// 单聊：通知对端；群聊：本期不广播给其他成员；聊天室：不支持。
+message MsgRead {
+  ChatType chat_type = 1;  // 会话类型
+  string from = 2;         // 已读方 user_id
+  string to = 3;           // 会话对端 / 群 / 聊天室
+  string msg_id = 4;       // 读到的最大 msg_id（可选）
+  int64 conv_seq = 5;      // 读到的最大 conv_seq（推荐）
+  int64 timestamp = 6;     // 已读时间（ms）
+  string conv_id = 7;      // 会话 ID
+}
+
+// ============================================================================
+// MsgRecall - CMD_MSG_RECALL_REQ / CMD_MSG_RECALL_PUSH payload
+// ============================================================================
+// 撤回请求与推送共用。设计意图见 docs/design/recall.md。
+message MsgRecall {
+  string msg_id = 1;       // 被撤回的消息 ID
+  ChatType chat_type = 2;  // 会话类型
+  string from = 3;         // 撤回发起方（必须等于原消息发送者）
+  string to = 4;           // 会话对端 / 群 / 聊天室
+  int64 timestamp = 5;     // 撤回时间（ms）
+  string reason = 6;       // 撤回原因（可选；管理员撤回时可填写）
+  string conv_id = 7;      // 会话 ID
+}
+
+// ============================================================================
+// MsgEdit - CMD_MSG_EDIT_REQ / CMD_MSG_EDIT_PUSH payload
+// ============================================================================
+// 编辑请求与推送共用。设计意图见 docs/design/edit.md。
+// REQ 可带 edit_version 做乐观锁；PUSH 中 edit_version 为服务端确认后的版本（从 1 递增）。
+message MsgEdit {
+  string msg_id = 1;           // 被编辑的消息 ID
+  ChatType chat_type = 2;      // 会话类型
+  string from = 3;             // 编辑发起方（必须等于原消息发送者）
+  string to = 4;               // 会话对端 / 群 / 聊天室
+  MsgType msg_type = 5;        // 编辑后的消息类型（可与原类型不同）
+  bytes content = 6;           // 编辑后的内容（按 msg_type 解析）
+  int64 timestamp = 7;         // 服务端确认的编辑时间（ms）
+  uint32 edit_version = 8;     // 编辑版本，从 1 递增；用于展示「已编辑」与冲突检测
+  map<string, string> ext = 9; // 扩展字段
+  string conv_id = 10;         // 会话 ID
+}
+
+// ============================================================================
+// MsgBurn - CMD_MSG_BURN_PUSH payload
+// ============================================================================
+// 阅后即焚销毁通知。设计意图见 docs/design/burn-after-read.md。
+// 服务端在对端已读且销毁任务执行后推送；双方全设备接收。
+message MsgBurn {
+  string msg_id = 1;       // 被销毁的消息 ID
+  ChatType chat_type = 2;  // 会话类型（v1 仅 CHAT_PRIVATE）
+  string from = 3;         // 原消息发送方 user_id
+  string to = 4;           // 单聊对端 user_id
+  int64 timestamp = 5;     // 销毁完成时间（ms）
+  string conv_id = 6;      // 会话 ID
+  int32 burn_ttl_sec = 7;  // 原消息配置的读后延迟（秒）；0 表示阅后立即销毁
+}
