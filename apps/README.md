@@ -50,7 +50,9 @@ mise run release-deploy                   # Release + K8s 验收
 
 # 共享库 / 压测 / Web
 mise run im_client:test
+mise run im_client:docs              # im_client ExDoc → apps/elixir/im_client/doc/
 mise run loadtest:run -- connection_load --app-key app_demo --users 10 --base-url http://localhost:4000
+mise run docs                        # 全部 Elixir ExDoc 一次生成
 mise run web:dev                          # im-console → :5173
 mise run ci                               # 提交前全量检查
 ```

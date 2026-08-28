@@ -10,7 +10,8 @@ defmodule IM.Client.MixProject do
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_ignore_filters: [&String.starts_with?(&1, "test/support/")],
-      name: "IM.Client"
+      name: "IM.Client",
+      docs: [main: "IM.Client"]
     ]
   end
 
@@ -27,7 +28,8 @@ defmodule IM.Client.MixProject do
     [
       {:im_proto, path: "../im_proto"},
       {:websockex, "~> 0.4.3"},
-      {:req, "~> 0.5"}
+      {:req, "~> 0.5"},
+      {:ex_doc, "~> 0.38", only: :dev, runtime: false}
     ]
   end
 end

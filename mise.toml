@@ -89,6 +89,16 @@ description = "依赖审计：检查已撤回（retired）的 hex 包"
 depends = ["im:deps-get"]
 run = "cd apps/elixir/im && mix hex.audit"
 
+[tasks."im:docs"]
+description = "生成 IM ExDoc（输出 apps/elixir/im/doc/）"
+depends = ["im:compile"]
+env = { MIX_ENV = "dev" }
+run = "cd apps/elixir/im && mix docs"
+
+[tasks.docs]
+description = "生成全部 Elixir 项目 ExDoc（im + im_client + loadtest）"
+depends = ["im:docs", "im_client:docs", "loadtest:docs"]
+
 [tasks."im:test"]
 description = "mix test（自动解析 PGPORT：15432 pg-forward 优先，其次 5432）"
 depends = ["im:compile"]
@@ -333,6 +343,12 @@ description = "im_client mix test"
 depends = ["im_client:deps-get"]
 run = "cd apps/elixir/im_client && mix test"
 
+[tasks."im_client:docs"]
+description = "生成 im_client ExDoc（输出 apps/elixir/im_client/doc/）"
+depends = ["im_client:deps-get"]
+env = { MIX_ENV = "dev" }
+run = "cd apps/elixir/im_client && mix docs"
+
 # ── Mix：apps/elixir/loadtest ─────────────────────────────────────────────────
 
 [tasks."loadtest:deps-get"]
@@ -348,6 +364,12 @@ run = "cd apps/elixir/loadtest && mix test"
 description = "运行压测（透传参数，例：mise run loadtest:run -- connection_load --app-key X）"
 depends = ["loadtest:deps-get"]
 run = "cd apps/elixir/loadtest && mix loadtest.run $@"
+
+[tasks."loadtest:docs"]
+description = "生成 loadtest ExDoc（输出 apps/elixir/loadtest/doc/）"
+depends = ["loadtest:deps-get"]
+env = { MIX_ENV = "dev" }
+run = "cd apps/elixir/loadtest && mix docs"
 
 # ── Web：apps/web/im-console ──────────────────────────────────────────────────
 

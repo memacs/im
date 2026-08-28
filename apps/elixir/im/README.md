@@ -44,6 +44,7 @@ mise run im:server           # http://localhost:4000  /ws
 | `mise run im:compile` | 编译 |
 | `mise run im:test` | ExUnit（自动解析 PGPORT） |
 | `mise run im:release` | 本地打 Release 包（`MIX_ENV=prod`） |
+| `mise run im:docs` | 生成 ExDoc API 文档 → `doc/index.html` |
 
 ### Release + K8s 单副本（与线上一致，推荐日常验收）
 

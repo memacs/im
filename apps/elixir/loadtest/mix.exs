@@ -16,7 +16,8 @@ defmodule IM.LoadTest.MixProject do
           overlays: "rel/overlays"
         ]
       ],
-      name: "IM.LoadTest"
+      name: "IM.LoadTest",
+      docs: [main: "IM.LoadTest.Controller"]
     ]
   end
 
@@ -33,7 +34,8 @@ defmodule IM.LoadTest.MixProject do
   defp deps do
     [
       {:im_client, path: "../im_client"},
-      {:jason, "~> 1.4"}
+      {:jason, "~> 1.4"},
+      {:ex_doc, "~> 0.38", only: :dev, runtime: false}
     ]
   end
 end

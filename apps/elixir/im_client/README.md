@@ -40,6 +40,7 @@ mise run im_client:test
 cd apps/elixir/im_client
 mix deps.get
 mix test
+mix docs    # 或 mise run im_client:docs → doc/index.html
 ```
 
 ### 在代码中使用

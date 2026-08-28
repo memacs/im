@@ -49,6 +49,7 @@ mix loadtest.run message_flood \
 
 ```bash
 mise run loadtest:test
+mise run loadtest:docs              # ExDoc → apps/elixir/loadtest/doc/
 mise run loadtest:run -- connection_load --app-key app_demo --users 50 --base-url http://localhost:4000
 ```
 
