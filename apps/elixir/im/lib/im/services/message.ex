@@ -104,9 +104,7 @@ defmodule IM.Services.Message do
   def ack_up(%MsgAck{} = ack, %MessageContext{} = ctx) do
     start = System.monotonic_time()
 
-    unless client_received?(ack.status) do
-      {:error, Error.new(:msg_invalid, "unsupported ack status")}
-    else
+    if client_received?(ack.status) do
       case MessageStore.get_by_msg_id(ctx.app_key, ack.msg_id) do
         {:ok, body} ->
           down = %MsgAck{
@@ -128,6 +126,8 @@ defmodule IM.Services.Message do
         {:error, :not_found} ->
           {:error, Error.new(:msg_invalid, "msg not found")}
       end
+    else
+      {:error, Error.new(:msg_invalid, "unsupported ack status")}
     end
   end
 

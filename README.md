@@ -111,7 +111,7 @@ Push / PR 触发 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)，与本
 | Job | 条件 | 步骤 |
 | --- | --- | --- |
 | **Proto** | 始终 | `proto-check` → 装插件 → `proto-gen-check`（生成物防漂移） |
-| **Elixir** | 存在 `apps/elixir/im/mix.exs` 时 | `format-check` → `compile --warnings-as-errors` → `hex.audit` → `test`（含 postgres service） |
+| **Elixir** | 存在 `apps/elixir/im/mix.exs` 时 | `format-check` → `credo`（高优先级）→ `compile --warnings-as-errors` → `hex.audit` → `test`（含 postgres service） |
 | **im-console** | 存在 `apps/web/im-console/package.json` 时 | `npm ci` → `vitest` → `vite build` |
 | **im_client** | 存在 `apps/elixir/im_client/mix.exs` 时 | `mix test` |
 | **loadtest** | 存在 `apps/elixir/loadtest/mix.exs` 时 | `mix test`（依赖 im_client） |

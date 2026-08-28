@@ -1,4 +1,4 @@
-# 与本地 `mise run ci` 对齐：proto-check → format-check → 严格编译 → 依赖审计 → test
+# 与本地 `mise run ci` 对齐：proto-check → format-check → credo → 严格编译 → 依赖审计 → test
 # 另有 release job 验证 Dockerfile 可构建（黄金路径见 release-deploy-test.md）
 # mix.exs 位于 apps/elixir/im；见 docs/implementation/monorepo-layout.md
 name: CI
@@ -75,6 +75,9 @@ jobs:
 
       - name: mix format --check-formatted
         run: mise run format-check
+
+      - name: mix credo
+        run: mise run im:credo
 
       - name: mix compile --warnings-as-errors
         run: mise run im:compile-strict

@@ -127,7 +127,7 @@ defmodule IM.Services.MessageGroupTest do
                bob_ctx
              )
 
-    assert length(by_conv.messages) >= 1
+    refute by_conv.messages == []
     assert hd(by_conv.messages).conv_id == "g:#{group.group_id}"
     _ = owner
   end

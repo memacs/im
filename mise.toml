@@ -89,6 +89,11 @@ description = "依赖审计：检查已撤回（retired）的 hex 包"
 depends = ["im:deps-get"]
 run = "cd apps/elixir/im && mix hex.audit"
 
+[tasks."im:credo"]
+description = "Credo 静态分析（合入前门禁：高优先级零 issue）"
+depends = ["im:deps-get"]
+run = "cd apps/elixir/im && mix credo --min-priority high"
+
 [tasks."im:docs"]
 description = "生成 IM ExDoc（输出 apps/elixir/im/doc/）"
 depends = ["im:compile"]
@@ -238,11 +243,12 @@ description = "提交前：proto + IM compile + test"
 depends = ["proto-check", "im:compile", "im:test"]
 
 [tasks.ci]
-description = "CI 等价：proto + format + 严格编译 + 依赖审计 + im/im_client/loadtest test"
+description = "CI 等价：proto + format + credo + 严格编译 + 依赖审计 + im/im_client/loadtest test"
 depends = [
   "proto-check",
   "proto-gen-check",
   "im:format-check",
+  "im:credo",
   "im:compile-strict",
   "im:audit",
   "im:test",

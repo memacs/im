@@ -1,0 +1,25 @@
+---
+description: IM 合入前门禁——format、credo、ci、文档一致；准备提交或合入时必须满足
+alwaysApply: true
+---
+
+# 合入前门禁
+
+声称可提交/合入/标 PROGRESS done **之前**，须本地全绿：
+
+```bash
+mise run format-check   # 不过则 mise run format
+mise run im:credo
+mise run ci             # = GHA：proto + format + compile-strict + audit + 全量 test
+```
+
+## 文档
+
+- 代码与 `docs/`、`proto/`、README **不得矛盾**；能力变更走 [`doc-sync-checklist.md`](docs/design/doc-sync-checklist.md) §2 + §2.6 grep
+- 协议/cmd 语义变更须 **人工确认**；系统级变更更新 `architecture-overview.md`
+
+## Agent
+
+- 自行跑门禁并修复，勿只提示用户
+- 未全绿 **禁止** `git commit`（用户明确要求且知悉风险除外）
+- 详流程： [`.agents/skills/im-commit-gates/SKILL.md`](.agents/skills/im-commit-gates/SKILL.md)

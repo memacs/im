@@ -328,7 +328,7 @@ deploy/                # 与 apps 对应的部署清单
 | **`git@github.com:j-morgan6/elixir-phoenix-guide.git`** | `elixir-essentials`、`ecto-*`、`phoenix-*`、`otp-essentials`、`testing-essentials`、`oban-essentials`、`deployment-gotchas`、`code-quality`、`security-essentials`、`telemetry-essentials` |
 | **`git@github.com:redis/agent-skills.git`** | `redis-*`、`iris-development`；IM 业务 Redis 键仍以 [`database-design.md`](docs/design/database/database-design.md) §二、[`permission-cache.md`](docs/design/permission-cache.md) 为准 |
 | **`git@github.com:LukasNiessen/kubernetes-skill.git`** | `kubernetes-skill`；IM 部署清单以 [`deploy/`](deploy/) 与 [`release-deploy-test.md`](docs/implementation/elixir/release-deploy-test.md) 为准 |
-| **本仓库自研** | `im-implementation`、`design-postgres-tables`、`im-flamegraph`、`im-k8s-debug` |
+| **本仓库自研** | `im-implementation`、`design-postgres-tables`、`im-flamegraph`、`im-k8s-debug`、`im-commit-gates` |
 
 ### 快速匹配
 
@@ -338,6 +338,7 @@ deploy/                # 与 apps 对应的部署清单
 | **按 Phase / roadmap 开发** | [`specs-index`](docs/specs-index.md) → `.kiro/specs/` → [`PROGRESS`](docs/implementation/elixir/PROGRESS.md) |
 | **新增/变更协议能力、核对文档是否漏改** | [`doc-sync-checklist`](docs/design/doc-sync-checklist.md)（**历史遗漏复盘 + 合入前清单**） |
 | 按 roadmap 实现、继续开发、TDD 循环 | [`im-implementation`](.agents/skills/im-implementation/SKILL.md) |
+| **合入前门禁、提交约束、PR 检查** | [`im-commit-gates`](.agents/skills/im-commit-gates/SKILL.md) |
 | **写/改任何实现代码（协议为准）** | 先读 `proto/` + [`protocol.md`](docs/design/protocol/protocol.md)；**改协议须人工确认** |
 | Web 演示控制台（独立 SPA、协议全覆盖） | [web-console.md](docs/design/web-console.md)、[implementation/web/web-console.md](docs/implementation/web/web-console.md) |
 | 写/改 `.ex` 通用风格 | [`elixir-essentials`](.agents/skills/elixir-essentials/SKILL.md) |
@@ -368,10 +369,24 @@ deploy/                # 与 apps 对应的部署清单
 
 ## 本地验收
 
+**合入前须全部门禁通过**（详见 [`.agents/skills/im-commit-gates/SKILL.md`](.agents/skills/im-commit-gates/SKILL.md)）：
+
 ```bash
-mise run check              # 单元测试
-mise run ci                 # 提交前完整检查（与 GitHub Actions 对齐）
-mise run verify             # check + Release 部署
+mise run format-check      # mix format --check-formatted
+mise run im:credo          # 静态分析，零 issue
+mise run ci                # 与 GitHub Actions 对齐的全量检查
+mise run verify            # check + Release 部署（可选）
+```
+
+| 门禁 | 说明 |
+| --- | --- |
+| `format-check` | 代码格式；不过则 `mise run format` |
+| `im:credo` | Credo 高优先级（warning+）零 issue |
+| `ci` | proto + format + credo + compile-strict + hex.audit + im/im_client/loadtest test |
+| 文档 | [`doc-sync-checklist.md`](docs/design/doc-sync-checklist.md) §2 + §2.6 grep；代码与文档不得矛盾 |
+
+```bash
+mise run check              # 轻量：proto + compile + test（不能代替 ci）
 ```
 
 详见：[`docs/implementation/elixir/release-deploy-test.md`](docs/implementation/elixir/release-deploy-test.md)

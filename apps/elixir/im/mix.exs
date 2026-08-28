@@ -72,6 +72,7 @@ defmodule IM.MixProject do
       {:telemetry_metrics_prometheus_core, "~> 1.2"},
       # 开发与测试工具
       {:ex_doc, "~> 0.38", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.18", only: :test, runtime: false},
       # 协议 E2E：仅测试环境依赖 im_client（IC-06 不做 compile-time 硬依赖）
       {:im_client, path: "../im_client", only: :test}

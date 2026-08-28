@@ -196,7 +196,7 @@ WS 命令处理器：解 Packet → `Dispatch` → `Reply`/`Push`。
 | **L0** | `mise run proto-check` | 改 proto 或生成代码 |
 | **L1** | `mise run test`（需 `pg-forward` 或本机 5432） | **每次**代码变更 |
 | **L2** | `mise run check` | 准备标 done |
-| **L3** | `mise run ci` | 提交前 |
+| **L3** | `mise run ci`（format + credo + 全量 test） | 提交前 |
 | **L4** | `mise run release-deploy` + `release-smoke` | **阶段 2+** 功能 |
 
 本地依赖：`mise run k8s-up` + `mise run pg-forward`（OrbStack Postgres → `localhost:15432`）。  
@@ -231,7 +231,7 @@ WS 命令处理器：解 Packet → `Dispatch` → `Reply`/`Push`。
 - [ ] 符合 `agent.md` 架构约束与 [`project-structure.md`](../../docs/implementation/elixir/project-structure.md)
 - [ ] 测试先于实现，描述验收场景
 - [ ] 新增/变更公共 API：`@moduledoc`、`@doc`（中文 + `## 示例`）、`@spec`；`mix docs` 可生成
-- [ ] `mix compile` / `mix test` / `protoc` 通过
+- [ ] `mix compile` / `mix test` / `protoc` 通过；合入前 `mise run ci` + `im:credo` 全绿
 - [ ] 阶段 2+：`release-deploy` + K8s 冒烟通过
 - [ ] 文档、注释、代码语义一致；系统级变更已更新 `architecture-overview.md`
 - [ ] `PROGRESS.md` 已更新

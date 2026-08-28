@@ -9,7 +9,7 @@
 | **Elixir / Phoenix** | `elixir-essentials`、`ecto-*`、`phoenix-*`、`otp-essentials`、`testing-essentials`、`oban-essentials`、`deployment-gotchas`、`code-quality`、`security-essentials`、`telemetry-essentials` | [j-morgan6/elixir-phoenix-guide](https://github.com/j-morgan6/elixir-phoenix-guide) |
 | **Redis** | `redis-*`、`iris-development` | [redis/agent-skills](https://github.com/redis/agent-skills) |
 | **Kubernetes** | `kubernetes-skill` | [LukasNiessen/kubernetes-skill](https://github.com/LukasNiessen/kubernetes-skill) |
-| **IM 自研** | `im-implementation`、`design-postgres-tables`、`im-flamegraph`、`im-k8s-debug` | 本仓库 |
+| **IM 自研** | `im-implementation`、`design-postgres-tables`、`im-flamegraph`、`im-k8s-debug`、`im-commit-gates` | 本仓库 |
 
 完整索引与任务匹配见 [`agent.md`](../agent.md)「Agent Skill → 快速匹配」。
 
@@ -177,5 +177,6 @@ rsync -av --delete \
 | [`design-postgres-tables`](design-postgres-tables/SKILL.md) | PostgreSQL 表设计审核 checklist |
 | [`im-flamegraph`](im-flamegraph/SKILL.md) | Erlang perf CPU 火焰图（`mise run flamegraph`） |
 | [`im-k8s-debug`](im-k8s-debug/SKILL.md) | K8s Pod 内 RPC + 结构化日志 trace 排障 |
+| [`im-commit-gates`](im-commit-gates/SKILL.md) | 合入前门禁：format、credo、ci、文档一致 |
 
 由本仓库维护，不随上游 Elixir / Redis skill 同步覆盖。
