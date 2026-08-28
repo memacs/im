@@ -2,7 +2,7 @@
 
 `.kiro/specs/` 存放 **AI 辅助开发时的阶段/特性规格**（requirements → design → tasks），与 [`roadmap.md`](implementation/elixir/roadmap.md) 任务 ID 对齐，**不替代** `proto/` 与 [`protocol.md`](design/protocol/protocol.md)。
 
-> **权威优先级**：`proto/` + `protocol.md` > `agent.md` > `roadmap.md` > Kiro spec > 实现代码  
+> **权威优先级**：`proto/` + `protocol.md` > `AGENTS.md` > `roadmap.md` > Kiro spec > 实现代码  
 > **活状态**：任务是否完成以 [`PROGRESS.md`](implementation/elixir/PROGRESS.md) 为准；spec 的 `tasks.md` 为开发过程勾选记录。
 
 ---
@@ -118,4 +118,4 @@ apps/elixir/im/lib/           ← 源码
 - [roadmap](implementation/elixir/roadmap.md)
 - [PROGRESS](implementation/elixir/PROGRESS.md)
 - [im-implementation Skill](../.agents/skills/im-implementation/SKILL.md)
-- [agent.md](../agent.md)（含 §文档地图）
+- [AGENTS.md](../AGENTS.md)（含 §文档地图）

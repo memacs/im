@@ -24,7 +24,45 @@ auto_suggest: true
 - [ ] PROGRESS / architecture 已更新（若适用）
 ```
 
-**禁止**：门禁未绿就 `git commit`（除非用户明确要求且知悉风险）。
+**禁止**：门禁未绿就 `git commit`。
+
+---
+
+## Git 提交规范
+
+- **不要自动提交代码到 git**，需要进行确认
+- **提交前必须让用户确认提交内容和 commit message**
+
+### Agent 提交流程（强制）
+
+1. **不得**在任务完成、测试通过、用户未开口时自动 `git commit`
+2. 用户要求提交时，先输出 **待确认包**：
+   - 变更文件列表（新增 / 修改 / 删除）
+   - `git diff --stat` 或关键 diff 摘要
+   - 建议的 **完整 commit message**（1–2 句，聚焦 why）
+   - 合入门禁结果（format / credo / ci）
+3. **等待用户明确确认**（可修改 message 或调整文件范围）
+4. 确认后再执行 `git add` → `git commit`
+5. **禁止**未经确认 `git push`
+
+### 待确认包模板
+
+```markdown
+## 准备提交（请确认）
+
+**变更文件**：
+- `path/to/file.ex`（修改）
+- …
+
+**commit message**：
+\`\`\`
+feat: …
+\`\`\`
+
+**门禁**：format ✅ | credo ✅ | ci ✅
+
+确认后我将执行提交；如需改 message 或排除文件请说明。
+```
 
 ---
 
@@ -100,7 +138,7 @@ mise run release-deploy && mise run release-smoke
 
 ## TDD 与代码质量（合入前提）
 
-见 [`agent.md`](../../../agent.md)：
+见 [`AGENTS.md`](../../../AGENTS.md)：
 
 - **测试先行**（非纯文档/部署任务）
 - 公共 API：`@moduledoc`、`@doc`（**简体中文** + `## 示例`）、`@spec`
@@ -115,9 +153,9 @@ mise run release-deploy && mise run release-smoke
 2. 失败 → 修复 → 重跑，直到全绿
 3. 输出摘要：每条门禁 ✅/❌ + 关键失败原因
 4. 文档变更列出：改了哪些 design/impl 文件、grep 是否已跑
-5. **仅当用户明确要求** 才 `git commit`；commit message 反映「为什么」
+5. **Git 提交规范**（见上文 §Git 提交规范）：不自动 commit；用户要求提交时先展示待确认包，**经确认后再 commit**
 
-### 汇报模板
+### 汇报模板（合入前，非提交）
 
 ```markdown
 ## 合入门禁
@@ -130,14 +168,15 @@ mise run release-deploy && mise run release-smoke
 | doc-sync | ✅（已 grep §2.6） |
 
 **文档同步**：（列表或 N/A）
-**建议 commit message**：（一句 why）
+
+（若用户要求提交，另附 §Git 提交规范 的「待确认包」，勿在此直接 commit）
 ```
 
 ---
 
 ## 相关链接
 
-- [`agent.md`](../../../agent.md) — TDD、规模前提、硬约束
+- [`AGENTS.md`](../../../AGENTS.md) — TDD、规模前提、硬约束
 - [`doc-sync-checklist.md`](../../../docs/design/doc-sync-checklist.md)
 - [`im-implementation`](../im-implementation/SKILL.md) — 开发循环与 L0–L4
 - [`.cursor/rules/commit-gates.mdc`](../../../.cursor/rules/commit-gates.mdc) — 会话级短规则

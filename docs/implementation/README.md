@@ -81,4 +81,4 @@
 
 - [文档总索引](../README.md)
 - [协议设计](../design/)
-- [AI 协作约定](../../agent.md)
+- [AI 协作约定](../../AGENTS.md)

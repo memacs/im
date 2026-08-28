@@ -103,7 +103,7 @@
 
 | ID | 修复 |
 |----|------|
-| G-80 | `resolve-pg-port.sh` + mise 任务自动 PGPORT；[`local-dev-gotchas.md`](local-dev-gotchas.md)；`agent.md` / im-implementation 技能 |
+| G-80 | `resolve-pg-port.sh` + mise 任务自动 PGPORT；[`local-dev-gotchas.md`](local-dev-gotchas.md)；`AGENTS.md` / im-implementation 技能 |
 
 ---
 

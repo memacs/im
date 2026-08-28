@@ -11,7 +11,7 @@ auto_suggest: true
 
 # Elixir 基础规范（IM 项目）
 
-> **语言**：本仓库 `apps/elixir/im` 的 `@moduledoc` / `@doc` **正文用简体中文**；代码标识符与 `@spec` 保持英文。见 [`agent.md`](../../agent.md)「中文优先」。
+> **语言**：本仓库 `apps/elixir/im` 的 `@moduledoc` / `@doc` **正文用简体中文**；代码标识符与 `@spec` 保持英文。见 [`AGENTS.md`](../../AGENTS.md)「中文优先」。
 
 ## 规则（必须遵守）
 

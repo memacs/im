@@ -129,7 +129,7 @@
 | [architecture-overview.md](design/architecture-overview.md) | 系统架构活文档 |
 | [roadmap.md](implementation/elixir/roadmap.md) | 分阶段任务定义 |
 | [specs-index.md](specs-index.md) | Kiro 阶段/特性规格（`.kiro/specs/`） |
-| [agent.md](../agent.md) | AI / 协作者硬约束 |
+| [AGENTS.md](../AGENTS.md) | AI / 协作者硬约束 |
 
 ---
 

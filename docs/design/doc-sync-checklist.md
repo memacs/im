@@ -4,7 +4,7 @@
 | --- | --- |
 | 状态 | **活文档**（新增能力合入前必跑） |
 | 来源 | 阅后即焚（DD-036）纳入 v1 时的遗漏复盘 |
-| 受众 | AI / 协作者；与 [`agent.md`](../../agent.md)「文档一致性」「协议为准」配套使用 |
+| 受众 | AI / 协作者；与 [`AGENTS.md`](../../AGENTS.md)「文档一致性」「协议为准」配套使用 |
 
 ---
 
@@ -16,7 +16,7 @@
 | --- | --- | --- |
 | 1 | **只改「新文件 + 索引」** | 新建专题设计就以为完成，未按「能力在仓库里的所有落点」扫一遍 |
 | 2 | **锚点过窄** | 对照撤回/编辑抄了主流程，但没 grep「撤回」「编辑」「400–499」等**已存在能力的所有引用** |
-| 3 | **`agent.md` 工作流不完整** | 原流程列了 proto / protocol / 专题设计 / architecture-overview / implementation，**未列出**双通道、Kafka、cmd-type、system-design、auth 配置、可观测性、交叉引用等扇出点 |
+| 3 | **`AGENTS.md` 工作流不完整** | 原流程列了 proto / protocol / 专题设计 / architecture-overview / implementation，**未列出**双通道、Kafka、cmd-type、system-design、auth 配置、可观测性、交叉引用等扇出点 |
 | 4 | **总览表与明细不同步** | `PROGRESS` 任务行已更新，`roadmap` 阶段总览表、M5 里程碑仍写旧文案 |
 | 5 | **横切关注点当可选** | `trace_id` 因果链、`AuthResp` 下发配置、`message_bodies` 字段、Kafka `im.downstream` 附录未视为必改项 |
 | 6 | **实现文档只写新模块** | 有 `burn-after-read.md` impl，但未改**挂钩模块**（`read-receipt` 触发销毁、`message-send-ack` 发送校验） |
@@ -29,7 +29,7 @@
 
 ## 2. 合入前必做（强制顺序）
 
-与 [`agent.md`](../../agent.md)「修改协议工作流」叠加使用；**全部勾选**后方可标 `PROGRESS` done 或宣称「文档已同步」。
+与 [`AGENTS.md`](../../AGENTS.md)「修改协议工作流」叠加使用；**全部勾选**后方可标 `PROGRESS` done 或宣称「文档已同步」。
 
 ### 2.1 协议与决策（主路径）
 
@@ -46,7 +46,7 @@
 
 - [ ] `docs/design/cmd-type.md`（区间表 + 新区间说明节）
 - [ ] `proto/common.proto` 注释与 `enum CmdType` 一致
-- [ ] `agent.md`「命令字分区」一行
+- [ ] `AGENTS.md`「命令字分区」一行
 - [ ] `docs/design/packet.md`（若涉及错误模型 / trace；否则确认指向 proto 即可）
 
 ### 2.3 横切与基础设施
@@ -83,13 +83,13 @@
 
 ```bash
 # 将 NEW 换成新能力中文/英文关键词，OLD 换成最相近已有能力（如阅后即焚 vs 撤回/编辑）
-rg -n "撤回|编辑" docs/ proto/ README.md agent.md --glob '!**/burn-after-read.md'
+rg -n "撤回|编辑" docs/ proto/ README.md AGENTS.md --glob '!**/burn-after-read.md'
 ```
 
 针对**新能力专有词**反查是否已写入主路径：
 
 ```bash
-rg -n "阅后即焚|burn_after_read|BURN_PUSH" docs/ proto/ README.md agent.md
+rg -n "阅后即焚|burn_after_read|BURN_PUSH" docs/ proto/ README.md AGENTS.md
 ```
 
 期望：主路径与扇出文档均有命中；**不应**只在 1～2 个文件中出现。

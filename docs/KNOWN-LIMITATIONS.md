@@ -68,7 +68,7 @@
 | `docs/`、`proto/`、`deploy/` | **必读** |
 | [http-api-reference.md](implementation/elixir/http-api-reference.md) | REST 对接必读 |
 | `.kiro/specs/` | 可选（AI 开发过程记录，非行为契约） |
-| `agent.md`、`.agents/skills/` | 可选（内部开发约定） |
+| `AGENTS.md`、`.agents/skills/` | 可选（内部开发约定） |
 
 ---
 

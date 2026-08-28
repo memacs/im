@@ -2,7 +2,7 @@
 
 本目录存放 IM 系统各模块的**设计文档**，记录「为什么这样设计、有什么好处、放弃了什么」。
 
-文档导航：[docs/README.md](../README.md) · [module-map.md](../module-map.md) · [agent.md §文档地图](../agent.md#文档地图)
+文档导航：[docs/README.md](../README.md) · [module-map.md](../module-map.md) · [AGENTS.md §文档地图](../AGENTS.md#文档地图)
 
 ---
 
@@ -147,5 +147,5 @@ sequenceDiagram
 ```
 ```
 
-涉及 **系统级** 变更时，须同步更新 [architecture-overview.md](architecture-overview.md)（见 [agent.md](../../agent.md)）。
+涉及 **系统级** 变更时，须同步更新 [architecture-overview.md](architecture-overview.md)（见 [AGENTS.md](../../AGENTS.md)）。
 

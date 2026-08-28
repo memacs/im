@@ -20,7 +20,7 @@
 2. 对应 `docs/design/<module>.md`（为什么）→ `docs/implementation/elixir/<module>.md`（怎么做）
 3. [implementation/elixir/PROGRESS.md](implementation/elixir/PROGRESS.md) — 当前进度与下一项任务
 4. [specs-index.md](specs-index.md) — 对应 Phase 的 `.kiro/specs/*/design.md`（开发要点）
-5. [agent.md](../agent.md) — TDD、双通道、文档同步等硬约束
+5. [AGENTS.md](../AGENTS.md) — TDD、双通道、文档同步等硬约束
 
 ### 查 REST / HTTP 接口
 
@@ -46,7 +46,7 @@
 
 ### AI / 协作者
 
-1. [agent.md](../agent.md) — **必读**：§文档地图、规模前提、协议为准、Skill 优先
+1. [AGENTS.md](../AGENTS.md) — **必读**：§文档地图、规模前提、协议为准、Skill 优先
 2. [module-map.md](module-map.md) — 改功能前定位文档与代码
 3. [design/doc-sync-checklist.md](design/doc-sync-checklist.md) — 协议/文档扇出合入前清单
 4. [.agents/skills/im-implementation/SKILL.md](../.agents/skills/im-implementation/SKILL.md) — 开发循环与验证命令
@@ -89,7 +89,7 @@ docs/
     └── web/                        # Web 控制台实现
 apps/                               # 可运行实现
 deploy/                             # 部署清单（见 deploy/README.md）
-agent.md                            # AI 协作约定
+AGENTS.md                            # AI 协作约定
 .kiro/specs/                        # Kiro 阶段/特性规格（见 specs-index.md）
 .agents/skills/                     # Agent Skill
 ```
@@ -117,7 +117,7 @@ agent.md                            # AI 协作约定
 | Java（预留） | [implementation/java/README.md](implementation/java/README.md) |
 | 应用总览（含文档对照） | [apps/README.md](apps/README.md) |
 | 部署 | [deploy/README.md](../deploy/README.md) · [deploy/elixir/](../deploy/elixir/) |
-| AI 协作 | [agent.md](../agent.md) |
+| AI 协作 | [AGENTS.md](../AGENTS.md) |
 
 ---
 
@@ -147,4 +147,4 @@ agent.md                            # AI 协作约定
 - [apps 索引](../apps/README.md)
 - [设计文档索引](design/README.md)
 - [Elixir 实现索引](implementation/elixir/README.md)
-- [AI 协作约定](../agent.md)（含 §文档地图）
+- [AI 协作约定](../AGENTS.md)（含 §文档地图）

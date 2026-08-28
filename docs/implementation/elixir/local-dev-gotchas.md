@@ -86,4 +86,4 @@ PGPORT=5432 mise run test     # GHA / 本机原生 Postgres
 
 - [README.md](../../../README.md) — 本地开发速查
 - [deploy/elixir/im/k8s/README.md](../../../deploy/elixir/im/k8s/README.md) — pg-forward
-- [agent.md](../../../agent.md) — AI 协作约束
+- [AGENTS.md](../../../AGENTS.md) — AI 协作约束

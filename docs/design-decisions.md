@@ -5,14 +5,14 @@
 
 规范细节以 [`design/protocol/protocol.md`](design/protocol/protocol.md) 与 [`proto/`](../proto/) 为准。
 
-**维护规则**（与 `agent.md` 一致）：
+**维护规则**（与 `AGENTS.md` 一致）：
 
-0. **协议为准**：所有实现代码以 `proto/` + `protocol.md` 为唯一行为契约；**修改协议须人工确认**（见 `agent.md`「协议为准」「修改协议工作流」）。
+0. **协议为准**：所有实现代码以 `proto/` + `protocol.md` 为唯一行为契约；**修改协议须人工确认**（见 `AGENTS.md`「协议为准」「修改协议工作流」）。
 1. 某一块协议经讨论确认后，必须新建或更新 `docs/design/<module>.md`（设计意图全文）。
 2. 同步：`protocol.md` 对应节只保留规范约定 + 指向该设计文档的链接；本文件一览表改状态；`proto` 注释一致。
 3. 未确认模块保持「待评审」，允许继续改。
 4. 推翻已确认决策：改 proto + protocol + 对应 `design/*.md`（变更原因写在 PR / commit 说明中，文档内不维护修订历史表）。
-5. **系统级变更**须同步更新 [architecture-overview.md](design/architecture-overview.md)（模块、数据流、能力边界；见 `agent.md`）。
+5. **系统级变更**须同步更新 [architecture-overview.md](design/architecture-overview.md)（模块、数据流、能力边界；见 `AGENTS.md`）。
 6. **功能行为变更**须同步更新该模块文档中的 **`## 完整流程`** Mermaid 图（见 [design/README.md](design/README.md)）。
 
 ---
@@ -55,7 +55,7 @@
 | DD-035 | 应用通道（App Channel） | [app-channel.md](design/app-channel.md) |
 | DD-036 | 阅后即焚 | [burn-after-read.md](design/burn-after-read.md) |
 | DD-037 | Web 演示控制台（独立前端） | [web-console.md](design/web-console.md) |
-| DD-038 | 协议为准、变更须人工确认 | [agent.md](../agent.md)（硬约束「协议为准」） |
+| DD-038 | 协议为准、变更须人工确认 | [AGENTS.md](../AGENTS.md)（硬约束「协议为准」） |
 | DD-039 | `msg_id` Snowflake 发号 | [msg-id-snowflake.md](design/msg-id-snowflake.md) |
 | DD-040 | 消息 TTL 清理 Job | [message-ttl-cleanup.md](design/message-ttl-cleanup.md) |
 
@@ -90,7 +90,7 @@
 | 消息上下文 | 已确认 | [design/message-context.md](design/message-context.md) | §23 |
 | 测试客户端 | 已确认 | [design/test-client.md](design/test-client.md) | §24 |
 | Web 演示控制台 | 已确认 | [design/web-console.md](design/web-console.md)（**协议能力全覆盖**） | — |
-| 协议为准（开发治理） | 已确认 | [agent.md](../agent.md)（DD-038） | — |
+| 协议为准（开发治理） | 已确认 | [AGENTS.md](../AGENTS.md)（DD-038） | — |
 | `msg_id` Snowflake 发号 | 已确认 | [msg-id-snowflake.md](design/msg-id-snowflake.md)（DD-039） | — |
 | 消息 TTL 清理 Job | 已确认 | [message-ttl-cleanup.md](design/message-ttl-cleanup.md)（DD-040） | — |
 | 好友系统 | 已确认 | [design/friend.md](design/friend.md) | §25 |

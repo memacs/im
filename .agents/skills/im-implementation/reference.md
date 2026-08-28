@@ -8,7 +8,7 @@
 
 ## 服务层测试骨架
 
-（实现模块须同时具备 `@moduledoc`、`@doc`、`@spec`，见 `agent.md`。）
+（实现模块须同时具备 `@moduledoc`、`@doc`、`@spec`，见 `AGENTS.md`。）
 
 ```elixir
 defmodule IM.Services.MessageSendTest do

@@ -93,4 +93,4 @@ kubectl apply -f deploy/elixir/loadtest/k8s/job.yaml
 - [生产 overlay README](elixir/im/k8s/overlays/prod/README.md)
 - [Elixir 部署子目录](elixir/README.md)
 - [Java 部署（预留）](java/README.md)
-- [agent.md](../agent.md)
+- [AGENTS.md](../AGENTS.md)

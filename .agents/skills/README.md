@@ -11,7 +11,7 @@
 | **Kubernetes** | `kubernetes-skill` | [LukasNiessen/kubernetes-skill](https://github.com/LukasNiessen/kubernetes-skill) |
 | **IM 自研** | `im-implementation`、`design-postgres-tables`、`im-flamegraph`、`im-k8s-debug`、`im-commit-gates` | 本仓库 |
 
-完整索引与任务匹配见 [`agent.md`](../agent.md)「Agent Skill → 快速匹配」。
+完整索引与任务匹配见 [`AGENTS.md`](../AGENTS.md)「Agent Skill → 快速匹配」。
 
 ---
 
@@ -57,12 +57,12 @@ HTTPS：`https://github.com/j-morgan6/elixir-phoenix-guide`
 |---------|------|
 | 通用 Elixir / Phoenix / Ecto 写法 | 对应上游 skill |
 | 按 roadmap 实现、分层落位、TDD 循环 | [`im-implementation`](im-implementation/SKILL.md)（**IM 唯一实施入口**） |
-| 协议、cmd、双通道、业务语义 | [`docs/design/`](../docs/design/)、[`agent.md`](../agent.md) |
+| 协议、cmd、双通道、业务语义 | [`docs/design/`](../docs/design/)、[`AGENTS.md`](../AGENTS.md) |
 | PostgreSQL 表结构（IM 业务） | [`design-postgres-tables`](design-postgres-tables/SKILL.md) + [`database-design.md`](../docs/design/database/database-design.md) |
 
-**冲突时**：IM 设计文档与 `agent.md` 硬约束（中文 `@doc`、TDD、双通道等）优先；语言与框架惯例优先采用上游 skill。
+**冲突时**：IM 设计文档与 `AGENTS.md` 硬约束（中文 `@doc`、TDD、双通道等）优先；语言与框架惯例优先采用上游 skill。
 
-**本地化**：`elixir-essentials` 等可能含 IM 专属补丁（如简体中文 `@doc`、链到 `agent.md`）；同步上游后须 diff 并保留这些改动。
+**本地化**：`elixir-essentials` 等可能含 IM 专属补丁（如简体中文 `@doc`、链到 `AGENTS.md`）；同步上游后须 diff 并保留这些改动。
 
 ### 同步上游
 

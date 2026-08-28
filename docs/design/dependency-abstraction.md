@@ -101,7 +101,7 @@ flowchart TD
 
 ### 4.2 易于测试
 
-测试时使用可替换实现，不依赖真实外部服务。IM 服务端细则见 [`agent.md`](../../agent.md)「测试驱动开发」：
+测试时使用可替换实现，不依赖真实外部服务。IM 服务端细则见 [`AGENTS.md`](../../AGENTS.md)「测试驱动开发」：
 
 - **DI 优先**：内存实现 / `config/test.exs` 切换；**仅**外部边界用 Mox。
 - **禁止 ExMachina**；用手写工厂或 Context 辅助造数。

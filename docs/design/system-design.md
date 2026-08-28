@@ -637,7 +637,7 @@ sequenceDiagram
 | 设计意图（按模块） | [`design/`](design/) |
 | 决策索引 | [`design-decisions.md`](design-decisions.md) |
 | Protobuf | [`proto/`](../proto/) |
-| AI 协作 | [`agent.md`](../agent.md) |
+| AI 协作 | [`AGENTS.md`](../AGENTS.md) |
 
 ---
 

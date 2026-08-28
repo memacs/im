@@ -21,5 +21,6 @@ mise run ci             # = GHA：proto + format + compile-strict + audit + 全�
 ## Agent
 
 - 自行跑门禁并修复，勿只提示用户
-- 未全绿 **禁止** `git commit`（用户明确要求且知悉风险除外）
+- 未全绿 **禁止** `git commit`
+- **不要自动提交**；用户明确说提交后，先展示变更清单与 commit message，**经确认再 commit**
 - 详流程： [`.agents/skills/im-commit-gates/SKILL.md`](.agents/skills/im-commit-gates/SKILL.md)

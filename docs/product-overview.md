@@ -194,7 +194,7 @@ mise run im:test
 | **客户端对接** | [协议规范](design/protocol/protocol.md) + [proto/](../proto/) → [http-api-reference](implementation/elixir/http-api-reference.md) |
 | **服务端开发** | [文档总索引](README.md) → [module-map](module-map.md) → [PROGRESS](implementation/elixir/PROGRESS.md) |
 | **运维部署** | [deploy/README.md](../deploy/README.md) → [deploy-guide](implementation/elixir/deploy-guide.md) |
-| **AI / 协作者** | [agent.md](../agent.md) → [specs-index](specs-index.md) |
+| **AI / 协作者** | [AGENTS.md](../AGENTS.md) → [specs-index](specs-index.md) |
 
 ---
 
@@ -217,5 +217,5 @@ mise run im:test
 ## 联系我们 / 参与共建
 
 - 提交 Issue / PR 讨论协议与实现
-- 按 [agent.md](../agent.md) 与 [PROGRESS](implementation/elixir/PROGRESS.md) 认领阶段性任务
+- 按 [AGENTS.md](../AGENTS.md) 与 [PROGRESS](implementation/elixir/PROGRESS.md) 认领阶段性任务
 - 架构变更请同步 [architecture-overview.md](design/architecture-overview.md) 与 [doc-sync-checklist](design/doc-sync-checklist.md)

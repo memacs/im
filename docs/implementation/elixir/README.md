@@ -150,5 +150,5 @@ mise run ci                 # proto + format + compile + test
 - [功能模块对照表](../../module-map.md)
 - [协议设计](../../design/protocol/protocol.md)
 - [数据库设计](../../design/database/database-design.md)
-- [AI 协作约定](../../../agent.md)
+- [AI 协作约定](../../../AGENTS.md)
 - [Agent Skills 索引](../../../.agents/skills/README.md)

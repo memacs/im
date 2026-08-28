@@ -24,7 +24,7 @@ Elixir 总览：[elixir/README.md](elixir/README.md)
 | [monorepo-layout.md](../docs/implementation/monorepo-layout.md) | 单仓 `apps/` + `deploy/` 布局 |
 | [deploy-guide.md](../docs/implementation/elixir/deploy-guide.md) | 生产部署指南 |
 | [deploy/README.md](../deploy/README.md) | **部署总览**（overlay、镜像、Job） |
-| [agent.md](../agent.md) | AI / 协作者硬约束 |
+| [AGENTS.md](../AGENTS.md) | AI / 协作者硬约束 |
 
 ### 各应用 ↔ 文档对照
 

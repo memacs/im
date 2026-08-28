@@ -2,7 +2,7 @@
 
 本文档定义从 **零代码** 到 **可上线** 的分阶段实施计划。AI 或协作者按阶段推进；每阶段有明确依赖、产出与验收标准。
 
-> **优先级**：`proto/` + [`protocol.md`](../design/protocol/protocol.md) > [`agent.md`](../../agent.md) > 本路线图。路线图与协议冲突时以协议为准并更新本文档。
+> **优先级**：`proto/` + [`protocol.md`](../design/protocol/protocol.md) > [`AGENTS.md`](../../AGENTS.md) > 本路线图。路线图与协议冲突时以协议为准并更新本文档。
 
 > **进度追踪**：实时状态见 [`PROGRESS.md`](PROGRESS.md)。每完成一项任务必须更新该文件。  
 > **Kiro Spec**：各 Phase 的 requirements/design/tasks 见 [specs-index.md](../../specs-index.md)（`.kiro/specs/`）。
@@ -18,9 +18,9 @@
 
 **原则**：每轮只推进 **一个可独立验收** 的小任务；不要跨 Phase 大块实现。
 
-**文档**：系统级变更（协议能力、分层、数据流、模块边界等）须同步更新 [`architecture-overview.md`](../design/architecture-overview.md)（见 [`agent.md`](../../agent.md)）。
+**文档**：系统级变更（协议能力、分层、数据流、模块边界等）须同步更新 [`architecture-overview.md`](../design/architecture-overview.md)（见 [`AGENTS.md`](../../AGENTS.md)）。
 
-**双通道原则**（已确认）：客户端业务能力须 **WebSocket + REST** 双入口，共用 `IM.Application.Dispatch` → `IM.Services.*`。见 [dual-channel-api.md](dual-channel-api.md)、`agent.md`。各 Phase 实现 WS Handler 时 **同任务** 交付对应 REST 路由与双通道测试（P2-10/11 起建立基础设施）。
+**双通道原则**（已确认）：客户端业务能力须 **WebSocket + REST** 双入口，共用 `IM.Application.Dispatch` → `IM.Services.*`。见 [dual-channel-api.md](dual-channel-api.md)、`AGENTS.md`。各 Phase 实现 WS Handler 时 **同任务** 交付对应 REST 路由与双通道测试（P2-10/11 起建立基础设施）。
 
 **验收黄金路径**（P0-10 完成后，**Phase 2 起强制执行**）：`mise run im:test` → `docker build -f deploy/elixir/im/Dockerfile -t im:local .` → `kubectl apply -k deploy/elixir/im/k8s/overlays/local/` → 冒烟/协议测试。详见 [`release-deploy-test.md`](release-deploy-test.md)。**禁止**仅用 `mix phx.server` 标功能 `done`。
 
@@ -429,7 +429,7 @@ flowchart LR
 | 项 | 说明 |
 | --- | --- |
 | **依赖** | Phase 5+ |
-| **参考** | [`observability.md`](observability.md)、[`kafka-event-bus.md`](kafka-event-bus.md)、[`dependency-abstraction.md`](dependency-abstraction.md)；[`design/observability.md`](../design/observability.md)；`agent.md` 规模前提 |
+| **参考** | [`observability.md`](observability.md)、[`kafka-event-bus.md`](kafka-event-bus.md)、[`dependency-abstraction.md`](dependency-abstraction.md)；[`design/observability.md`](../design/observability.md)；`AGENTS.md` 规模前提 |
 | **产出** | libcluster、Redis Cluster 客户端、Kafka Broadway、Telemetry |
 
 ### 任务清单
@@ -460,7 +460,7 @@ flowchart LR
 | 项 | 说明 |
 | --- | --- |
 | **依赖** | Phase 9 |
-| **参考** | [monorepo-layout.md](../monorepo-layout.md)（`apps/elixir/loadtest`）、[test-client.md](test-client.md)、`agent.md` 规模自检 |
+| **参考** | [monorepo-layout.md](../monorepo-layout.md)（`apps/elixir/loadtest`）、[test-client.md](test-client.md)、`AGENTS.md` 规模自检 |
 | **产出** | `apps/elixir/loadtest/`、`deploy/elixir/loadtest/`、压测报告、部署指南 |
 
 ### 任务清单
@@ -562,7 +562,7 @@ flowchart LR
 
 | 主题 | 说明 |
 | --- | --- |
-| **协议变更（任何语义修改）** | 含 `proto/`、`protocol.md`、已确认 `design/*.md` 中的 cmd/字段/时序/错误码；**须先人工确认**，再按 `agent.md`「修改协议工作流」改文档，**最后**改代码。禁止「先改代码再补协议」 |
+| **协议变更（任何语义修改）** | 含 `proto/`、`protocol.md`、已确认 `design/*.md` 中的 cmd/字段/时序/错误码；**须先人工确认**，再按 `AGENTS.md`「修改协议工作流」改文档，**最后**改代码。禁止「先改代码再补协议」 |
 | 数据库 Schema 大改 | 分片策略、索引、迁移不可逆操作 |
 | 生产密钥与租户配置 | 不写入仓库 |
 | 压测达标与否 | 需人审报告 |
@@ -581,7 +581,7 @@ flowchart LR
 | --- | --- |
 | [`PROGRESS.md`](PROGRESS.md) | 任务状态看板 |
 | [`monorepo-layout.md`](../monorepo-layout.md) | 单仓 `apps/` + `deploy/` 布局 |
-| [`agent.md`](../../agent.md) | AI 全局约束 |
+| [`AGENTS.md`](../../AGENTS.md) | AI 全局约束 |
 | [`.agents/skills/im-implementation/SKILL.md`](../../.agents/skills/im-implementation/SKILL.md) | 每轮开发流程 |
 | [`release-deploy-test.md`](release-deploy-test.md) | Release → K8s → Test 黄金路径 |
 | [`deploy/elixir/im/k8s/README.md`](../../../deploy/elixir/im/k8s/README.md) | OrbStack + kubectl 操作 |

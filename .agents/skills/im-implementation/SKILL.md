@@ -9,10 +9,10 @@ auto_suggest: true
 # IM 服务端实施技能
 
 本技能是 **唯一入口**：任务编排（做什么）+ Elixir 开发循环（怎么写）。  
-**文档地图**（全项目）：[`agent.md` §文档地图](../../agent.md#文档地图) · [`docs/README.md`](../../docs/README.md) · [`module-map.md`](../../docs/module-map.md)  
+**文档地图**（全项目）：[`AGENTS.md` §文档地图](../../AGENTS.md#文档地图) · [`docs/README.md`](../../docs/README.md) · [`module-map.md`](../../docs/module-map.md)  
 语言与框架惯例按需阅读 `elixir-essentials`、`testing-essentials`、`otp-essentials` 等。
 
-**语言**：向用户汇报、文档与代码 `@doc` 正文使用 **简体中文**（见 [`agent.md`](../../agent.md)「中文优先」）。
+**语言**：向用户汇报、文档与代码 `@doc` 正文使用 **简体中文**（见 [`AGENTS.md`](../../AGENTS.md)「中文优先」）。
 
 ---
 
@@ -28,7 +28,7 @@ auto_suggest: true
 ## 权威来源（按优先级）
 
 1. [`proto/`](../../proto/) + [`docs/design/protocol/protocol.md`](../../docs/design/protocol/protocol.md) — **做什么**
-2. [`agent.md`](../../agent.md) — 硬约束、规模前提、一致性
+2. [`AGENTS.md`](../../AGENTS.md) — 硬约束、规模前提、一致性
 3. [`docs/implementation/elixir/roadmap.md`](../../docs/implementation/elixir/roadmap.md) — 阶段与验收
 4. [`docs/implementation/elixir/PROGRESS.md`](../../docs/implementation/elixir/PROGRESS.md) — **当前做到哪**
 5. [`docs/specs-index.md`](../../docs/specs-index.md) — Kiro 阶段/特性 spec（`.kiro/specs/`）
@@ -37,7 +37,7 @@ auto_suggest: true
 8. [`docs/implementation/elixir/<module>.md`](../../docs/implementation/elixir/) — 怎么做（按模块）
 9. 其他 `.agents/skills/*` — 语言/框架惯例
 
-**冲突处理**：协议 > agent.md > roadmap。发现不一致时先对齐文档与 proto，再写代码。
+**冲突处理**：协议 > AGENTS.md > roadmap。发现不一致时先对齐文档与 proto，再写代码。
 
 ---
 
@@ -82,7 +82,7 @@ auto_suggest: true
 ## ① 读任务上下文
 
 ```
-agent.md
+AGENTS.md
   → PROGRESS.md（第一个 pending 且依赖已满足的 ID）
   → roadmap.md 对应阶段验收标准
   → proto + design/<module>.md + implementation/elixir/<module>.md
@@ -134,7 +134,7 @@ REST 入口？                    → lib/im_web/controllers/api/v1/* + lib/im/i
 
 ## ④ 测试驱动微循环
 
-遵循 [`agent.md`](../../agent.md)：**先写（或更新）测试，再写实现**；业务能力 WS + REST 双入口经 `Dispatch`。
+遵循 [`AGENTS.md`](../../AGENTS.md)：**先写（或更新）测试，再写实现**；业务能力 WS + REST 双入口经 `Dispatch`。
 
 ### 红 → 绿 → 重构
 
@@ -166,11 +166,11 @@ mise run test
 ### 实现约束
 
 - **最小 diff**：只改任务相关文件
-- **规模前提**：百万在线、多节点；见 `agent.md` 自检
+- **规模前提**：百万在线、多节点；见 `AGENTS.md` 自检
 - **协议**：WebSocket 二进制 `Packet`；不用 Channel 字符串传业务
 - **主路径**：`CMD_MSG_SEND` 同步 `ACK_DOWN(SERVER_RECEIVED)`，不得异步挂起
 - **存储**：存 `ChatMessage` 等业务体，不存 `Packet`
-- **文档与类型**：公共 API 须 `@moduledoc`、`@doc`（**中文正文** + **`## 示例`**）、`@spec`（见 `agent.md`）
+- **文档与类型**：公共 API 须 `@moduledoc`、`@doc`（**中文正文** + **`## 示例`**）、`@spec`（见 `AGENTS.md`）
 - **日志**：业务代码 **仅** `IM.Log.*`（**宏 API**，自动带 `caller_module`/`caller_line`）；遵守 [observability.md](../../docs/design/observability.md) §2.6.0 统一 JSON 格式
 - 绿灯后重构；**不顺手做下一任务 ID**
 
@@ -228,14 +228,14 @@ WS 命令处理器：解 Packet → `Dispatch` → `Reply`/`Push`。
 ## 完成定义
 
 - [ ] 行为符合 `protocol.md` 与 `proto`
-- [ ] 符合 `agent.md` 架构约束与 [`project-structure.md`](../../docs/implementation/elixir/project-structure.md)
+- [ ] 符合 `AGENTS.md` 架构约束与 [`project-structure.md`](../../docs/implementation/elixir/project-structure.md)
 - [ ] 测试先于实现，描述验收场景
 - [ ] 新增/变更公共 API：`@moduledoc`、`@doc`（中文 + `## 示例`）、`@spec`；`mix docs` 可生成
 - [ ] `mix compile` / `mix test` / `protoc` 通过；合入前 `mise run ci` + `im:credo` 全绿
 - [ ] 阶段 2+：`release-deploy` + K8s 冒烟通过
 - [ ] 文档、注释、代码语义一致；系统级变更已更新 `architecture-overview.md`
 - [ ] `PROGRESS.md` 已更新
-- [ ] 未擅自 `git commit`（除非用户明确要求）
+- [ ] 未自动 `git commit`；若用户要求提交，已展示变更与 message 并 **经确认** 后提交（见 [`im-commit-gates`](../im-commit-gates/SKILL.md) §Git 提交规范）
 
 ---
 
@@ -326,4 +326,4 @@ WS 命令处理器：解 Packet → `Dispatch` → `Reply`/`Push`。
 | [`project-structure.md`](../../docs/implementation/elixir/project-structure.md) | `lib/` 布局 |
 | [`reference.md`](reference.md) | 测试骨架与代码示例 |
 | [`release-deploy-test.md`](../../docs/implementation/elixir/release-deploy-test.md) | Release 与 K8s |
-| [`agent.md`](../../agent.md) | 全局约束 |
+| [`AGENTS.md`](../../AGENTS.md) | 全局约束 |

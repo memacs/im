@@ -5,7 +5,7 @@
 | 语言 | TypeScript（React + Vite） |
 | 设计文档 | [web-console.md](../../design/web-console.md)（**权威**） |
 | Roadmap | Phase 12（P12-xx）；**完成定义 = 协议能力全覆盖** |
-| 协议 | 行为以 [`proto/`](../../../proto/) + [`protocol.md`](../../design/protocol/protocol.md) 为准；**禁止**擅自改协议，变更须人工确认（[`agent.md`](../../../agent.md)） |
+| 协议 | 行为以 [`proto/`](../../../proto/) + [`protocol.md`](../../design/protocol/protocol.md) 为准；**禁止**擅自改协议，变更须人工确认（[`AGENTS.md`](../../../AGENTS.md)） |
 
 > **文档分级**：独立前端 impl。行为规范见设计文档 §3 能力矩阵；本文列目录、工具链与验收要点。
 
@@ -125,7 +125,7 @@ Console **不调用** `/internal/v1`；**不超前**伪造未实现的 cmd 行�
 | E2E | Playwright（可选）：按 Coverage 清单抽样冒烟 |
 | 协议回归 | **仍以** `im_client` + ExUnit 为主；Console 用于人工全协议走查 |
 
-遵循 [`agent.md`](../../../agent.md)：**禁止 sleep 同步**；E2E 用 `waitFor` / 网络空闲，不用 `page.waitForTimeout` 赌时序（真实退避测试除外并注释）。
+遵循 [`AGENTS.md`](../../../AGENTS.md)：**禁止 sleep 同步**；E2E 用 `waitFor` / 网络空闲，不用 `page.waitForTimeout` 赌时序（真实退避测试除外并注释）。
 
 ---
 

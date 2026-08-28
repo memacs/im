@@ -15,7 +15,7 @@
 im/
 ├── proto/                         # 语言无关协议（唯一真相）
 ├── docs/                          # design + implementation 文档
-├── agent.md
+├── AGENTS.md                      # AI 协作约定（Cursor / Copilot 等可读）
 ├── mise.toml                      # 工具版本；mix 任务指向 apps/elixir/im
 │
 ├── apps/                          # ★ 可运行实现

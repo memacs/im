@@ -130,7 +130,7 @@ end
 
 ## 5. 测试（TDD）
 
-与 [`agent.md`](../../../agent.md)「测试驱动开发」一致：**DI 优先**（内存 Store/Cache）、**禁止 ExMachina**、**禁止 sleep 同步**（用 `assert_receive` / `GenServer.call`）。
+与 [`AGENTS.md`](../../../AGENTS.md)「测试驱动开发」一致：**DI 优先**（内存 Store/Cache）、**禁止 ExMachina**、**禁止 sleep 同步**（用 `assert_receive` / `GenServer.call`）。
 
 每个 Service 能力至少两组用例：
 

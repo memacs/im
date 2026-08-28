@@ -57,7 +57,7 @@
 10. 热路径是否 **少拷贝**：PUSH/Kafka 透传 `binary`，避免重复 decode/encode？见 [zero-copy-delivery.md](docs/design/zero-copy-delivery.md)
 11. 实现是否与 **现有协议** 一致？若需改 `proto`/cmd 语义，是否已获 **人工确认**？
 
-详见：[`docs/design/modular-architecture.md`](docs/design/modular-architecture.md)、[`docs/implementation/elixir/project-structure.md`](docs/implementation/elixir/project-structure.md)、[`agent.md`](agent.md) 规模自检。
+详见：[`docs/design/modular-architecture.md`](docs/design/modular-architecture.md)、[`docs/implementation/elixir/project-structure.md`](docs/implementation/elixir/project-structure.md)、[`AGENTS.md`](AGENTS.md) 规模自检。
 
 ## 目录
 
@@ -79,7 +79,7 @@ deploy/                # 与 apps 对应的部署清单
 
 | 使用中文 | 保留英文 |
 | --- | --- |
-| 设计/实现文档、`agent.md`、`.agents/skills/` 正文 | 代码标识符、模块名、函数名 |
+| 设计/实现文档、`AGENTS.md`、`.agents/skills/` 正文 | 代码标识符、模块名、函数名 |
 | `@moduledoc` / `@doc` **正文**（ExDoc 生成内容） | `@spec` 类型、协议字段名、`CmdType` 等 |
 | 业务语义注释、PR/汇报、错误 `msg` 的人类可读描述 | 行业标准缩写：HTTP、WebSocket、JSON、Kafka、ExUnit 等 |
 | 测试用例 `describe` / `test` 名称（描述行为） | 文件路径、mix 命令、环境变量 |
@@ -93,11 +93,11 @@ deploy/                # 与 apps 对应的部署清单
 | 要求 | 说明 |
 | --- | --- |
 | **时机** | 会话开始、接新任务、改代码/修 bug、写设计、做评审前 |
-| **动作** | 根据任务类型匹配 skill（见下文「Agent Skill」）；**有则必读**，无则按 `agent.md` 与 `docs/` 继续 |
+| **动作** | 根据任务类型匹配 skill（见下文「Agent Skill」）；**有则必读**，无则按 `AGENTS.md` 与 `docs/` 继续 |
 | **范围** | 不限 Elixir：部署、测试、安全、可观测性等均有对应 skill |
 | **实施入口** | 服务端实现与开发循环 → [`im-implementation`](.agents/skills/im-implementation/SKILL.md) |
 | **禁止** | 跳过 skill 直接写代码/改设计（除非已确认无匹配 skill） |
-| **禁止改 skill 文件** | 除非用户**明确要求**修改 skill，**不得**编辑 `.agents/skills/` 下任何文件（含 `SKILL.md`、上游 vendor 内容）；仅阅读、引用；说明性文档写在 `agent.md` / `docs/` |
+| **禁止改 skill 文件** | 除非用户**明确要求**修改 skill，**不得**编辑 `.agents/skills/` 下任何文件（含 `SKILL.md`、上游 vendor 内容）；仅阅读、引用；说明性文档写在 `AGENTS.md` / `docs/` |
 
 ### 文档一致性
 
@@ -117,6 +117,19 @@ deploy/                # 与 apps 对应的部署清单
 
 详见：[`docs/design/protocol/protocol.md`](docs/design/protocol/protocol.md)
 
+### Git 提交规范
+
+- **不要自动提交代码到 git**，需要进行确认
+- **提交前必须让用户确认提交内容和 commit message**
+
+| 要求 | 说明 |
+| --- | --- |
+| **禁止自动 commit** | 完成实现、门禁全绿、用户说「好了」等 **均不等于** 可提交；须等用户 **明确** 说「提交」「commit」等 |
+| **提交前展示** | 先给出：变更文件列表、**完整 commit message**、合入门禁结果；等用户确认后再 `git add` / `git commit` |
+| **用户修改** | 用户改 message 或剔除文件 → 按反馈调整后 **再次确认** |
+| **合入门禁** | 确认提交前须已跑通 format / credo / ci（见 [`im-commit-gates`](.agents/skills/im-commit-gates/SKILL.md)） |
+| **禁止 push** | 除非用户 **明确要求** push |
+
 ### 协议为准（硬约束）
 
 **所有代码开发必须以协议为唯一行为契约**；协议变更 **必须经人工确认** 后方可动手。
@@ -129,7 +142,7 @@ deploy/                # 与 apps 对应的部署清单
 | **禁止** | 为实现方便擅自增删改 cmd/字段、改时序、在代码里发明协议未定义的行为；协议无法满足需求时 **停止编码**，提出变更方案等人审 |
 | **协议变更** | 修改 `proto/`、`protocol.md` 或 **已确认** 设计文档中的协议语义前，**必须获得人工确认**；AI **不得**擅自改协议（含「顺手改 proto」、扩大/缩小 cmd 语义） |
 | **不一致时** | 代码 ≠ 协议 → **改代码**；协议与设计文档矛盾 → **停下**，列选项请人确认改协议还是改设计 |
-| **优先级** | `proto/` + `protocol.md` > `agent.md` > `roadmap.md` > 实现代码 |
+| **优先级** | `proto/` + `protocol.md` > `AGENTS.md` > `roadmap.md` > 实现代码 |
 
 协议变更流程见下文「修改协议工作流」；与 [roadmap 人工确认门禁](docs/implementation/elixir/roadmap.md#人工确认门禁) 叠加适用。
 

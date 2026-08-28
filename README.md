@@ -159,7 +159,7 @@ im/
 │   └── java/im/                 # 预留
 ├── deploy/elixir/im/            # IM Dockerfile + k8s + scripts
 ├── mise.toml
-└── agent.md                        # AI 协作约定（§文档地图）
+└── AGENTS.md                    # AI 协作约定（§文档地图）
 ```
 
 详见 [monorepo-layout.md](docs/implementation/monorepo-layout.md)、[project-structure.md](docs/implementation/elixir/project-structure.md)。
@@ -239,4 +239,4 @@ mise run release-smoke
 - [Elixir 实现文档](docs/implementation/elixir/)
 - [Elixir 部署文档](deploy/elixir/)
 - [CHANGELOG](CHANGELOG.md) · [LICENSE](LICENSE)
-- [AI 协作约定](agent.md)（含 §文档地图）
+- [AI 协作约定](AGENTS.md)（含 §文档地图）

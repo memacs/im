@@ -4,7 +4,7 @@
 
 ### 维护约定（必读）
 
-本文档是 **活架构总览**。凡 **系统级** 变更，须与专题设计、`proto`、`protocol.md` **同一 PR / 同一次提交** 内更新本文（见 [agent.md](../../agent.md)「架构总览同步」）。
+本文档是 **活架构总览**。凡 **系统级** 变更，须与专题设计、`proto`、`protocol.md` **同一 PR / 同一次提交** 内更新本文（见 [AGENTS.md](../../AGENTS.md)「架构总览同步」）。
 
 | 须同步更新本文 | 示例 |
 | --- | --- |
@@ -440,7 +440,7 @@ flowchart TB
 
 ## 12. 协议与代码仓库（给研发）
 
-**协议为准（硬约束）**：`proto/` + [`protocol/protocol.md`](protocol/protocol.md) 是所有实现代码的 **唯一行为契约**（含 Elixir 服务端、`im_client`、Web Console、loadtest）。代码与协议不一致时 **改代码**；确需改协议时 **须人工确认** 后再改 `proto` 与文档，最后才改实现。详见 [`agent.md`](../../agent.md)「协议为准」。
+**协议为准（硬约束）**：`proto/` + [`protocol/protocol.md`](protocol/protocol.md) 是所有实现代码的 **唯一行为契约**（含 Elixir 服务端、`im_client`、Web Console、loadtest）。代码与协议不一致时 **改代码**；确需改协议时 **须人工确认** 后再改 `proto` 与文档，最后才改实现。详见 [`AGENTS.md`](../../AGENTS.md)「协议为准」。
 
 ```text
 proto/*.proto          →  消息结构（语言无关，权威）

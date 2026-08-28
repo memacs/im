@@ -6,7 +6,7 @@
 | 项目路径 | **`apps/elixir/im/`**（非仓库根） |
 | 路线图 | P0-01 创建 mix 项目；P0-05 空模块骨架 |
 | 架构 | [modular-architecture.md](../../design/modular-architecture.md) §1.3、[dual-channel-api.md](dual-channel-api.md) |
-| 协议 | **实现须严格对齐** [`proto/`](../../../proto/) + [`protocol.md`](../../design/protocol/protocol.md)；改协议须人工确认（[`agent.md`](../../../agent.md)） |
+| 协议 | **实现须严格对齐** [`proto/`](../../../proto/) + [`protocol.md`](../../design/protocol/protocol.md)；改协议须人工确认（[`AGENTS.md`](../../../AGENTS.md)） |
 
 > P0-05 验收：在 `apps/elixir/im/` 下目录存在且 `mix compile` 通过；占位模块须有 `@moduledoc` + 公共函数 `@doc`/`@spec`（见 §文档与 ExDoc）。
 
@@ -14,7 +14,7 @@
 
 ## 文档与 ExDoc
 
-所有 **`lib/im*` 公共 API** 须具备完整文档属性，供 `mix docs` 生成 HTML。**`@moduledoc` / `@doc` 正文使用简体中文**（见 [`agent.md`](../../../agent.md)「中文优先」）。
+所有 **`lib/im*` 公共 API** 须具备完整文档属性，供 `mix docs` 生成 HTML。**`@moduledoc` / `@doc` 正文使用简体中文**（见 [`AGENTS.md`](../../../AGENTS.md)「中文优先」）。
 
 | 层级 | 模块示例 | 文档要求 |
 |------|----------|----------|
@@ -131,7 +131,7 @@ apps/elixir/im/
 
 ## 测试代码落位
 
-与 [`agent.md`](../../../agent.md)「测试代码落位」一致：
+与 [`AGENTS.md`](../../../AGENTS.md)「测试代码落位」一致：
 
 - **`lib/`**：Release / loadtest 运行时会加载的模块。
 - **`test/support/`**：ExUnit Case、fixtures、集群 E2E（`IM.ClusterPeerBoot` 等）、Fake/Mox。
@@ -139,7 +139,7 @@ apps/elixir/im/
 
 `:peer` 第二 BEAM 通过 `:code.add_paths/1` 同步 test 编译路径，**不得**把测试引导模块放进 `lib/`。
 
-`im` 协议 E2E 使用 `im_client/test/support/` 中的断言辅助时，在 `apps/elixir/im/mix.exs` 的 `elixirc_paths(:test)` 加入 `../im_client/test/support`（与 [`agent.md`](../../../agent.md) 一致）。
+`im` 协议 E2E 使用 `im_client/test/support/` 中的断言辅助时，在 `apps/elixir/im/mix.exs` 的 `elixirc_paths(:test)` 加入 `../im_client/test/support`（与 [`AGENTS.md`](../../../AGENTS.md) 一致）。
 
 ---
 
