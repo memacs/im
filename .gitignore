@@ -17,10 +17,6 @@ erl_crash.dump
 # ── Protobuf 生成代码（由 protoc 生成，不入库）────────────────────────────────
 /gen/
 
-# ── vendor skill（自带 .git 的上游 clone，暂不入库；见 .agents/skills/README.md）
-# 待决：改为 git submodule，或删除其 .git 目录后作为普通文件入库
-.agents/skills/kubernetes-skill/
-
 # ── Node / 前端（apps/web/im-console）─────────────────────────────────────────
 **/node_modules/
 **/dist/
