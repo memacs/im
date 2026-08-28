@@ -40,6 +40,8 @@ defmodule IM.MixProject do
       {:phoenix, "~> 1.8"},
       {:bandit, "~> 1.7"},
       {:jason, "~> 1.4"},
+      # 协议编解码：proto/ 下的 .proto 由 protoc-gen-elixir 生成到 lib/im/pb/
+      {:protobuf, "~> 0.14"},
       # 持久化
       {:ecto_sql, "~> 3.13"},
       {:phoenix_ecto, "~> 4.6"},

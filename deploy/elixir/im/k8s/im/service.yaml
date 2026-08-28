@@ -7,6 +7,11 @@ metadata:
     app: im
 spec:
   type: ClusterIP
+  # WebSocket 重连尽量回到同一 Pod，减少 Tracker/Presence 抖动
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
   ports:
     - name: http
       port: 4000

@@ -13,7 +13,7 @@ data:
   PHX_HOST: "im.im-dev.svc.cluster.local"
   PHX_SCHEME: "http"
   # 集群内 Service DNS — 与 deps 栈一致
-  DATABASE_URL: "ecto://im:im_dev_only@postgres.im-dev.svc.cluster.local:5432/im_dev"
+  # 注意：DATABASE_URL 含密码，放在 Secret im-runtime 中，不在此处
   REDIS_URL: "redis://redis.im-dev.svc.cluster.local:6379"
   # ── 分布式 Erlang（overlays/local 单副本默认值）────────────────────────────
   # 单副本：im@127.0.0.1 + distribution=name 即可本地联调。

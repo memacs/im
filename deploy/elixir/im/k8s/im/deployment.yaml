@@ -7,6 +7,14 @@ metadata:
     app: im
 spec:
   replicas: 1
+  revisionHistoryLimit: 5
+  # 长连接服务：先起新 Pod 再摘旧 Pod，容量不下降
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  minReadySeconds: 10
   selector:
     matchLabels:
       app: im
@@ -15,10 +23,26 @@ spec:
       labels:
         app: im
     spec:
+      # WebSocket 需要时间把在途消息写完并让客户端重连到新 Pod
+      terminationGracePeriodSeconds: 60
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        # 与 Dockerfile 的 USER nobody:nogroup 一致
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: im
           image: im:local
           imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           ports:
             - name: http
               containerPort: 4000
@@ -27,8 +51,11 @@ spec:
                 name: im
             - secretRef:
                 name: im-runtime
-          # 多副本时用于构造唯一 RELEASE_NODE（runtime.exs 或启动脚本读取）
           env:
+            # Release 启动脚本需要可写目录；根文件系统只读，指向 emptyDir
+            - name: RELEASE_TMP
+              value: /tmp
+            # 多副本时用于构造唯一 RELEASE_NODE（runtime.exs 或启动脚本读取）
             - name: POD_IP
               valueFrom:
                 fieldRef:
@@ -40,6 +67,9 @@ spec:
             # Phase 9 多副本：取消下行注释，覆盖 ConfigMap 中的 RELEASE_NODE
             # - name: RELEASE_NODE
             #   value: "im@$(POD_IP)"   # 需启动脚本展开；或 runtime.exs 读 POD_IP 拼接
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
           # 启动窗口：BEAM 冷启动期间不让 liveness 误杀
           startupProbe:
             httpGet:
@@ -53,13 +83,21 @@ spec:
               path: /health/ready
               port: http
             periodSeconds: 10
-            failureThreshold: 6
+            timeoutSeconds: 3
+            failureThreshold: 3
           # 存活不查库；数据库抖动不应重启整个集群
           livenessProbe:
             httpGet:
               path: /health/live
               port: http
             periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              # Endpoint 摘除是异步的，先等一会儿再让应用开始关闭
+              exec:
+                command: ["/bin/sh", "-c", "sleep 5"]
           resources:
             requests:
               cpu: 100m
@@ -67,3 +105,7 @@ spec:
             limits:
               cpu: "2"
               memory: 1Gi
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 128Mi

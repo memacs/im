@@ -18,6 +18,40 @@ IM_APP_DIR = "apps/elixir/im"
 description = "校验 proto 语法"
 run = "protoc -I proto --descriptor_set_out=/dev/null proto/*.proto"
 
+[tasks.proto-plugin]
+description = "安装 protoc-gen-elixir（版本须与 mix.exs 的 :protobuf 主版本一致）"
+run = "cd apps/elixir/im && mix escript.install hex protobuf 0.14.1 --force"
+
+# 生成物入库：Docker 构建阶段无需 protoc，clone 即可编译。
+# 代价是改完 .proto 必须重跑本任务，proto-gen-check 会在 CI 上把漏跑挡下来。
+[tasks.proto-gen]
+description = "由 proto/ 生成 Elixir 代码到 apps/elixir/im/lib/pb/"
+run = """
+set -e
+rm -rf apps/elixir/im/lib/pb
+mkdir -p apps/elixir/im/lib/pb
+PATH="$HOME/.mix/escripts:$PATH" protoc \
+  --proto_path=proto \
+  --elixir_out=apps/elixir/im/lib/pb \
+  --elixir_opt=package_prefix=pb \
+  proto/*.proto
+cd apps/elixir/im && mix format "lib/pb/**/*.ex"
+"""
+
+[tasks.proto-gen-check]
+description = "校验 lib/pb/ 与 proto/ 同步（CI 用）"
+depends = ["proto-gen"]
+# 用 status 而非 diff：新增 .proto 会产出未跟踪文件，git diff 看不到
+run = """
+changes=$(git status --porcelain -- apps/elixir/im/lib/pb)
+if [ -n "$changes" ]; then
+  echo "错误：lib/pb/ 与 proto/ 不同步。请运行 'mise run proto-gen' 并提交生成物。" >&2
+  echo "$changes" >&2
+  exit 1
+fi
+echo "lib/pb/ 与 proto/ 同步"
+"""
+
 # ── Mix：apps/elixir/im ───────────────────────────────────────────────────────
 
 [tasks."im:deps-get"]
@@ -36,6 +70,16 @@ depends = ["proto-check", "im:deps-get", "im:deps-compile"]
 description = "mix compile"
 depends = ["im:deps-get"]
 run = "cd apps/elixir/im && mix compile"
+
+[tasks."im:compile-strict"]
+description = "mix compile --warnings-as-errors（CI 用）"
+depends = ["im:deps-get"]
+run = "cd apps/elixir/im && mix compile --warnings-as-errors"
+
+[tasks."im:audit"]
+description = "依赖审计：检查已撤回（retired）的 hex 包"
+depends = ["im:deps-get"]
+run = "cd apps/elixir/im && mix hex.audit"
 
 [tasks."im:test"]
 description = "mix test"
@@ -130,8 +174,14 @@ description = "提交前：proto + IM compile + test"
 depends = ["proto-check", "im:compile", "im:test"]
 
 [tasks.ci]
-description = "CI 等价：proto + format + compile + test"
-depends = ["proto-check", "im:format-check", "im:compile", "im:test"]
+description = "CI 等价：proto + format + 严格编译 + 依赖审计 + test"
+depends = [
+  "proto-check",
+  "im:format-check",
+  "im:compile-strict",
+  "im:audit",
+  "im:test",
+]
 
 # ── Kubernetes（deploy/elixir/im/k8s）─────────────────────────────────────────
 

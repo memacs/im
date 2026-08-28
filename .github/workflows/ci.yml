@@ -1,4 +1,5 @@
-# 与本地 `mise run ci` 对齐：proto-check → format-check → compile → test
+# 与本地 `mise run ci` 对齐：proto-check → format-check → 严格编译 → 依赖审计 → test
+# 另有 release job 验证 Dockerfile 可构建（黄金路径见 release-deploy-test.md）
 # mix.exs 位于 apps/elixir/im；见 docs/implementation/monorepo-layout.md
 name: CI
 
@@ -68,8 +69,23 @@ jobs:
       - name: mix format --check-formatted
         run: mise run format-check
 
-      - name: mix compile
-        run: mise run compile
+      - name: mix compile --warnings-as-errors
+        run: mise run im:compile-strict
+
+      - name: 依赖审计（已撤回的 hex 包）
+        run: mise run im:audit
 
       - name: mix test
         run: mise run test
+
+  release:
+    name: Release 镜像
+    runs-on: ubuntu-latest
+    needs: elixir
+    if: hashFiles('apps/elixir/im/mix.exs') != ''
+    steps:
+      - uses: actions/checkout@v4
+
+      # 与本地、线上使用同一个 Dockerfile，防止 Release 构建回归
+      - name: docker build
+        run: docker build -f deploy/elixir/im/Dockerfile -t im:${{ github.sha }} .

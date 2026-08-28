@@ -5,3 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/part-of: im
     environment: local
+    # Pod Security Standards：本地即按 restricted 校验，避免加固缺口拖到生产才发现
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
