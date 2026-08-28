@@ -9,7 +9,7 @@
 
 **图例**：`pending` | `in_progress` | `done` | `blocked` | `deferred`
 
-**当前阶段**：IM Phase 0（进行中）｜im_client 未启动｜loadtest 未启动｜im-console 未启动
+**当前阶段**：IM Phase 0（**已完成 10/10**，可进入 Phase 1）｜im_client 未启动｜loadtest 未启动｜im-console 未启动
 
 ---
 
@@ -19,7 +19,7 @@
 
 | Phase | 名称 | 进度 |
 | --- | --- | --- |
-| 0 | 工程脚手架 | 8 / 10 |
+| 0 | 工程脚手架 | 10 / 10 |
 | 1 | 协议适配层 | 0 / 5 |
 | 2 | WebSocket 与连接生命周期 | 0 / 14 |
 | 3 | 单聊消息主路径 | 0 / 12 |
@@ -70,11 +70,11 @@
 | P0-01 | 创建 mix 项目骨架 | done | Phoenix 1.8 + Ecto + Bandit；`config/runtime.exs`、`mix.lock`、`releases` 齐备 |
 | P0-02 | mise.toml 与 proto-check | done | 见根目录 mise.toml |
 | P0-03 | deploy/elixir/im/Dockerfile Release 构建 | done | `docker build` 通过；runtime 基础镜像改 trixie 以匹配 ERTS glibc |
-| P0-04 | protobuf 代码生成集成 | pending | |
-| P0-05 | 目录结构骨架（`project-structure.md`） | pending | 已建 `lib/im_web/`、`repo.ex`、`health.ex`、`release.ex`；余 `protocol/`、`services/`、`delivery/`、`stores/` 等占位 |
+| P0-04 | protobuf 代码生成集成 | done | `{:protobuf, "~> 0.14"}`；`mise run proto-gen` → `lib/pb/`（`Pb.Im.Protocol.*`）；生成物入库，CI 用 `proto-gen-check` 防漂移 |
+| P0-05 | 目录结构骨架（`project-structure.md`） | done | 分层占位模块齐备，`mix compile --warnings-as-errors` 通过；契约测试见 `test/im/skeleton_test.exs` |
 | P0-06 | ExUnit 与 CI 测试入口 | done | GHA Elixir job 含 postgres service + 依赖缓存；`mise run ci` 通过 |
 | P0-07 | README 本地开发说明 | done | 根 README 含 mise、proto、Release+K8s 路径 |
-| P0-08 | deploy/elixir/im/k8s/base 依赖栈 | done | redis + postgres |
+| P0-08 | deploy/elixir/im/k8s/base 依赖栈 | done | redis + postgres 均为 StatefulSet + PVC；见下「加固」 |
 | P0-09 | deploy/elixir/im/k8s/im + overlays/local | done | `kubectl rollout status deployment/im` 通过；探针拆 `/health/live` 与 `/health/ready` |
 | P0-10 | release-deploy-local 脚本与文档 | done | release-deploy-test.md |
 
@@ -85,16 +85,29 @@
 | 存活探针 `/health/live` | `IMWeb.HealthController.live/2` | 200，不查库 |
 | 就绪探针 `/health/ready` | `IMWeb.HealthController.ready/2` + `IM.Health.RepoChecker` | 200 `database: connected`；DB 异常 503 |
 | 兼容入口 `/health` | 同 live | `mise run release-smoke` |
-| Release 迁移 | `IM.Release.migrate/0` + `rel/overlays/bin/migrate` | 容器内 `bin/migrate` 退出码 0 |
+| Release 迁移 | `IM.Release.migrate/0` + `rel/overlays/bin/migrate` | 容器内 `bin/migrate` 退出码 0（只读根文件系统下亦可） |
+
+**部署与 CI 加固**（Phase 0 收尾附带交付，基准见 `.agents/skills/kubernetes-skill`）：
+
+| 项 | 落位 | 验证 |
+| --- | --- | --- |
+| PSS restricted | `k8s/base/namespace.yaml` 三个 `pod-security.kubernetes.io/*` 标签 | 全部 Pod 在 enforce 下 Running |
+| 工作负载安全上下文 | `runAsNonRoot`+`runAsUser: 65534`、`drop: [ALL]`、`readOnlyRootFilesystem`、`seccompProfile` | 容器内 `touch /app` 失败、`id` = nobody |
+| 只读根 + Release 临时目录 | `RELEASE_TMP=/tmp` + `emptyDir` | `bin/im start`、`bin/migrate` 均正常 |
+| 优雅停机 | `terminationGracePeriodSeconds: 60` + `preStop sleep 5` + `maxUnavailable: 0` | 滚动更新先起新 Pod 再摘旧 Pod |
+| 密钥收敛 | `DATABASE_URL`/`SECRET_KEY_BASE`/`RELEASE_COOKIE` 移入 Secret `im-runtime` | ConfigMap 中不再含密码 |
+| 长连接会话亲和 | `Service.sessionAffinity: ClientIP` | — |
+| 依赖栈持久化 | postgres/redis 改 StatefulSet + `volumeClaimTemplates`；Redis 开 AOF | PVC Bound；重启不丢序列号 |
+| CI 严格化 | `--warnings-as-errors`、`mix hex.audit`、`proto-gen-check`、`docker build` job | `mise run ci` 通过 |
 
 ## Phase 1：协议适配层
 
 | ID | 任务 | 状态 | 备注 |
 | --- | --- | --- | --- |
-| P1-01 | IM.Protocol.Codec | pending | 依赖 P0-04 |
-| P1-02 | IM.Protocol.Reply | pending | |
-| P1-03 | IM.Protocol.Push | pending | |
-| P1-04 | IM.Protocol.Router | pending | |
+| P1-01 | IM.Protocol.Codec | pending | 骨架已在（P0-05）；生成物 `Pb.Im.Protocol.*` 可用 |
+| P1-02 | IM.Protocol.Reply | pending | 骨架已在 |
+| P1-03 | IM.Protocol.Push | pending | 骨架已在 |
+| P1-04 | IM.Protocol.Router | pending | 骨架已在 |
 | P1-05 | 错误码与 proto 一致 | pending | |
 
 ## Phase 2：WebSocket 与连接生命周期

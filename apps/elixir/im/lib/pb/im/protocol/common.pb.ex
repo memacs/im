@@ -1,7 +1,11 @@
 defmodule Pb.Im.Protocol.ProtoVersion do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.ProtoVersion",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:PROTO_VERSION_UNSPECIFIED, 0)
   field(:PROTO_VERSION_V1, 1)
@@ -10,7 +14,11 @@ end
 defmodule Pb.Im.Protocol.CmdType do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.CmdType",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:CMD_UNSPECIFIED, 0)
   field(:CMD_AUTH_REQ, 1)
@@ -102,7 +110,11 @@ end
 defmodule Pb.Im.Protocol.ErrorCode do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.ErrorCode",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:CODE_OK, 0)
   field(:CODE_UNAUTHORIZED, 1001)
@@ -135,7 +147,11 @@ end
 defmodule Pb.Im.Protocol.ChatType do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.ChatType",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:CHAT_TYPE_UNSPECIFIED, 0)
   field(:CHAT_PRIVATE, 1)
@@ -146,7 +162,11 @@ end
 defmodule Pb.Im.Protocol.PayloadCompression do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.PayloadCompression",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:PAYLOAD_COMPRESSION_UNSPECIFIED, 0)
   field(:PAYLOAD_COMPRESSION_NONE, 1)
@@ -157,7 +177,10 @@ end
 defmodule Pb.Im.Protocol.ErrorBody do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.ErrorBody",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:code, 1, type: :int32)
   field(:msg, 2, type: :string)
@@ -168,7 +191,10 @@ end
 defmodule Pb.Im.Protocol.Packet do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.Packet",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:ver, 1, type: :uint32)
   field(:cmd, 2, type: :uint32)

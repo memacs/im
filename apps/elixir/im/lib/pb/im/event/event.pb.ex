@@ -1,7 +1,11 @@
 defmodule Pb.Im.Event.EventSource do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.event.EventSource",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:EVENT_SOURCE_UNSPECIFIED, 0)
   field(:EVENT_SOURCE_WEBSOCKET, 1)
@@ -13,7 +17,11 @@ end
 defmodule Pb.Im.Event.IngressType do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.event.IngressType",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:INGRESS_UNSPECIFIED, 0)
   field(:INGRESS_WS, 1)
@@ -24,7 +32,11 @@ end
 defmodule Pb.Im.Event.SessionEventType do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.event.SessionEventType",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:SESSION_EVENT_UNSPECIFIED, 0)
   field(:SESSION_LOGIN, 1)
@@ -35,7 +47,11 @@ end
 defmodule Pb.Im.Event.FanoutMode do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.event.FanoutMode",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:FANOUT_UNSPECIFIED, 0)
   field(:FANOUT_DIRECT, 1)
@@ -47,7 +63,11 @@ end
 defmodule Pb.Im.Event.PushChannel do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.event.PushChannel",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:PUSH_CHANNEL_UNSPECIFIED, 0)
   field(:PUSH_CHANNEL_APNS, 1)
@@ -58,7 +78,11 @@ end
 defmodule Pb.Im.Event.AppEventDirection do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.event.AppEventDirection",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:APP_EVENT_DIRECTION_UNSPECIFIED, 0)
   field(:APP_EVENT_UP, 1)
@@ -68,7 +92,10 @@ end
 defmodule Pb.Im.Event.UpstreamEvent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.UpstreamEvent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:event_id, 1, type: :string, json_name: "eventId")
   field(:timestamp, 2, type: :int64)
@@ -86,7 +113,10 @@ end
 defmodule Pb.Im.Event.SessionEvent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.SessionEvent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:event_id, 1, type: :string, json_name: "eventId")
   field(:timestamp, 2, type: :int64)
@@ -105,7 +135,10 @@ end
 defmodule Pb.Im.Event.DownstreamEvent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.DownstreamEvent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:event_id, 1, type: :string, json_name: "eventId")
   field(:timestamp, 2, type: :int64)
@@ -123,7 +156,10 @@ end
 defmodule Pb.Im.Event.FanoutInfo do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.FanoutInfo",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:mode, 1, type: Pb.Im.Event.FanoutMode, enum: true)
   field(:recipient_count, 2, type: :uint32, json_name: "recipientCount")
@@ -135,7 +171,10 @@ end
 defmodule Pb.Im.Event.FanoutAudience do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.FanoutAudience",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:from_user_id, 1, type: :string, json_name: "fromUserId")
   field(:from_device_id, 2, type: :string, json_name: "fromDeviceId")
@@ -147,7 +186,10 @@ end
 defmodule Pb.Im.Event.PushTarget do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.PushTarget",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
   field(:device_id, 2, type: :string, json_name: "deviceId")
@@ -157,7 +199,10 @@ end
 defmodule Pb.Im.Event.PushNotificationBatchEvent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.PushNotificationBatchEvent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:event_id, 1, type: :string, json_name: "eventId")
   field(:timestamp, 2, type: :int64)
@@ -178,7 +223,10 @@ end
 defmodule Pb.Im.Event.PushNotificationTarget do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.PushNotificationTarget",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
   field(:device_id, 2, type: :string, json_name: "deviceId")
@@ -191,7 +239,11 @@ end
 defmodule Pb.Im.Event.PushNotificationEvent do
   @moduledoc false
 
-  use Protobuf, deprecated: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    deprecated: true,
+    full_name: "im.event.PushNotificationEvent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:event_id, 1, type: :string, json_name: "eventId")
   field(:timestamp, 2, type: :int64)
@@ -215,7 +267,11 @@ end
 defmodule Pb.Im.Event.PushDisplay.ExtrasEntry do
   @moduledoc false
 
-  use Protobuf, map: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.PushDisplay.ExtrasEntry",
+    map: true,
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:key, 1, type: :string)
   field(:value, 2, type: :string)
@@ -224,7 +280,10 @@ end
 defmodule Pb.Im.Event.PushDisplay do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.PushDisplay",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:title, 1, type: :string)
   field(:body, 2, type: :string)
@@ -236,7 +295,10 @@ end
 defmodule Pb.Im.Event.AppEvent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.event.AppEvent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:event_id, 1, type: :string, json_name: "eventId")
   field(:timestamp, 2, type: :int64)

@@ -1,7 +1,10 @@
 defmodule Pb.Im.Protocol.Passthrough do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.Passthrough",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:chat_type, 1, type: Pb.Im.Protocol.ChatType, json_name: "chatType", enum: true)
   field(:from, 2, type: :string)

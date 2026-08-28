@@ -135,10 +135,12 @@ flowchart LR
 
 ### Phase 0 完成定义
 
-- [ ] `cd apps/elixir/im && mix compile && mix test` 绿
-- [ ] `protoc -I proto --descriptor_set_out=/dev/null proto/*.proto` 绿
-- [ ] `./deploy/elixir/im/scripts/release-deploy-local.sh` 全链路通过
-- [ ] `PROGRESS.md` 中 P0 全部 `done`
+- [x] `cd apps/elixir/im && mix compile && mix test` 绿（22 tests + 1 doctest）
+- [x] `protoc -I proto --descriptor_set_out=/dev/null proto/*.proto` 绿
+- [x] `./deploy/elixir/im/scripts/release-deploy-local.sh` 全链路通过
+- [x] `PROGRESS.md` 中 P0 全部 `done`
+
+**Phase 0 已完成**（2026-08）。附带交付的部署与 CI 加固见 [PROGRESS.md](PROGRESS.md) §Phase 0。
 
 ---
 

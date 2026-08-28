@@ -1,7 +1,10 @@
 defmodule Pb.Im.Protocol.DeviceResource do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.DeviceResource",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:device_id, 1, type: :string, json_name: "deviceId")
   field(:session_id, 2, type: :string, json_name: "sessionId")
@@ -18,7 +21,10 @@ end
 defmodule Pb.Im.Protocol.AuthReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.AuthReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:app_key, 1, type: :string, json_name: "appKey")
   field(:user_id, 2, type: :string, json_name: "userId")
@@ -42,7 +48,10 @@ end
 defmodule Pb.Im.Protocol.AuthResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.AuthResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:device, 1, type: Pb.Im.Protocol.DeviceResource)
   field(:server_time, 2, type: :int64, json_name: "serverTime")
@@ -68,7 +77,10 @@ end
 defmodule Pb.Im.Protocol.HeartbeatReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.HeartbeatReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:client_time, 1, type: :int64, json_name: "clientTime")
 end
@@ -76,7 +88,10 @@ end
 defmodule Pb.Im.Protocol.HeartbeatResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.HeartbeatResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:server_time, 1, type: :int64, json_name: "serverTime")
 end
@@ -84,7 +99,10 @@ end
 defmodule Pb.Im.Protocol.KickNotify do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.KickNotify",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:reason, 1, type: :string)
   field(:kicker, 2, type: Pb.Im.Protocol.DeviceResource)

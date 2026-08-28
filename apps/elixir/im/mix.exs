@@ -14,12 +14,17 @@ defmodule IM.MixProject do
       test_coverage: [tool: ExCoveralls],
       # test/support 是 Case 模板，不是测试文件
       test_ignore_filters: [&String.starts_with?(&1, "test/support/")],
-      preferred_cli_env: [
-        coveralls: :test,
-        "coveralls.html": :test
-      ],
       name: "IM",
       docs: docs()
+    ]
+  end
+
+  def cli do
+    [
+      preferred_envs: [
+        coveralls: :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -40,8 +45,10 @@ defmodule IM.MixProject do
       {:phoenix, "~> 1.8"},
       {:bandit, "~> 1.7"},
       {:jason, "~> 1.4"},
-      # 协议编解码：proto/ 下的 .proto 由 protoc-gen-elixir 生成到 lib/im/pb/
-      {:protobuf, "~> 0.14"},
+      # 协议编解码：proto/ 下的 .proto 由 protoc-gen-elixir 生成到 lib/pb/。
+      # 生成器插件版本必须与本依赖一致（mise 任务 proto-plugin 装同版本），
+      # 否则生成物可能用到运行时库没有的 API。
+      {:protobuf, "~> 0.17.0"},
       # 持久化
       {:ecto_sql, "~> 3.13"},
       {:phoenix_ecto, "~> 4.6"},

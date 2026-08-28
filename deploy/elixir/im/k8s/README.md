@@ -78,6 +78,42 @@ kubectl -n im-dev port-forward svc/postgres 5432:5432
 kubectl -n im-dev port-forward svc/redis 6379:6379
 ```
 
+`mix test` 连的也是这套 Postgres。`kubectl port-forward` 会在 Pod 重建或空闲时断开，
+用带自动重连的常驻任务省事：
+
+```bash
+mise run pg-forward                       # 终端 A，常驻
+PGPORT=15432 mise run test                # 终端 B
+```
+
+---
+
+## 安全加固基线
+
+清单按 Pod Security Standards **restricted** 编写，`im-dev` 命名空间上打了
+`pod-security.kubernetes.io/enforce=restricted`——本地就按生产口径校验，
+免得加固缺口留到上线才暴露。
+
+| 项 | 配置 |
+| --- | --- |
+| 身份 | `runAsNonRoot: true`、`runAsUser/Group: 65534`（与 Dockerfile 的 `USER nobody:nogroup` 一致） |
+| 权限 | `allowPrivilegeEscalation: false`、`capabilities.drop: [ALL]`、`seccompProfile: RuntimeDefault` |
+| 文件系统 | `readOnlyRootFilesystem: true` + `/tmp` emptyDir |
+| API 访问 | `automountServiceAccountToken: false`（IM 不调 K8s API；P9-01 上 libcluster 时需按需放开并配 RBAC） |
+| 密钥 | `DATABASE_URL`、`SECRET_KEY_BASE`、`RELEASE_COOKIE` 在 Secret `im-runtime`，不在 ConfigMap |
+
+**只读根文件系统与 Elixir Release**：`bin/im start` 需要一个可写的临时目录写
+`vm.args`、启动脚本产物等，默认在 `$RELEASE_ROOT/tmp`（即只读的 `/app`）。
+Deployment 因此设 `RELEASE_TMP=/tmp` 并挂 emptyDir，`bin/im eval`、`bin/migrate` 同样依赖它。
+
+**优雅停机**：`terminationGracePeriodSeconds: 60` + `preStop: sleep 5`。
+Endpoint 摘除是异步的，Pod 被标记 Terminating 后仍可能收到几秒流量，
+先 sleep 再让应用开始关闭。配合 `maxUnavailable: 0`，滚动更新时先起新 Pod 再摘旧 Pod。
+真正的连接 drain（通知客户端重连）在 Phase 9 补。
+
+> **尚未做**：NetworkPolicy、PodDisruptionBudget、HPA、镜像 digest 固定。
+> 前两项要等多副本（P9-01b）才有意义——单副本上 PDB 会挡住节点排空。
+
 ---
 
 ## 多副本联调
@@ -130,8 +166,8 @@ deploy/elixir/im/
 └── k8s/
     ├── kustomization.yaml      # → base（仅依赖）
     ├── base/
-    │   ├── namespace.yaml
-    │   └── deps/
+    │   ├── namespace.yaml      # 含 PSS restricted 标签
+    │   └── deps/               # postgres / redis StatefulSet + PVC
     ├── im/
     │   ├── deployment.yaml
     │   ├── service.yaml
@@ -150,8 +186,17 @@ kubectl apply -k deploy/elixir/im/k8s/overlays/local/
 kubectl delete -k deploy/elixir/im/k8s/overlays/local/
 kubectl -n im-dev get pods,svc
 kubectl -n im-dev logs -f deployment/im
-kubectl -n im-dev exec -it deploy/redis -- redis-cli
-kubectl -n im-dev exec -it deploy/postgres -- psql -U im -d im_dev
+# redis/postgres 是 StatefulSet（带 PVC），不是 Deployment
+kubectl -n im-dev exec -it redis-0 -- redis-cli
+kubectl -n im-dev exec -it postgres-0 -- psql -U im -d im_dev
+```
+
+依赖栈用 StatefulSet + `volumeClaimTemplates`，重启不丢数据。Redis 开了 AOF：
+它是 `conv_seq` / `inbox_seq` 的权威发号源，重启丢号会让序列回退，客户端据此判重会错乱。
+
+```bash
+kubectl -n im-dev get pvc                       # 查看卷
+kubectl -n im-dev delete pvc data-postgres-0    # 需要清库时（会丢数据）
 ```
 
 ---

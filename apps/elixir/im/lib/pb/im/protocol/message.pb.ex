@@ -1,7 +1,11 @@
 defmodule Pb.Im.Protocol.MsgType do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.MsgType",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:MSG_TYPE_UNSPECIFIED, 0)
   field(:MSG_TEXT, 1)
@@ -17,7 +21,11 @@ end
 defmodule Pb.Im.Protocol.StreamStatus do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.StreamStatus",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:STREAM_STATUS_UNSPECIFIED, 0)
   field(:STREAM_STATUS_START, 1)
@@ -30,7 +38,11 @@ end
 defmodule Pb.Im.Protocol.MsgPriority do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.MsgPriority",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:MSG_PRIORITY_NORMAL, 0)
   field(:MSG_PRIORITY_HIGH, 1)
@@ -40,7 +52,11 @@ end
 defmodule Pb.Im.Protocol.AckStatus do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.AckStatus",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:ACK_STATUS_UNSPECIFIED, 0)
   field(:ACK_SERVER_RECEIVED, 1)
@@ -51,7 +67,10 @@ end
 defmodule Pb.Im.Protocol.TextContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.TextContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:text, 1, type: :string)
 end
@@ -59,7 +78,10 @@ end
 defmodule Pb.Im.Protocol.ImageContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.ImageContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:url, 1, type: :string)
   field(:thumbnail_url, 2, type: :string, json_name: "thumbnailUrl")
@@ -73,7 +95,10 @@ end
 defmodule Pb.Im.Protocol.AudioContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.AudioContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:url, 1, type: :string)
   field(:file_name, 2, type: :string, json_name: "fileName")
@@ -85,7 +110,10 @@ end
 defmodule Pb.Im.Protocol.VideoContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.VideoContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:url, 1, type: :string)
   field(:thumbnail_url, 2, type: :string, json_name: "thumbnailUrl")
@@ -100,7 +128,10 @@ end
 defmodule Pb.Im.Protocol.FileContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FileContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:url, 1, type: :string)
   field(:file_name, 2, type: :string, json_name: "fileName")
@@ -111,7 +142,10 @@ end
 defmodule Pb.Im.Protocol.LocationContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.LocationContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:latitude, 1, type: :double)
   field(:longitude, 2, type: :double)
@@ -122,7 +156,10 @@ end
 defmodule Pb.Im.Protocol.CustomContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.CustomContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:custom_type, 1, type: :string, json_name: "customType")
   field(:data, 2, type: :bytes)
@@ -131,7 +168,11 @@ end
 defmodule Pb.Im.Protocol.StreamContent.MetadataEntry do
   @moduledoc false
 
-  use Protobuf, map: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.StreamContent.MetadataEntry",
+    map: true,
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:key, 1, type: :string)
   field(:value, 2, type: :string)
@@ -140,7 +181,10 @@ end
 defmodule Pb.Im.Protocol.StreamContent do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.StreamContent",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:stream_id, 1, type: :string, json_name: "streamId")
   field(:status, 2, type: Pb.Im.Protocol.StreamStatus, enum: true)
@@ -153,7 +197,11 @@ end
 defmodule Pb.Im.Protocol.ChatMessage.ExtEntry do
   @moduledoc false
 
-  use Protobuf, map: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.ChatMessage.ExtEntry",
+    map: true,
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:key, 1, type: :string)
   field(:value, 2, type: :string)
@@ -162,7 +210,10 @@ end
 defmodule Pb.Im.Protocol.ChatMessage do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.ChatMessage",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:msg_id, 1, type: :string, json_name: "msgId")
   field(:client_msg_id, 2, type: :string, json_name: "clientMsgId")
@@ -188,7 +239,10 @@ end
 defmodule Pb.Im.Protocol.MsgSendReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgSendReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:message, 1, type: Pb.Im.Protocol.ChatMessage)
 end
@@ -196,7 +250,10 @@ end
 defmodule Pb.Im.Protocol.MsgPushBatch do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgPushBatch",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:messages, 1, repeated: true, type: Pb.Im.Protocol.ChatMessage)
 end
@@ -204,7 +261,10 @@ end
 defmodule Pb.Im.Protocol.MsgAck do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgAck",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:msg_id, 1, type: :string, json_name: "msgId")
   field(:client_msg_id, 2, type: :string, json_name: "clientMsgId")
@@ -215,7 +275,10 @@ end
 defmodule Pb.Im.Protocol.MsgAckBatchUp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgAckBatchUp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:acks, 1, repeated: true, type: Pb.Im.Protocol.MsgAck)
 end
@@ -223,7 +286,10 @@ end
 defmodule Pb.Im.Protocol.MsgAckBatchDown do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgAckBatchDown",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:acks, 1, repeated: true, type: Pb.Im.Protocol.MsgAck)
 end
@@ -231,7 +297,10 @@ end
 defmodule Pb.Im.Protocol.MsgRead do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgRead",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:chat_type, 1, type: Pb.Im.Protocol.ChatType, json_name: "chatType", enum: true)
   field(:from, 2, type: :string)
@@ -245,7 +314,10 @@ end
 defmodule Pb.Im.Protocol.MsgRecall do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgRecall",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:msg_id, 1, type: :string, json_name: "msgId")
   field(:chat_type, 2, type: Pb.Im.Protocol.ChatType, json_name: "chatType", enum: true)
@@ -259,7 +331,11 @@ end
 defmodule Pb.Im.Protocol.MsgEdit.ExtEntry do
   @moduledoc false
 
-  use Protobuf, map: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgEdit.ExtEntry",
+    map: true,
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:key, 1, type: :string)
   field(:value, 2, type: :string)
@@ -268,7 +344,10 @@ end
 defmodule Pb.Im.Protocol.MsgEdit do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgEdit",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:msg_id, 1, type: :string, json_name: "msgId")
   field(:chat_type, 2, type: Pb.Im.Protocol.ChatType, json_name: "chatType", enum: true)
@@ -285,7 +364,10 @@ end
 defmodule Pb.Im.Protocol.MsgBurn do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.MsgBurn",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:msg_id, 1, type: :string, json_name: "msgId")
   field(:chat_type, 2, type: Pb.Im.Protocol.ChatType, json_name: "chatType", enum: true)

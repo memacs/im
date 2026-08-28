@@ -48,8 +48,9 @@ chmod +x deploy/elixir/im/scripts/release-deploy-local.sh
 | **Dockerfile** | `deploy/elixir/im/Dockerfile` | **同一文件** |
 | **构建命令** | `docker build -f deploy/elixir/im/Dockerfile` | CI 相同命令，tag 为版本号 |
 | **运行入口** | `bin/im start` | 相同 |
-| **基础镜像** | `elixir:1.19.5-otp-28` → `debian:bookworm-slim` | 相同 |
+| **基础镜像** | `elixir:1.19.5-otp-28` → `debian:trixie-slim` | 相同（runtime 须与 build 同 Debian 版本，否则 ERTS 缺 GLIBC） |
 | **配置注入** | ConfigMap + Secret | 相同结构，值来自生产 Secret 管理 |
+| **安全上下文** | PSS restricted（非 root、只读根、drop ALL） | 相同；见 [k8s/README.md](../../../deploy/elixir/im/k8s/README.md) §安全加固基线 |
 | **依赖连接** | K8s Service DNS（postgres/redis） | 相同模式 |
 | **镜像 tag** | `im:local` | `im:<git-sha>` 或 semver |
 | **Overlay** | `deploy/elixir/im/k8s/overlays/local` | 未来 `overlays/prod` 仅 patch 副本数/资源/Secret |
@@ -88,17 +89,20 @@ IM Pod 通过 `deploy/elixir/im/k8s/im/configmap.yaml` 与 `secret.yaml` 注入�
 
 | 变量 | 来源 | 说明 |
 | --- | --- | --- |
-| `DATABASE_URL` | ConfigMap | 指向集群内 `postgres` Service |
+| `DATABASE_URL` | **Secret** | 含数据库密码，因此不放 ConfigMap；指向集群内 `postgres` Service |
+| `SECRET_KEY_BASE` | **Secret** | 本地占位；生产走外部 Secret |
+| `RELEASE_COOKIE` | **Secret** | 多节点集群必需（Phase 9） |
 | `REDIS_URL` | ConfigMap | 指向集群内 `redis` Service |
 | `PHX_HOST` | ConfigMap | URL 生成用主机名；`runtime.exs` 以 `fetch_env!` 读取，缺失即启动失败 |
 | `PHX_SERVER` | ConfigMap | `true` 时才启动 HTTP 监听 |
+| `RELEASE_TMP` | Deployment env | `/tmp`（emptyDir）。根文件系统只读，Release 启动脚本需要可写临时目录 |
+| `POD_IP` / `POD_NAME` | Deployment `fieldRef` | 多副本时构造唯一 `RELEASE_NODE` 用 |
 | `LOG_LEVEL` | 可选 | 默认 `warning`（见 observability.md §2.6）；排障可临时设 `info` / `debug` |
-| `SECRET_KEY_BASE` | Secret | 本地占位；生产走外部 Secret |
-| `RELEASE_COOKIE` | Secret | 多节点集群必需（Phase 9） |
 | `RELEASE_DISTRIBUTION` / `RELEASE_NODE` | ConfigMap（单副本默认） | 单副本：`name` + `im@127.0.0.1`；多副本每 Pod 唯一节点名，见 [k8s/README.md](../../../deploy/elixir/im/k8s/README.md) §分布式 Erlang |
 | `IM_NODE_ROLE` | ConfigMap | `access` / `message`（Phase 9 分角色） |
 
-应用须在 `config/runtime.exs` 读取上述变量（Phase 0 脚手架时配置），**禁止** Release 镜像依赖 dev.exs 本地路径。
+`config/runtime.exs` 读取上述变量，**禁止** Release 镜像依赖 dev.exs 本地路径。
+密码类一律进 Secret：ConfigMap 在集群里是明文可读的普通对象，`kubectl describe` 就会打印出来。
 
 ---
 

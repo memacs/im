@@ -1,7 +1,11 @@
 defmodule Pb.Im.Protocol.FriendStatus do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.FriendStatus",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:FRIEND_STATUS_UNSPECIFIED, 0)
   field(:FRIEND_STATUS_NONE, 1)
@@ -14,7 +18,11 @@ end
 defmodule Pb.Im.Protocol.FriendRequestStatus do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.FriendRequestStatus",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:FRIEND_REQUEST_STATUS_UNSPECIFIED, 0)
   field(:FRIEND_REQUEST_STATUS_PENDING, 1)
@@ -26,7 +34,10 @@ end
 defmodule Pb.Im.Protocol.FriendAddReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendAddReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:to_user_id, 1, type: :string, json_name: "toUserId")
   field(:message, 2, type: :string)
@@ -36,7 +47,10 @@ end
 defmodule Pb.Im.Protocol.FriendAddResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendAddResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:request_id, 1, type: :string, json_name: "requestId")
   field(:status, 2, type: Pb.Im.Protocol.FriendStatus, enum: true)
@@ -45,7 +59,10 @@ end
 defmodule Pb.Im.Protocol.FriendRequestNotify do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendRequestNotify",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:request_id, 1, type: :string, json_name: "requestId")
   field(:from_user_id, 2, type: :string, json_name: "fromUserId")
@@ -58,7 +75,10 @@ end
 defmodule Pb.Im.Protocol.FriendAcceptReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendAcceptReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:request_id, 1, type: :string, json_name: "requestId")
   field(:from_user_id, 2, type: :string, json_name: "fromUserId")
@@ -68,7 +88,10 @@ end
 defmodule Pb.Im.Protocol.FriendAcceptResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendAcceptResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:friend_user_id, 1, type: :string, json_name: "friendUserId")
   field(:status, 2, type: Pb.Im.Protocol.FriendStatus, enum: true)
@@ -77,7 +100,10 @@ end
 defmodule Pb.Im.Protocol.FriendAcceptNotify do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendAcceptNotify",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
   field(:nickname, 2, type: :string)
@@ -89,7 +115,10 @@ end
 defmodule Pb.Im.Protocol.FriendRejectReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendRejectReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:request_id, 1, type: :string, json_name: "requestId")
   field(:from_user_id, 2, type: :string, json_name: "fromUserId")
@@ -98,7 +127,10 @@ end
 defmodule Pb.Im.Protocol.FriendRejectResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendRejectResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:friend_user_id, 1, type: :string, json_name: "friendUserId")
 end
@@ -106,7 +138,10 @@ end
 defmodule Pb.Im.Protocol.FriendRejectNotify do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendRejectNotify",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
   field(:nickname, 2, type: :string)
@@ -116,7 +151,10 @@ end
 defmodule Pb.Im.Protocol.FriendDeleteReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendDeleteReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:friend_user_id, 1, type: :string, json_name: "friendUserId")
 end
@@ -124,7 +162,10 @@ end
 defmodule Pb.Im.Protocol.FriendDeleteResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendDeleteResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:friend_user_id, 1, type: :string, json_name: "friendUserId")
 end
@@ -132,7 +173,10 @@ end
 defmodule Pb.Im.Protocol.FriendDeleteNotify do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendDeleteNotify",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
   field(:timestamp, 2, type: :int64)
@@ -141,7 +185,10 @@ end
 defmodule Pb.Im.Protocol.FriendBlockReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendBlockReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
 end
@@ -149,7 +196,10 @@ end
 defmodule Pb.Im.Protocol.FriendBlockResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendBlockResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
 end
@@ -157,7 +207,10 @@ end
 defmodule Pb.Im.Protocol.FriendBlockNotify do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendBlockNotify",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
   field(:timestamp, 2, type: :int64)
@@ -166,7 +219,10 @@ end
 defmodule Pb.Im.Protocol.FriendUnblockReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendUnblockReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
 end
@@ -174,7 +230,10 @@ end
 defmodule Pb.Im.Protocol.FriendUnblockResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendUnblockResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
 end
@@ -182,7 +241,10 @@ end
 defmodule Pb.Im.Protocol.FriendSetRemarkReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendSetRemarkReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:friend_user_id, 1, type: :string, json_name: "friendUserId")
   field(:remark, 2, type: :string)
@@ -191,7 +253,10 @@ end
 defmodule Pb.Im.Protocol.FriendSetRemarkResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendSetRemarkResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:friend_user_id, 1, type: :string, json_name: "friendUserId")
   field(:remark, 2, type: :string)
@@ -200,7 +265,10 @@ end
 defmodule Pb.Im.Protocol.FriendListReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendListReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:limit, 1, type: :int32)
   field(:cursor, 2, type: :string)
@@ -209,7 +277,10 @@ end
 defmodule Pb.Im.Protocol.FriendListResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendListResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:friends, 1, repeated: true, type: Pb.Im.Protocol.FriendInfo)
   field(:next_cursor, 2, type: :string, json_name: "nextCursor")
@@ -219,7 +290,10 @@ end
 defmodule Pb.Im.Protocol.FriendInfo do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendInfo",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:user_id, 1, type: :string, json_name: "userId")
   field(:nickname, 2, type: :string)
@@ -233,7 +307,10 @@ end
 defmodule Pb.Im.Protocol.FriendRequestListReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendRequestListReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:limit, 1, type: :int32)
   field(:cursor, 2, type: :string)
@@ -242,7 +319,10 @@ end
 defmodule Pb.Im.Protocol.FriendRequestListResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendRequestListResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:requests, 1, repeated: true, type: Pb.Im.Protocol.FriendRequestInfo)
   field(:next_cursor, 2, type: :string, json_name: "nextCursor")
@@ -252,7 +332,10 @@ end
 defmodule Pb.Im.Protocol.FriendRequestInfo do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.FriendRequestInfo",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:request_id, 1, type: :string, json_name: "requestId")
   field(:from_user_id, 2, type: :string, json_name: "fromUserId")

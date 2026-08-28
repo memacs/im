@@ -18,9 +18,10 @@ IM_APP_DIR = "apps/elixir/im"
 description = "校验 proto 语法"
 run = "protoc -I proto --descriptor_set_out=/dev/null proto/*.proto"
 
+# 版本须与 apps/elixir/im/mix.exs 的 :protobuf 一致，否则生成物可能调用运行时库没有的 API
 [tasks.proto-plugin]
-description = "安装 protoc-gen-elixir（版本须与 mix.exs 的 :protobuf 主版本一致）"
-run = "cd apps/elixir/im && mix escript.install hex protobuf 0.14.1 --force"
+description = "安装 protoc-gen-elixir（版本与 mix.exs 的 :protobuf 对齐）"
+run = "cd apps/elixir/im && mix escript.install hex protobuf 0.17.0 --force"
 
 # 生成物入库：Docker 构建阶段无需 protoc，clone 即可编译。
 # 代价是改完 .proto 必须重跑本任务，proto-gen-check 会在 CI 上把漏跑挡下来。
@@ -28,11 +29,17 @@ run = "cd apps/elixir/im && mix escript.install hex protobuf 0.14.1 --force"
 description = "由 proto/ 生成 Elixir 代码到 apps/elixir/im/lib/pb/"
 run = """
 set -e
+# mise 会把 MIX_HOME 指向它管理的 elixir 安装目录，escript 装在那儿而非 ~/.mix
+escripts="${MIX_HOME:-$HOME/.mix}/escripts"
+if [ ! -x "$escripts/protoc-gen-elixir" ]; then
+  echo "未找到 protoc-gen-elixir，请先运行：mise run proto-plugin" >&2
+  exit 1
+fi
 rm -rf apps/elixir/im/lib/pb
-mkdir -p apps/elixir/im/lib/pb
-PATH="$HOME/.mix/escripts:$PATH" protoc \
+# 输出根是 lib/：生成器按模块命名空间建子目录，package_prefix=pb 即落在 lib/pb/im/...
+PATH="$escripts:$PATH" protoc \
   --proto_path=proto \
-  --elixir_out=apps/elixir/im/lib/pb \
+  --elixir_out=apps/elixir/im/lib \
   --elixir_opt=package_prefix=pb \
   proto/*.proto
 cd apps/elixir/im && mix format "lib/pb/**/*.ex"
@@ -208,6 +215,19 @@ run = "kubectl -n im-dev logs -f deployment/im"
 [tasks.k8s-port-forward]
 description = "将 IM 服务转发到本机 4000"
 run = "kubectl -n im-dev port-forward svc/im 4000:4000"
+
+# mix test 连的是 K8s 里的 Postgres。kubectl port-forward 会在 Pod 重建或空闲时断开，
+# 这里自动重连，省得测试跑到一半报 econnrefused。用法：另开一个终端常驻。
+[tasks.pg-forward]
+description = "把 K8s Postgres 常驻转发到本机 15432（mix test 用）"
+run = """
+echo "Postgres → localhost:15432（Ctrl-C 退出）；另开终端运行 PGPORT=15432 mise run test"
+while true; do
+  kubectl -n im-dev port-forward statefulset/postgres 15432:5432 || true
+  echo "转发断开，2 秒后重连…" >&2
+  sleep 2
+done
+"""
 
 # ── Release 镜像 + K8s 验收 ───────────────────────────────────────────────────
 

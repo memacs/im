@@ -20,11 +20,11 @@ RUN mix deps.get --only prod
 RUN mix deps.compile
 
 COPY apps/elixir/im/config config
+# lib/pb 是 protoc 生成物，已入库；构建阶段无需 protoc（生成见 mise run proto-gen）
 COPY apps/elixir/im/lib lib
 COPY apps/elixir/im/priv priv
 # rel/overlays 提供 bin/migrate（Release 内执行 Ecto 迁移）
 COPY apps/elixir/im/rel rel
-COPY proto proto
 
 RUN mix compile
 RUN mix release

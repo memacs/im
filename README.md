@@ -2,8 +2,9 @@
 
 基于 WebSocket + Protobuf 的即时通讯系统。
 
-**当前状态**：协议与设计文档已完成；**Phoenix 骨架 + Release 黄金路径已打通**（Phase 0 完成 8/10，见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)）。
-`mise run ci`、`mise run release-deploy`、`mise run release-smoke` 均可运行；余 P0-04（protobuf 代码生成）与 P0-05（分层目录骨架）。
+**当前状态**：协议与设计文档已完成；**Phase 0 工程脚手架 10/10 完成**（见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)），
+Phoenix 骨架、protobuf 代码生成、Release → K8s 黄金路径均已跑通，下一步进入 Phase 1（协议适配层）。
+`mise run ci`、`mise run proto-gen`、`mise run release-deploy`、`mise run release-smoke` 均可运行。
 
 ---
 
@@ -26,7 +27,7 @@
 
 | 语言 | 文档 | 状态 |
 |------|------|------|
-| **Elixir** | [docs/implementation/elixir/](docs/implementation/elixir/) | P0-01 完成，Phase 0 进行中 |
+| **Elixir** | [docs/implementation/elixir/](docs/implementation/elixir/) | Phase 0 完成，Phase 1 待开始 |
 | **Java** | [docs/implementation/java/](docs/implementation/java/) | 预留 |
 
 ### 部署配置（多语言）
@@ -57,23 +58,24 @@
 
 ## 生成代码
 
-需安装 [Protocol Buffers 编译器](https://protobuf.dev/installation/)（`protoc`）。
+需安装 [Protocol Buffers 编译器](https://protobuf.dev/installation/)（`protoc`；`mise install` 已包含）。
+
+**Elixir**（IM 服务端，生成物入库于 `apps/elixir/im/lib/pb/`）：
 
 ```bash
-# Go
-protoc -I proto --go_out=paths=source_relative:gen/go proto/*.proto
+mise run proto-plugin      # 首次：装 protoc-gen-elixir
+mise run proto-gen         # 生成，改完 .proto 必须重跑
+mise run proto-gen-check   # 校验生成物与 proto/ 同步（CI 会跑）
+```
 
-# Java
+其他语言（输出目录需先 `mkdir -p gen/go gen/java`）：
+
+```bash
+protoc -I proto --go_out=paths=source_relative:gen/go proto/*.proto
 protoc -I proto --java_out=gen/java proto/*.proto
 
 # 仅校验语法
 protoc -I proto --descriptor_set_out=/dev/null proto/*.proto
-```
-
-生成前请先创建输出目录：
-
-```bash
-mkdir -p gen/go gen/java
 ```
 
 ---
@@ -88,8 +90,8 @@ mkdir -p gen/go gen/java
 mise install
 mise tasks                  # 查看全部任务
 mise run k8s-up             # 本地 postgres + redis
-kubectl -n im-dev port-forward svc/postgres 5432:5432   # 另开终端
-mise run ci                 # proto + format + compile + test
+mise run pg-forward         # 另开终端常驻：Postgres → localhost:15432（会自动重连）
+PGPORT=15432 mise run ci    # proto + format + 严格编译 + 依赖审计 + test
 mise run release-deploy     # 构建 Release 镜像并部署到 K8s
 ```
 
@@ -101,8 +103,9 @@ Push / PR 触发 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)，与本
 
 | Job | 条件 | 步骤 |
 | --- | --- | --- |
-| **Proto** | 始终 | `mise run proto-check` |
-| **Elixir** | 存在 `apps/elixir/im/mix.exs` 时 | `format-check` → `compile` → `test` |
+| **Proto** | 始终 | `proto-check` → 装插件 → `proto-gen-check`（生成物防漂移） |
+| **Elixir** | 存在 `apps/elixir/im/mix.exs` 时 | `format-check` → `compile --warnings-as-errors` → `hex.audit` → `test`（含 postgres service） |
+| **Release 镜像** | 同上 | `docker build -f deploy/elixir/im/Dockerfile` |
 
 本地提交前（mix 项目就绪后）：`mise run ci`。
 
@@ -130,7 +133,7 @@ im/
 ├── proto/                       # 协议（语言无关）
 ├── docs/                        # 设计 + 实现文档
 ├── apps/                        # ★ 可运行实现
-│   ├── elixir/im/               # 主 IM（P0-01）
+│   ├── elixir/im/               # 主 IM（lib/im 手写、lib/pb protoc 生成）
 │   ├── elixir/loadtest/         # 压测（Phase 10）
 │   └── java/im/                 # 预留
 ├── deploy/elixir/im/            # IM Dockerfile + k8s + scripts
@@ -155,6 +158,7 @@ im/
 已引入：
 
 - **框架**: Phoenix 1.8 + Bandit
+- **序列化**: protobuf 0.14（`protoc-gen-elixir` 生成到 `lib/pb/`）
 - **持久化**: Ecto SQL + Postgrex (PostgreSQL)
 - **跨节点广播**: Phoenix.PubSub
 
@@ -185,9 +189,9 @@ mise run proto-check
 
 ```bash
 mise install
-mise run k8s-up                                          # mix test 需要 postgres
-kubectl -n im-dev port-forward svc/postgres 5432:5432    # 另开终端
-mise run im:test
+mise run k8s-up             # mix test 需要 postgres
+mise run pg-forward         # 另开终端常驻
+PGPORT=15432 mise run im:test
 ```
 
 ### 3. 本地部署验收

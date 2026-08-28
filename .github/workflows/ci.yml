@@ -27,6 +27,13 @@ jobs:
       - name: proto-check
         run: mise run proto-check
 
+      - name: 安装 protoc-gen-elixir
+        run: mise run proto-plugin
+
+      # 生成物入库，漏跑 proto-gen 会让 lib/pb 与 proto/ 悄悄漂移
+      - name: 校验 lib/pb 与 proto 同步
+        run: mise run proto-gen-check
+
   elixir:
     name: Elixir
     runs-on: ubuntu-latest

@@ -36,11 +36,18 @@ if [[ "$SKIP_DEPLOY" != "1" ]]; then
   log "Applying Kubernetes overlay: $OVERLAY"
   kubectl apply -k "$OVERLAY"
 
+  # redis/postgres 为 StatefulSet（带 PVC 持久化），不是 Deployment
   log "Waiting for dependencies..."
-  kubectl -n "$NAMESPACE" rollout status deployment/redis --timeout=120s
-  kubectl -n "$NAMESPACE" rollout status deployment/postgres --timeout=180s
+  kubectl -n "$NAMESPACE" rollout status statefulset/redis --timeout=120s
+  kubectl -n "$NAMESPACE" rollout status statefulset/postgres --timeout=180s
 
   if kubectl -n "$NAMESPACE" get deployment im &>/dev/null; then
+    # 本地用固定 tag im:local，镜像重建不改变 Deployment spec，
+    # kubectl apply 因此不会触发滚动更新 —— 必须显式 restart，否则跑的还是旧镜像。
+    if [[ "$SKIP_BUILD" != "1" ]]; then
+      log "Restarting IM to pick up the rebuilt image..."
+      kubectl -n "$NAMESPACE" rollout restart deployment/im
+    fi
     log "Waiting for IM Release rollout..."
     kubectl -n "$NAMESPACE" rollout status deployment/im --timeout=300s
   fi

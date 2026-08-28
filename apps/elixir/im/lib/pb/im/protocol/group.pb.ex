@@ -1,7 +1,11 @@
 defmodule Pb.Im.Protocol.GroupMemberRole do
   @moduledoc false
 
-  use Protobuf, enum: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    enum: true,
+    full_name: "im.protocol.GroupMemberRole",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:GROUP_MEMBER_ROLE_UNSPECIFIED, 0)
   field(:GROUP_MEMBER_ROLE_MEMBER, 1)
@@ -12,7 +16,11 @@ end
 defmodule Pb.Im.Protocol.GroupCreateReq.ExtEntry do
   @moduledoc false
 
-  use Protobuf, map: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupCreateReq.ExtEntry",
+    map: true,
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:key, 1, type: :string)
   field(:value, 2, type: :string)
@@ -21,7 +29,10 @@ end
 defmodule Pb.Im.Protocol.GroupCreateReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupCreateReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:name, 2, type: :string)
@@ -34,7 +45,10 @@ end
 defmodule Pb.Im.Protocol.GroupCreateResp do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupCreateResp",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:name, 2, type: :string)
@@ -45,7 +59,10 @@ end
 defmodule Pb.Im.Protocol.GroupOperateReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupOperateReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:reason, 2, type: :string)
@@ -54,7 +71,10 @@ end
 defmodule Pb.Im.Protocol.GroupOperatePush do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupOperatePush",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:conv_id, 2, type: :string, json_name: "convId")
@@ -66,7 +86,10 @@ end
 defmodule Pb.Im.Protocol.GroupMemberPush do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupMemberPush",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:conv_id, 2, type: :string, json_name: "convId")
@@ -78,7 +101,10 @@ end
 defmodule Pb.Im.Protocol.GroupKickReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupKickReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:member_uids, 2, repeated: true, type: :string, json_name: "memberUids")
@@ -88,7 +114,10 @@ end
 defmodule Pb.Im.Protocol.GroupInviteReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupInviteReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:member_uids, 2, repeated: true, type: :string, json_name: "memberUids")
@@ -97,7 +126,10 @@ end
 defmodule Pb.Im.Protocol.GroupAdminReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupAdminReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:member_uid, 2, type: :string, json_name: "memberUid")
@@ -106,7 +138,10 @@ end
 defmodule Pb.Im.Protocol.GroupAdminPush do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupAdminPush",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:conv_id, 2, type: :string, json_name: "convId")
@@ -119,7 +154,10 @@ end
 defmodule Pb.Im.Protocol.GroupTransferReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupTransferReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:new_owner_uid, 2, type: :string, json_name: "newOwnerUid")
@@ -128,7 +166,10 @@ end
 defmodule Pb.Im.Protocol.GroupTransferPush do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupTransferPush",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:conv_id, 2, type: :string, json_name: "convId")
@@ -140,7 +181,11 @@ end
 defmodule Pb.Im.Protocol.GroupUpdateReq.ExtEntry do
   @moduledoc false
 
-  use Protobuf, map: true, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupUpdateReq.ExtEntry",
+    map: true,
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:key, 1, type: :string)
   field(:value, 2, type: :string)
@@ -149,7 +194,10 @@ end
 defmodule Pb.Im.Protocol.GroupUpdateReq do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupUpdateReq",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:name, 2, type: :string)
@@ -161,7 +209,10 @@ end
 defmodule Pb.Im.Protocol.GroupUpdatePush do
   @moduledoc false
 
-  use Protobuf, protoc_gen_elixir_version: "0.14.1", syntax: :proto3
+  use Protobuf,
+    full_name: "im.protocol.GroupUpdatePush",
+    protoc_gen_elixir_version: "0.17.0",
+    syntax: :proto3
 
   field(:group_id, 1, type: :string, json_name: "groupId")
   field(:conv_id, 2, type: :string, json_name: "convId")

@@ -2,8 +2,9 @@
 
 基于 Elixir + Phoenix Framework 的 IM 服务端实现。
 
-> **当前状态**：`apps/elixir/im/` Phoenix 骨架已就位，Release 镜像可构建、K8s 可 rollout、健康检查通过。
-> 进度见 [PROGRESS.md](PROGRESS.md)（下一项 P0-04 / P0-05）。
+> **当前状态**：**Phase 0 完成**。Phoenix 骨架、分层占位模块、protobuf 代码生成（`lib/pb/`）就位，
+> Release 镜像可构建、K8s 在 PSS restricted 下可 rollout、健康检查与 `bin/migrate` 通过。
+> 进度见 [PROGRESS.md](PROGRESS.md)（下一项 Phase 1 协议适配层）。
 
 ---
 
@@ -101,8 +102,8 @@ mise run ci            # proto + format + compile + test
 
 | Phase | 名称 | 状态 |
 |-------|------|------|
-| 0 | 工程脚手架 | 进行中（8/10，余 P0-04 protobuf 生成、P0-05 目录骨架） |
-| 1 | 协议适配层 | 待开始 |
+| 0 | 工程脚手架 | **完成（10/10）** |
+| 1 | 协议适配层 | 待开始（0/5，骨架模块已就位） |
 | 2 | WebSocket 接入 | 待开始（0/14） |
 | 3+ | … | 见 [roadmap.md](roadmap.md) |
 

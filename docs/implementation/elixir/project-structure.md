@@ -44,9 +44,12 @@ apps/elixir/im/
 ├── test/
 ├── priv/
 └── lib/
+    ├── pb/                           # protoc 生成物，勿手改（见下）
     ├── im/
     │   ├── application.ex
     │   ├── repo.ex
+    │   ├── health.ex
+    │   ├── release.ex
     │   ├── protocol/                 # 协议层（无业务）
     │   │   ├── codec.ex
     │   │   ├── router.ex
@@ -65,14 +68,30 @@ apps/elixir/im/
     │   ├── stores/
     │   ├── cluster/
     │   ├── event_bus/
-    │   ├── domain/
+    │   ├── domain/                   # MessageContext、Error 等跨层值对象
     │   ├── telemetry/
     │   └── log.ex
     └── im_web/
         ├── endpoint.ex
         ├── router.ex
+        ├── controllers/
         └── controllers/api/v1/
 ```
+
+### `lib/pb/`：protobuf 生成代码
+
+| 项 | 约定 |
+|------|------|
+| 生成命令 | `mise run proto-gen`（首次需 `mise run proto-plugin` 装 `protoc-gen-elixir`） |
+| 模块前缀 | `Pb.`（`--elixir_opt=package_prefix=pb`）→ `Pb.Im.Protocol.Packet`、`Pb.Im.Event.*` |
+| 目录 | 按模块命名空间分层：`lib/pb/im/protocol/common.pb.ex`、`lib/pb/im/event/event.pb.ex` |
+| 版本 | `protoc-gen-elixir` 与 `mix.exs` 的 `:protobuf` **必须同版本**（当前 0.17.0），否则生成物可能调用运行时库没有的 API |
+| 是否入库 | **入库**。Docker 构建阶段因此不需要 protoc；代价是改完 `.proto` 必须重跑生成 |
+| 防漂移 | CI 跑 `mise run proto-gen-check`，生成物与 `proto/` 不一致即失败 |
+
+前缀不用 `IM.` 是为了和手写的 `IM.Protocol.*` 区分：Elixir 里 `Im` 与 `IM` 是两个模块，
+混在同一命名空间下极易看错，且在大小写不敏感的文件系统上同名模块会撞 `.beam` 文件。
+`lib/pb/` 全是生成物、`lib/im/` 全是手写代码，边界一眼可辨。
 
 ---
 
@@ -93,9 +112,14 @@ apps/elixir/im/
 - [x] `lib/im/application.ex` 启动 `IM.Repo`、`Phoenix.PubSub`、`IMWeb.Endpoint`（P0-01）
 - [x] `lib/im_web/router.ex` 注册 `GET /health/live`、`/health/ready`、`/health`（见下）
 - [x] `test/im_web/controllers/health_controller_test.exs` 覆盖成功与 503 路径
-- [ ] `lib/im/protocol/*.ex` 空模块占位
-- [ ] `lib/im/application/dispatch.ex` 空 `execute/3` → `{:error, :not_implemented}`（含 `@moduledoc`、`@doc`、`@spec`）
-- [ ] `services/`、`delivery/`、`ingress/`、`websocket/commands/` 目录存在
+- [x] `lib/im/protocol/*.ex` 占位（`codec`、`router`、`reply`、`push`、`cmd`）
+- [x] `lib/im/domain/{message_context,error}.ex`：`MessageContext` 按 [message-context.md](message-context.md) 定型，`Error` 为跨层统一错误值
+- [x] `lib/im/application/dispatch.ex` 空 `execute/3`（含 `@moduledoc`、`@doc`、`@spec`）
+- [x] `services/`、`delivery/`、`ingress/`、`websocket/commands/`、`stores/`、`cluster/`、`event_bus/`、`telemetry/` 目录存在
+- [x] `test/im/skeleton_test.exs` 锁定骨架契约
+
+**占位返回值**：统一 `{:error, IM.Domain.Error.not_implemented(cmd)}`，而非裸 `{:error, :not_implemented}`。
+`@spec` 因此从骨架期就是最终形态 `{:error, IM.Domain.Error.t()}`，Phase 1+ 填实现时不必回头改签名和调用方。
 
 **健康检查为何拆两个端点**：`/health/live` 不查库，失败会重启容器；`/health/ready`
 查主库，失败只摘流量。合成一个端点时，浅检查会掩盖故障，深检查会在数据库抖动时
