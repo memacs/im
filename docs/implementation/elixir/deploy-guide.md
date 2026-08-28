@@ -71,6 +71,18 @@ mix loadtest.run connection_load --app-key app_demo --users 50 --base-url http:/
 | `GET /health/ready` | 依赖就绪（DB 等） |
 | `GET /metrics` | Prometheus 文本（P9-05） |
 
+### CPU 火焰图
+
+排查 CPU 热点时使用 Erlang/OTP 原生 perf（非 trace）：
+
+```bash
+kubectl -n im-dev set env deployment/im IM_PERF_FLAMEGRAPH=true
+kubectl -n im-dev rollout status deployment/im
+mise run flamegraph
+```
+
+产出 `artifacts/flamegraph/run-k8s-*/flame_sched.svg`。完整说明见 [flamegraph.md](flamegraph.md)。
+
 ---
 
 ## 6. Event Bus（Kafka 旁路）

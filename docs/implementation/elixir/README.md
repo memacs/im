@@ -69,6 +69,7 @@
 |------|------|
 | [local-dev-gotchas.md](local-dev-gotchas.md) | 本地 Postgres 15432、CI 端口 |
 | [deploy-guide.md](deploy-guide.md) | 生产部署指南 |
+| [flamegraph.md](flamegraph.md) | CPU 火焰图（`mise run flamegraph`） |
 | [release-smoke-auth.md](release-smoke-auth.md) | Release 鉴权冒烟 |
 | [fault-drill.md](fault-drill.md) | 故障演练步骤 |
 

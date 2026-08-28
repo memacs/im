@@ -200,6 +200,7 @@ curl -X POST "https://<host>/api/v1/sessions" \
 | --- | --- |
 | 健康检查 | `/health/live`（存活）vs `/health/ready`（含 DB） |
 | 指标 | `GET /metrics`（Prometheus） |
+| CPU 火焰图 | `mise run flamegraph`（Erlang 原生 perf，须 `IM_PERF_FLAMEGRAPH=true`）→ [flamegraph.md](implementation/elixir/flamegraph.md) |
 | 日志 | JSON 结构化，含 `trace_id` |
 | 滚动发布 | `maxUnavailable: 0`，`terminationGracePeriodSeconds: 60` |
 | PG 备份 | **交付方自备** runbook（本仓库未含） |

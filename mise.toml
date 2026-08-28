@@ -328,6 +328,14 @@ run = "chmod +x deploy/elixir/im/scripts/release-smoke-messaging.sh && ./deploy/
 description = "冒烟：健康 + Pod 内 REST 登录（见 release-smoke-auth.md）"
 run = "chmod +x deploy/elixir/im/scripts/release-smoke-auth.sh && ./deploy/elixir/im/scripts/release-smoke-auth.sh"
 
+[tasks.flamegraph]
+description = "采集 IM CPU 火焰图（K8s + Erlang perf → artifacts/flamegraph/，见 docs/implementation/elixir/flamegraph.md）"
+run = "chmod +x deploy/elixir/im/scripts/flamegraph-mise.sh deploy/elixir/im/scripts/capture-flamegraph.sh && ./deploy/elixir/im/scripts/flamegraph-mise.sh"
+
+[tasks."im:flamegraph"]
+description = "同 flamegraph（IM 别名）"
+depends = ["flamegraph"]
+
 [tasks.verify]
 description = "完整验收：check + Release 构建部署"
 depends = ["check", "release-deploy"]

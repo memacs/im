@@ -224,7 +224,9 @@ kubectl -n im-dev delete pvc data-postgres-0    # 需要清库时（会丢数据
 
 ## mise 任务
 
-见根目录 [`mise.toml`](../../../../mise.toml)：`mise run k8s-up`、`k8s-full`、`release-deploy`、`k8s-port-forward`、`release-smoke` 等。`mise tasks` 查看全部。
+见根目录 [`mise.toml`](../../../../mise.toml)：`mise run k8s-up`、`k8s-full`、`release-deploy`、`k8s-port-forward`、`release-smoke`、`flamegraph` 等。`mise tasks` 查看全部。
+
+**CPU 火焰图**：先 `kubectl -n im-dev set env deployment/im IM_PERF_FLAMEGRAPH=true` 并 rollout，再 `mise run flamegraph`。见 [flamegraph.md](../../../../docs/implementation/elixir/flamegraph.md)。
 
 ---
 

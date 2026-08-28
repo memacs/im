@@ -17,6 +17,7 @@
 ├─ WS 时序         docs/design/protocol/protocol.md + protocol-e2e-message-sequences.md
 ├─ 启动 / 配置     apps/README.md → apps/<app>/README.md
 ├─ 部署 / K8s      deploy/README.md → deploy/elixir/im/k8s/README.md
+├─ CPU 火焰图      docs/implementation/elixir/flamegraph.md → mise run flamegraph
 └─ 活状态          design-decisions.md · architecture-overview.md · PROGRESS.md
 ```
 

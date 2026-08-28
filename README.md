@@ -5,6 +5,7 @@
 **当前状态**：协议与设计文档已完成；**Phase 0–13** 核心能力已落地（见 [PROGRESS.md](docs/implementation/elixir/PROGRESS.md)），
 Release → K8s 黄金路径、压测与 Web 控制台可运行。
 `mise run ci`、`mise run release-deploy`、`mise run release-smoke`、`mise run release-smoke-messaging` 均可使用。
+**CPU 火焰图**：`mise run flamegraph`（须先开启 `IM_PERF_FLAMEGRAPH=true`，见 [火焰图说明](docs/implementation/elixir/flamegraph.md)）。
 
 **第三方交付**：[交付手册](docs/DELIVERY.md) · [已知限制](docs/KNOWN-LIMITATIONS.md) · [生产 K8s 模板](deploy/elixir/im/k8s/overlays/prod/) · [CHANGELOG](CHANGELOG.md) · [LICENSE](LICENSE)
 
@@ -130,6 +131,14 @@ mise run release-deploy     # 构建 Release 镜像 + 部署 IM
 mise run k8s-port-forward   # 另开终端
 mise run release-smoke      # /health/live + /health/ready
 mise run im:test-smoke      # 进程内 messaging + auth（CI 同步骤）
+```
+
+**CPU 火焰图**（排查热点，默认关）：开启 `IM_PERF_FLAMEGRAPH=true` 并 rollout 后，`mise run flamegraph` → `artifacts/flamegraph/run-k8s-*/flame_sched.svg`。详见 [flamegraph.md](docs/implementation/elixir/flamegraph.md)。
+
+```bash
+kubectl -n im-dev set env deployment/im IM_PERF_FLAMEGRAPH=true
+kubectl -n im-dev rollout status deployment/im
+OPEN=1 DURATION=30 mise run flamegraph
 ```
 
 详见 [docs/implementation/elixir/release-deploy-test.md](docs/implementation/elixir/release-deploy-test.md) 与 [deploy/elixir/im/k8s/README.md](deploy/elixir/im/k8s/README.md)。

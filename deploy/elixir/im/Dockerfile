@@ -7,7 +7,7 @@
 # ---------- build：编译 Release ----------
 FROM elixir:1.19.5-otp-28 AS build
 
-RUN apt-get update -y && apt-get install -y build-essential git \
+RUN apt-get update -y && apt-get install -y build-essential git cmake \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /apps/elixir/im
@@ -37,6 +37,7 @@ RUN mix release
 FROM debian:trixie-slim AS runtime
 
 RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses6 locales ca-certificates \
+    perl linux-perf \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

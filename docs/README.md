@@ -38,6 +38,7 @@
 | [DELIVERY.md](DELIVERY.md) | **第三方交付手册**（验收、Bootstrap、文档导航） |
 | [KNOWN-LIMITATIONS.md](KNOWN-LIMITATIONS.md) | **已知限制清单**（v1 能力边界） |
 | [release-deploy-test.md](implementation/elixir/release-deploy-test.md) | Release → K8s → 冒烟 |
+| [flamegraph.md](implementation/elixir/flamegraph.md) | **CPU 火焰图**（`mise run flamegraph`） |
 | [deploy-guide.md](implementation/elixir/deploy-guide.md) | 生产部署指南 |
 | [fault-drill.md](implementation/elixir/fault-drill.md) | 故障演练 |
 | [deploy/elixir/](../deploy/elixir/) | K8s 清单与 Dockerfile |

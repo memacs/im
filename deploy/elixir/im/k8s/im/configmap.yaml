@@ -40,3 +40,5 @@ data:
   CLUSTER_STRATEGY: ""
   CLUSTER_SERVICE: "im-headless"
   CLUSTER_APP_NAME: "im"
+  # Erlang 原生 perf 火焰图（默认关；见 .agents/skills/im-flamegraph/SKILL.md）
+  # IM_PERF_FLAMEGRAPH: "true"
