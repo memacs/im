@@ -11,7 +11,7 @@ defmodule IM.Stores.IdWorkerStore do
 
   ## 示例
 
-      :ok = IM.Stores.IdWorkerStore.upsert(3, "im@127.0.0.1", ~U[2026-01-01 00:00:30.000000Z])
+      :ok = IM.Stores.IdWorkerStore.upsert(3, "im@127.0.0.1", ~U[2000-01-01 00:00:30.000000Z])
   """
   @spec upsert(non_neg_integer(), String.t(), DateTime.t()) :: :ok | {:error, term()}
   def upsert(worker_id, node_name, lease_until)

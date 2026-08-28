@@ -148,8 +148,8 @@ CREATE TABLE user_inbox (
     ...
 ) PARTITION BY RANGE (created_at);
 
-CREATE TABLE user_inbox_2026_07 PARTITION OF user_inbox
-    FOR VALUES FROM ('2026-07-01') TO ('2026-08-01');
+CREATE TABLE user_inbox_yyyy_mm PARTITION OF user_inbox
+    FOR VALUES FROM ('<month-start>') TO ('<next-month-start>');
 ```
 
 #### 冷热分离策略

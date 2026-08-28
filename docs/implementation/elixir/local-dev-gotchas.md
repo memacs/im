@@ -28,7 +28,7 @@
 Postgres **在 OrbStack 里通常是有的**，但 **不会**直接占本机 5432。  
 未设 `PGPORT=15432` 且未跑 `pg-forward` 时，Mix 会去连本机 5432 → 失败。
 
-### 2026-08-04 事件（AI 验证失误）
+### 事件（AI 验证失误）
 
 - 跑 `mise run im:test` 未 export `PGPORT`
 - 得出「DB 不可用 / 测试无法跑通」的错误结论
@@ -59,7 +59,7 @@ PGPORT=15432 mise run test    # OrbStack
 PGPORT=5432 mise run test     # GHA / 本机原生 Postgres
 ```
 
-### 自动化（2026-08-04 起）
+### 自动化
 
 以下 mise 任务在运行前 **`source resolve-pg-port.sh`**：
 

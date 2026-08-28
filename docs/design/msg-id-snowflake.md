@@ -51,7 +51,7 @@
 **常量（建议）**：
 
 ```elixir
-@epoch_ms 1_704_067_200_000   # 2024-01-01 00:00:00 UTC
+@epoch_ms 1_704_067_200_000   # 固定 epoch（UTC）
 @max_worker_id 0x3FF          # 1023
 @max_sequence 0xFFF           # 4095
 ```
@@ -257,7 +257,7 @@ flowchart TD
 
 ## 6. 评审清单
 
-- [x] 人工确认采用 Snowflake 替代 Redis `INCR` 作为 `msg_id` 主路径（2026-07）
+- [x] 人工确认采用 Snowflake 替代 Redis `INCR` 作为 `msg_id` 主路径
 - [x] 确认 `EPOCH_MS` 与 `worker_id` 上限（1024 节点）
 - [x] 更新 [database-design.md](database/database-design.md) §三.2 权威表述
 - [ ] 压测：单节点 Snowflake 生成 + 写库 P99（Phase 3 验收）

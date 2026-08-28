@@ -25,7 +25,7 @@ lib/im/
       └── connection.ex            # connections.total + auth.total
 ```
 
-**落地状态（2026-08）**：Wave1–5 已对齐——宏日志、生产 NDJSON、核心/存储/投递/出站/跨节点/burn 指标；`IM.Audit`；§2.6.4 失败路径日志 + REST `LogContext` + 登出审计。  
+**落地状态**：Wave1–5 已对齐——宏日志、生产 NDJSON、核心/存储/投递/出站/跨节点/burn 指标；`IM.Audit`；§2.6.4 失败路径日志 + REST `LogContext` + 登出审计。  
 Application 启动时挂 `IM.Log.RateLimit` + `IM.Telemetry.Supervisor`；Handler 入口 `IM.Log.Metadata.set_from_packet/2`。
 
 ---
@@ -329,7 +329,7 @@ end
 **输出示例**（`IM.Log.warning(:packet_error, code: 2004, ref_cmd: :CMD_MSG_SEND)`，metadata 已设 `trace_id`）：
 
 ```json
-{"@timestamp":"2026-07-29T10:15:30.123Z","level":"warning","event":"packet_error","message":"packet_error","service":"im","host":"im-0","node":"im@10.0.0.12","trace_id":"abc","app_key":"demo","cmd":"CMD_MSG_SEND","code":2004,"ref_cmd":"CMD_MSG_SEND","caller_module":"Elixir.IM.Services.MessageSend","caller_file":"message_send.ex","caller_line":142}
+{"@timestamp":"<ISO8601>","level":"warning","event":"packet_error","message":"packet_error","service":"im","host":"im-0","node":"im@10.0.0.12","trace_id":"abc","app_key":"demo","cmd":"CMD_MSG_SEND","code":2004,"ref_cmd":"CMD_MSG_SEND","caller_module":"Elixir.IM.Services.MessageSend","caller_file":"message_send.ex","caller_line":142}
 ```
 
 ---

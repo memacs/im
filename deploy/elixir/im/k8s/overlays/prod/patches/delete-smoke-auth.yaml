@@ -1,0 +1,6 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: im-smoke-auth
+  namespace: im-dev
+$patch: delete

@@ -49,6 +49,7 @@ mise run release-smoke
 | --- | --- |
 | `deploy/elixir/im/k8s/` | 仅依赖（Redis + PostgreSQL） |
 | `deploy/elixir/im/k8s/overlays/local/` | **依赖 + IM Release**（集成测试用这个） |
+| `deploy/elixir/im/k8s/overlays/prod/` | **生产模板**（仅 IM + Ingress，外部 PG/Redis，见 [README](overlays/prod/README.md)） |
 | `deploy/elixir/im/k8s/im/` | IM Deployment / Service / ConfigMap / Secret |
 | `deploy/elixir/im/k8s/base/` | 命名空间与依赖基础层 |
 
@@ -193,7 +194,8 @@ deploy/elixir/im/
     │   └── secret.yaml
     └── overlays/
         ├── local/              # 全栈单副本
-        └── cluster/            # 多副本 + libcluster + PDB（P9-01b）
+        ├── cluster/            # 多副本 + libcluster + PDB（P9-01b）
+        └── prod/               # 生产模板（外部 PG/Redis + Ingress TLS）
 ```
 
 ---

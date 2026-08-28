@@ -6,6 +6,8 @@
 Release → K8s 黄金路径、压测与 Web 控制台可运行。
 `mise run ci`、`mise run release-deploy`、`mise run release-smoke`、`mise run release-smoke-messaging` 均可使用。
 
+**第三方交付**：[交付手册](docs/DELIVERY.md) · [已知限制](docs/KNOWN-LIMITATIONS.md) · [生产 K8s 模板](deploy/elixir/im/k8s/overlays/prod/) · [CHANGELOG](CHANGELOG.md) · [LICENSE](LICENSE)
+
 ---
 
 ## 文档
@@ -15,7 +17,8 @@ Release → K8s 黄金路径、压测与 Web 控制台可运行。
 | 文档 | 说明 |
 |------|------|
 | [docs/product-overview.md](docs/product-overview.md) | **产品介绍**（能力、优势、典型场景） |
-| [产品介绍（对外推介）](docs/product-overview.md) | **产品能力、场景、对接方式** |
+| [docs/DELIVERY.md](docs/DELIVERY.md) | **第三方交付手册** |
+| [docs/KNOWN-LIMITATIONS.md](docs/KNOWN-LIMITATIONS.md) | **已知限制清单** |
 | [docs/README.md](docs/README.md) | **文档总索引**（按角色导航） |
 | [docs/module-map.md](docs/module-map.md) | **功能模块对照表**（设计↔实现↔代码） |
 | [docs/specs-index.md](docs/specs-index.md) | **Kiro Spec 索引**（`.kiro/specs/`） |
@@ -109,8 +112,8 @@ Push / PR 触发 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)，与本
 | **Proto** | 始终 | `proto-check` → 装插件 → `proto-gen-check`（生成物防漂移） |
 | **Elixir** | 存在 `apps/elixir/im/mix.exs` 时 | `format-check` → `compile --warnings-as-errors` → `hex.audit` → `test`（含 postgres service） |
 | **im-console** | 存在 `apps/web/im-console/package.json` 时 | `npm ci` → `vitest` → `vite build` |
-| **im_client** | 存在 `im_client/mix.exs` 时 | `mix test` |
-| **loadtest** | 存在 `loadtest/mix.exs` 时 | `mix test`（依赖 im_client） |
+| **im_client** | 存在 `apps/elixir/im_client/mix.exs` 时 | `mix test` |
+| **loadtest** | 存在 `apps/elixir/loadtest/mix.exs` 时 | `mix test`（依赖 im_client） |
 | **Release 镜像** | 同上 | `docker build -f deploy/elixir/im/Dockerfile` |
 
 本地提交前（mix 项目就绪后）：`mise run ci`。
@@ -219,8 +222,12 @@ mise run release-smoke
 
 ## 相关链接
 
+- [交付手册](docs/DELIVERY.md)
+- [已知限制](docs/KNOWN-LIMITATIONS.md)
 - [部署总览](deploy/README.md)
+- [生产 K8s 模板](deploy/elixir/im/k8s/overlays/prod/)
 - [文档总索引](docs/README.md)
 - [Elixir 实现文档](docs/implementation/elixir/)
 - [Elixir 部署文档](deploy/elixir/)
+- [CHANGELOG](CHANGELOG.md) · [LICENSE](LICENSE)
 - [AI 协作约定](agent.md)（含 §文档地图）

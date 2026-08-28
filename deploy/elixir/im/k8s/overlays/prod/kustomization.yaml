@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 生产模板：仅 IM 工作负载 + Ingress，不含集群内 PG/Redis
+# 部署前必读 README.md：创建 Secret、替换镜像与外部依赖 URL
+namespace: im-prod
+
+resources:
+  - namespace.yaml
+  - ../../im
+  - pdb.yaml
+  - hpa.yaml
+  - ingress.yaml
+
+patches:
+  - path: configmap-prod.yaml
+  - path: deployment-prod.yaml
+  - path: patches/delete-dev-secret.yaml
+  - path: patches/delete-smoke-messaging.yaml
+  - path: patches/delete-smoke-auth.yaml
+
+images:
+  - name: im
+    newName: registry.example.com/im
+    newTag: v0.1.0

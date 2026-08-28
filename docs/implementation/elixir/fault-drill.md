@@ -55,7 +55,6 @@
 ## 5. 记录模板
 
 ```text
-日期：
 环境：local / staging
 故障：节点宕机 | Redis | PG
 操作：

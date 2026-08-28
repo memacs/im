@@ -6,7 +6,7 @@
 | 设计文档 | [mobile-push.md](../../design/mobile-push.md) |
 | Kafka | [kafka-event-bus.md](kafka-event-bus.md) §2.11 |
 | Roadmap | Phase 5（P5-09）、Phase 9（P9-03c） |
-| 差距审查 | [gap-review-2026-08-wave3.md](gap-review-2026-08-wave3.md) G-50/G-51 |
+| 差距审查 | [gap-review-wave3.md](gap-review-wave3.md) G-50/G-51 |
 
 ---
 

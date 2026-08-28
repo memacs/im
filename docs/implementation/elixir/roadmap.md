@@ -141,7 +141,7 @@ flowchart LR
 - [x] `./deploy/elixir/im/scripts/release-deploy-local.sh` 全链路通过
 - [x] `PROGRESS.md` 中 P0 全部 `done`
 
-**Phase 0 已完成**（2026-08）。附带交付的部署与 CI 加固见 [PROGRESS.md](PROGRESS.md) §Phase 0。
+**Phase 0 已完成**。附带交付的部署与 CI 加固见 [PROGRESS.md](PROGRESS.md) §Phase 0。
 
 ---
 

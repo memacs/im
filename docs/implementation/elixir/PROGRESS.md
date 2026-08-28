@@ -9,7 +9,7 @@
 
 **图例**：`pending` | `in_progress` | `done` | `blocked` | `deferred`
 
-**当前阶段**：Phase 0–13 完成｜差距审查 [gap-review-2026-08.md](gap-review-2026-08.md) + [wave3 生产就绪](gap-review-2026-08-wave3.md)
+**当前阶段**：Phase 0–13 完成｜差距审查 [gap-review.md](gap-review.md) + [wave3 生产就绪](gap-review-wave3.md)
 
 ---
 
@@ -334,7 +334,7 @@
 
 ## Phase 13：缓存、未读与会话（Remediation）
 
-> 差距审查：[gap-review-2026-08.md](gap-review-2026-08.md)
+> 差距审查：[gap-review.md](gap-review.md)
 
 | ID | 任务 | 状态 | 备注 |
 | --- | --- | --- | --- |

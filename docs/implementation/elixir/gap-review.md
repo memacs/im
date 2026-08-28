@@ -1,6 +1,5 @@
-# 全项目差距审查与Remediation（2026-08）
+# 全项目差距审查与 Remediation
 
-> 审查日期：2026-08-04  
 > 范围：`apps/elixir/im`、`im_client`、`loadtest`、`im-console`、`deploy/`、设计/实现文档  
 > 状态：**Remediation 已落地**（见下文「修复记录」）
 
@@ -63,7 +62,7 @@
 
 ---
 
-## 3. 修复记录（2026-08-04）
+## 3. 修复记录
 
 | ID | 修复 |
 |----|------|
@@ -78,7 +77,7 @@
 | G-20–24 | README、loadtest-report、Kiro tasks、K8s README 更新 |
 | G-30–31 | im-console `listConversations` + Chat 会话面板 + Coverage |
 
-### 3.1 第二轮收尾（2026-08-04 续）
+### 3.1 第二轮收尾
 
 | ID | 修复 |
 |----|------|
@@ -116,5 +115,5 @@
 - [loadtest-report.md](loadtest-report.md) — LT-33 与 Job 说明
 - [release-smoke-messaging.md](release-smoke-messaging.md)
 - [release-smoke-auth.md](release-smoke-auth.md)
-- [gap-review-2026-08-wave3.md](gap-review-2026-08-wave3.md) — 第三轮全面审核（生产就绪）
+- [gap-review-wave3.md](gap-review-wave3.md) — 第三轮全面审核（生产就绪）
 - [local-dev-gotchas.md](local-dev-gotchas.md) — **OrbStack Postgres 端口 / mix test 踩坑**

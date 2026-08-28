@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: im
+  namespace: im-dev
+data:
+  PHX_HOST: "im.example.com"
+  PHX_SCHEME: "https"
+  PHX_URL_PORT: "443"
+  # 替换为托管 Redis 连接串（多副本必填）
+  REDIS_URL: "redis://:CHANGE_ME@redis.example.com:6379"
+  # 多副本 libcluster（与 overlays/cluster 一致）
+  RELEASE_NODE_MODE: "pod_ip"
+  RELEASE_NODE: ""
+  CLUSTER_STRATEGY: "kubernetes"
+  CLUSTER_SERVICE: "im-headless"
+  CLUSTER_APP_NAME: "im"
+  # Kafka 旁路（默认关；有 broker 时开启）
+  EVENT_BUS_ENABLED: "false"
+  EVENT_BUS_PRODUCER: "brod"
+  KAFKA_BROKERS: ""
+  # 生产建议按需开启 Oban Cron（见 deploy-guide.md §7）
+  # UNREAD_FLUSH_AUTO: "true"
+  # PERMISSION_RECONCILE_AUTO: "true"
+  # TTL_PURGE_AUTO: "true"

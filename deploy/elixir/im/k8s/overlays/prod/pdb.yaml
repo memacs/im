@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: im
+  labels:
+    app: im
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: im

@@ -14,6 +14,7 @@
 | IM Release 镜像 | `deploy/elixir/im/Dockerfile` | 生产主服务 |
 | 本地 K8s overlay | `deploy/elixir/im/k8s/overlays/local/` | OrbStack / 本地集群 |
 | 多副本 overlay | `deploy/elixir/im/k8s/overlays/cluster/` | libcluster + headless + PDB |
+| **生产 overlay 模板** | `deploy/elixir/im/k8s/overlays/prod/` | 外部 PG/Redis + Ingress TLS（见 [DELIVERY.md](../../DELIVERY.md)） |
 | 压测镜像 / Job | `deploy/elixir/loadtest/` | 独立 Deployment，对 `svc/im` 施压 |
 
 ---

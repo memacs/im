@@ -2,7 +2,7 @@
 
 基于 Elixir + Phoenix Framework 的 IM 服务端实现。
 
-> **当前状态**：**Phase 0–13 完成**。进度与差距审查见 [PROGRESS.md](PROGRESS.md)、[gap-review-2026-08.md](gap-review-2026-08.md)。
+> **当前状态**：**Phase 0–13 完成**。进度与差距审查见 [PROGRESS.md](PROGRESS.md)、[gap-review.md](gap-review.md)。
 
 ---
 
@@ -91,8 +91,8 @@
 
 | 文档 | 说明 |
 |------|------|
-| [gap-review-2026-08.md](gap-review-2026-08.md) | 差距审查与 Remediation |
-| [gap-review-2026-08-wave3.md](gap-review-2026-08-wave3.md) | Wave3 生产就绪项 |
+| [gap-review.md](gap-review.md) | 差距审查与 Remediation |
+| [gap-review-wave3.md](gap-review-wave3.md) | Wave3 生产就绪项 |
 
 ### 边缘模块（薄文档 — 模块表 + 测试要点 + 链设计）
 
@@ -139,7 +139,7 @@ mise run ci                 # proto + format + compile + test
 |-------|------|------|
 | 0–12 | 核心协议与集群 | **完成**（见 [PROGRESS.md](PROGRESS.md)） |
 | 13 | 缓存/未读/会话/Remediation | **完成** |
-| 后续 | 规模实测、v1 deferred | 见 [roadmap.md](roadmap.md)、[gap-review-2026-08.md](gap-review-2026-08.md) |
+| 后续 | 规模实测、v1 deferred | 见 [roadmap.md](roadmap.md)、[gap-review.md](gap-review.md) |
 
 ---
 

@@ -31,14 +31,17 @@
 → [design/protocol/protocol.md](design/protocol/protocol.md)（规范）  
 → [implementation/elixir/protocol-e2e-message-sequences.md](implementation/elixir/protocol-e2e-message-sequences.md)（E2E 自动生成时序）
 
-### 运维 / 部署 / 验收
+### 第三方交付 / 运维
 
 | 文档 | 说明 |
 | --- | --- |
+| [DELIVERY.md](DELIVERY.md) | **第三方交付手册**（验收、Bootstrap、文档导航） |
+| [KNOWN-LIMITATIONS.md](KNOWN-LIMITATIONS.md) | **已知限制清单**（v1 能力边界） |
 | [release-deploy-test.md](implementation/elixir/release-deploy-test.md) | Release → K8s → 冒烟 |
 | [deploy-guide.md](implementation/elixir/deploy-guide.md) | 生产部署指南 |
 | [fault-drill.md](implementation/elixir/fault-drill.md) | 故障演练 |
 | [deploy/elixir/](../deploy/elixir/) | K8s 清单与 Dockerfile |
+| [overlays/prod/](../deploy/elixir/im/k8s/overlays/prod/) | **生产 K8s 模板** |
 
 ### AI / 协作者
 
@@ -98,10 +101,10 @@ agent.md                            # AI 协作约定
 
 | 分类 | 入口 |
 | --- | --- |
-| 产品介绍（对外推介） | [product-overview.md](../product-overview.md) |
+| **第三方交付** | [DELIVERY.md](DELIVERY.md) · [KNOWN-LIMITATIONS.md](KNOWN-LIMITATIONS.md) |
+| 产品介绍（对外推介） | [product-overview.md](product-overview.md) |
 | **功能模块对照（推荐）** | [module-map.md](module-map.md) |
 | **Kiro Spec 索引** | [specs-index.md](specs-index.md) |
-| 产品介绍 | [product-overview.md](product-overview.md) |
 | 协议规范 | [design/protocol/protocol.md](design/protocol/protocol.md) |
 | 数据库 | [design/database/database-design.md](design/database/database-design.md) |
 | 系统架构（首读） | [design/architecture-overview.md](design/architecture-overview.md) |

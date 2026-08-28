@@ -470,7 +470,7 @@ end
 
 ```json
 {
-  "test_id": "load_test_20260727",
+  "test_id": "load_test_example",
   "duration_ms": 180000,
   "summary": {
     "total_requests": 100000,

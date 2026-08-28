@@ -38,6 +38,7 @@ elixir/im/
     └── overlays/
         ├── local/                  # 单副本全栈（日常验收）
         ├── cluster/                # 多副本 + libcluster + HPA + PDB
+        ├── prod/                   # ★ 生产模板（外部 PG/Redis + Ingress TLS）
         └── kafka-event-bus/        # Redpanda + Event Bus 开启
 ```
 
@@ -71,6 +72,7 @@ kubectl apply -f deploy/elixir/loadtest/k8s/job.yaml
 | --- | --- | --- | --- |
 | `overlays/local` | 1 | 关 | 日常开发、功能冒烟 |
 | `overlays/cluster` | 2（HPA 2–6） | 开 | 多节点扇出、滚动发布验收 |
+| **`overlays/prod`** | 2（HPA 2–10） | 开 | **生产模板**：外部 PG/Redis、Ingress TLS、无 dev Secret |
 | `overlays/kafka-event-bus` | 1 + Redpanda | 关 | Kafka 旁路联调 |
 
 ---
@@ -86,6 +88,9 @@ kubectl apply -f deploy/elixir/loadtest/k8s/job.yaml
 
 ## 相关链接
 
+- [第三方交付手册](../docs/DELIVERY.md)
+- [已知限制清单](../docs/KNOWN-LIMITATIONS.md)
+- [生产 overlay README](elixir/im/k8s/overlays/prod/README.md)
 - [Elixir 部署子目录](elixir/README.md)
 - [Java 部署（预留）](java/README.md)
 - [agent.md](../agent.md)

@@ -101,7 +101,7 @@ deploy/                # 与 apps 对应的部署清单
 
 **所有修改必须保证「文档、注释、代码」三者语义一致，禁止只改其一。**
 
-> **历史教训（必读）**：2026-07 阅后即焚（DD-036）合入时曾出现 **18+ 处文档扇出遗漏**（只改了主设计文档与 proto，未同步 dual-channel、Kafka、roadmap 总览表、实现挂钩等）。**新增/变更协议能力前必须先读并完成** [`docs/design/doc-sync-checklist.md`](docs/design/doc-sync-checklist.md) **§2 勾选 + §2.6 grep 验收**；禁止重复同类错误。
+> **历史教训（必读）**：阅后即焚（DD-036）合入时曾出现 **18+ 处文档扇出遗漏**（只改了主设计文档与 proto，未同步 dual-channel、Kafka、roadmap 总览表、实现挂钩等）。**新增/变更协议能力前必须先读并完成** [`docs/design/doc-sync-checklist.md`](docs/design/doc-sync-checklist.md) **§2 勾选 + §2.6 grep 验收**；禁止重复同类错误。
 
 **架构总览同步（硬约束）**：任何 **系统级** 变更（协议能力、模块划分、分层、数据流、部署拓扑、对外能力边界、核心角色关系）在合入前 **必须** 同步更新 [`docs/design/architecture-overview.md`](docs/design/architecture-overview.md)。该文档是面向全团队的 **活架构图**；专题设计（`docs/design/<module>.md`）写「为什么」，总览写「系统长什么样」；**每个功能模块须有 `## 完整流程` 图**。
 

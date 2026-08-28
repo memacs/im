@@ -197,7 +197,7 @@ WebSocket 发包 ──► 下行计数
 
 ```json
 {
-  "@timestamp": "2026-07-29T10:15:30.123Z",
+  "@timestamp": "<ISO8601>",
   "level": "warning",
   "event": "packet_error",
   "message": "packet_error",
@@ -295,7 +295,7 @@ WebSocket 发包 ──► 下行计数
 
 ```text
 # 开发环境 TTY 示例（键名与生产 JSON 一致）
-2026-07-29T10:15:30.123Z event=msg_send_ok trace_id=abc msg_id=m1 duration_ms=12 level=info
+<ISO8601> event=msg_send_ok trace_id=abc msg_id=m1 duration_ms=12 level=info
 
 # 生产 JSON 示例（单行）
 {"@timestamp":"...","level":"warning","event":"packet_error","message":"packet_error","trace_id":"abc","code":2004,"ref_cmd":"CMD_MSG_SEND"}

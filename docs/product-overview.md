@@ -2,7 +2,7 @@
 
 > 面向产品、业务方与技术决策者的能力概览。
 
-**文档导航**：[文档总索引](README.md) · [功能对照表](module-map.md) · [架构总览](design/architecture-overview.md) · [HTTP API](implementation/elixir/http-api-reference.md) · [实施进度](implementation/elixir/PROGRESS.md)
+**文档导航**：[文档总索引](README.md) · [交付手册](DELIVERY.md) · [已知限制](KNOWN-LIMITATIONS.md) · [功能对照表](module-map.md) · [架构总览](design/architecture-overview.md) · [HTTP API](implementation/elixir/http-api-reference.md) · [实施进度](implementation/elixir/PROGRESS.md)
 
 ---
 

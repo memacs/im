@@ -45,7 +45,7 @@
 | 10 | 压测与上线准备 | [phase-10-loadtest-ops](../.kiro/specs/phase-10-loadtest-ops/) | [loadtest-report](implementation/elixir/loadtest-report.md)、[deploy-guide](implementation/elixir/deploy-guide.md) |
 | 11 | 应用通道 | [phase-11-app-channel](../.kiro/specs/phase-11-app-channel/) | [app-channel](implementation/elixir/app-channel.md) |
 | 12 | Web 演示控制台 | [phase-12-web-console](../.kiro/specs/phase-12-web-console/) | [web-console](implementation/web/web-console.md) |
-| 13 | 缓存 / 未读 / Remediation | 见下方 **Remediation** 与 [gap-review-2026-08](implementation/elixir/gap-review-2026-08.md) | [unread-count](implementation/elixir/unread-count.md)、[permission-cache](implementation/elixir/permission-cache.md) |
+| 13 | 缓存 / 未读 / Remediation | 见下方 **Remediation** 与 [gap-review](implementation/elixir/gap-review.md) | [unread-count](implementation/elixir/unread-count.md)、[permission-cache](implementation/elixir/permission-cache.md) |
 
 ---
 
@@ -64,7 +64,7 @@
 | --- | --- | --- |
 | [dual-channel-completion](../.kiro/specs/dual-channel-completion/) | REST 与 Dispatch 补全 | [dual-channel-api](design/dual-channel-api.md) |
 | [p7-08-p8-09](../.kiro/specs/p7-08-p8-09/) | P7-08 流式消息、P8-09 相关 | [stream-message](implementation/elixir/stream-message.md) |
-| [design-gaps-completion](../.kiro/specs/design-gaps-completion/) | 设计文档与实现差距补全 | [gap-review-2026-08](implementation/elixir/gap-review-2026-08.md) |
+| [design-gaps-completion](../.kiro/specs/design-gaps-completion/) | 设计文档与实现差距补全 | [gap-review](implementation/elixir/gap-review.md) |
 | [brod-producer](../.kiro/specs/brod-producer/) | Kafka Brod Producer 接入 | [kafka-event-bus](implementation/elixir/kafka-event-bus.md) |
 
 ---
@@ -87,7 +87,7 @@ Phase 9–13 及 gap-review 期间的 **专项修复与对齐** spec；完成后
 | observability **wave4** | [observability-align-wave4](../.kiro/specs/observability-align-wave4/) | 可观测性对齐 wave4 |
 | observability **wave5** | [observability-align-wave5](../.kiro/specs/observability-align-wave5/) | 可观测性对齐 wave5 |
 
-差距审查汇总：[gap-review-2026-08.md](implementation/elixir/gap-review-2026-08.md)、[wave3](implementation/elixir/gap-review-2026-08-wave3.md)
+差距审查汇总：[gap-review.md](implementation/elixir/gap-review.md)、[wave3](implementation/elixir/gap-review-wave3.md)
 
 ---
 

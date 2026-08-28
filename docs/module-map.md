@@ -111,7 +111,7 @@
 | 压测报告 | [loadtest-report](implementation/elixir/loadtest-report.md) | — |
 | 压测稳定性 | [loadtest-stability](implementation/elixir/loadtest-stability.md) | — |
 | 故障演练 | [fault-drill](implementation/elixir/fault-drill.md) | — |
-| 差距审查 | [gap-review-2026-08](implementation/elixir/gap-review-2026-08.md)、[wave3](implementation/elixir/gap-review-2026-08-wave3.md) | — |
+| 差距审查 | [gap-review](implementation/elixir/gap-review.md)、[wave3](implementation/elixir/gap-review-wave3.md) | — |
 | 生产部署指南 | [deploy-guide](implementation/elixir/deploy-guide.md) |
 | Release 部署验收 | [release-deploy-test](implementation/elixir/release-deploy-test.md) |
 | K8s 清单操作 | [deploy/elixir/im/k8s/README.md](../deploy/elixir/im/k8s/README.md) |

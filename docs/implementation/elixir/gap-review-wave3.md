@@ -1,6 +1,6 @@
-# 全项目全面审核（第三轮，2026-08-04）
+# 全项目全面审核（第三轮）
 
-> 前置：[gap-review-2026-08.md](gap-review-2026-08.md) Phase 13 Remediation 已完成。  
+> 前置：[gap-review.md](gap-review.md) Phase 13 Remediation 已完成。  
 > 本轮：在 PROGRESS 全 `done` 前提下，对照设计/实现/运维/CI 做 **生产就绪** 审查。
 
 ---
@@ -76,7 +76,7 @@
 
 ---
 
-## 4. 修复记录（2026-08-04 第三轮）
+## 4. 修复记录（第三轮）
 
 | ID | 修复 |
 |----|------|
@@ -90,7 +90,7 @@
 
 **仍待运维/环境**：G-40 规模压测归档、G-42 git 提交、G-52 Kafka 本地栈。
 
-### 3.3 第四轮收尾（2026-08-04 续）
+### 3.3 第四轮收尾
 
 | ID | 修复 |
 |----|------|
@@ -99,7 +99,7 @@
 | G-64 | Chat `MSG_STREAM` 四段发送；Coverage 更新 |
 | G-41 | `IM.Application.warn_redis_cache!/0` prod 启动告警 |
 
-### 3.2 Postgres 端口误判（2026-08-04）
+### 3.2 Postgres 端口误判
 
 | ID | 修复 |
 |----|------|
@@ -109,7 +109,7 @@
 
 ## 5. v1 刻意不做
 
-与 [gap-review-2026-08.md §5](gap-review-2026-08.md) 一致，另加：
+与 [gap-review.md §5](gap-review.md) 一致，另加：
 
 - FCM/APNs SDK（外置推送服务消费 `im.push`）
 - `IM.Delivery.PushDisplay`、推送 Redis 幂等（设计有、v1 简化）
