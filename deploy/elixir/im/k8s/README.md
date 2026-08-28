@@ -47,7 +47,7 @@ mise run release-smoke
 
 | 路径 | 内容 |
 | --- | --- |
-| `deploy/elixir/im/k8s/` | 仅依赖（Redis + PostgreSQL） |
+| `deploy/elixir/im/k8s/` | 依赖栈（Redis + PostgreSQL + Redpanda） |
 | `deploy/elixir/im/k8s/overlays/local/` | **依赖 + IM Release**（集成测试用这个） |
 | `deploy/elixir/im/k8s/overlays/prod/` | **生产模板**（仅 IM + Ingress，外部 PG/Redis，见 [README](overlays/prod/README.md)） |
 | `deploy/elixir/im/k8s/im/` | IM Deployment / Service / ConfigMap / Secret |
@@ -69,6 +69,7 @@ kubectl apply -k deploy/elixir/im/k8s/overlays/local/
 | --- | --- | --- |
 | `redis` | `redis.im-dev.svc.cluster.local:6379` | 序列号、在线状态 |
 | `postgres` | `postgres.im-dev.svc.cluster.local:5432` | 消息与业务数据 |
+| `redpanda` | `redpanda.im-dev.svc.cluster.local:9092` | Kafka 旁路（Event Bus） |
 | `im` | `im.im-dev.svc.cluster.local:4000` | IM Release（WebSocket / HTTP） |
 
 宿主机调试：

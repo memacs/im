@@ -87,7 +87,7 @@ mise run flamegraph
 
 ## 6. Event Bus（Kafka 旁路）
 
-默认 **开启**（`EVENT_BUS_ENABLED=true`）。本地 `overlays/local` 含 Redpanda；生产须配置 `KAFKA_BROKERS`。关闭：`EVENT_BUS_ENABLED=false`。
+默认 **开启**（`EVENT_BUS_ENABLED=true`）。`mise run k8s-up` 会起 Redpanda；`release-deploy` 另起 IM。生产须配置 `KAFKA_BROKERS`。
 
 **本地 K8s 一键开启**（含 Redpanda）：
 

@@ -253,8 +253,13 @@ depends = [
 # ── Kubernetes（deploy/elixir/im/k8s）─────────────────────────────────────────
 
 [tasks.k8s-up]
-description = "启动本地 K8s 依赖（redis + postgres）"
-run = "kubectl apply -k deploy/elixir/im/k8s/"
+description = "启动本地 K8s 依赖（redis + postgres + redpanda）"
+run = """
+kubectl apply -k deploy/elixir/im/k8s/
+kubectl -n im-dev rollout status statefulset/redis --timeout=120s
+kubectl -n im-dev rollout status statefulset/postgres --timeout=180s
+kubectl -n im-dev rollout status deployment/redpanda --timeout=180s
+"""
 
 [tasks.k8s-down]
 description = "删除本地 K8s 依赖"

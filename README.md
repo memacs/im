@@ -96,7 +96,7 @@ protoc -I proto --descriptor_set_out=/dev/null proto/*.proto
 ```bash
 mise install
 mise tasks                  # 查看全部任务
-mise run k8s-up             # 本地 postgres + redis
+mise run k8s-up             # 本地 postgres + redis + redpanda
 mise run pg-forward         # 另开终端常驻：Postgres → localhost:15432（会自动重连）
 mise run ci                 # 自动解析 PGPORT（15432 优先）；见 local-dev-gotchas.md
 mise run release-deploy     # 构建 Release 镜像并部署到 K8s
@@ -126,7 +126,7 @@ Push / PR 触发 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)，与本
 集成测试须在 **Release 镜像 + OrbStack Kubernetes** 中执行，不用 dev server 代替验收。
 
 ```bash
-mise run k8s-up             # 依赖栈（redis + postgres）
+mise run k8s-up             # 依赖栈（redis + postgres + redpanda）
 mise run release-deploy     # 构建 Release 镜像 + 部署 IM
 mise run k8s-port-forward   # 另开终端
 mise run release-smoke      # /health/live + /health/ready

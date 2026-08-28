@@ -7,6 +7,8 @@ Thumbs.db
 # ── Elixir / Mix ─────────────────────────────────────────────────────────────
 **/_build/
 **/deps/
+!deploy/elixir/im/k8s/base/deps/
+!deploy/elixir/im/k8s/base/deps/**
 **/cover/
 **/doc/
 **/.elixir_ls/

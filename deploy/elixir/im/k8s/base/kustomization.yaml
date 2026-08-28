@@ -7,3 +7,4 @@ resources:
   - namespace.yaml
   - deps/redis.yaml
   - deps/postgres.yaml
+  - deps/redpanda.yaml

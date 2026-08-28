@@ -33,7 +33,7 @@ elixir/im/
 │   ├── release-smoke-auth.sh
 │   └── release-smoke-messaging.sh
 └── k8s/
-    ├── base/                       # redis + postgres（StatefulSet + PVC）
+    ├── base/                       # redis + postgres + redpanda
     ├── im/                         # IM Deployment / Service / ConfigMap
     └── overlays/
         ├── local/                  # 单副本全栈（日常验收）
