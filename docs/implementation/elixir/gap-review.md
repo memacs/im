@@ -87,6 +87,12 @@
 | G-30 | Debug AuthResp 全字段；Chat `CMD_MSG_ACK_BATCH_UP`；AuthReq 协商 compression |
 | 测试 | `smoke_test.exs` 增加 `auth/0` |
 
+### 3.2 第三轮：出站调度 WFQ gap 修复（2026-09-02）
+
+| ID | 修复 |
+|----|------|
+| G-40 | 出站调度周期 drain 实现：`PacketTransport.push_via_queue` 改为只入队不立即 drain；`init/1` 加 `:drain_tick` 周期触发（默认 50ms）；提取 `drain_outbound/1` 公共函数。队列在周期内堆积 → aging/coalesce/`outbound_max_depth` 全部生效；WFQ 多带选择在多带同时积压时按 8/4/1 权重出队。新增 `packet_transport_test.exs` 10 个测试全绿，覆盖入队不 drain、`drain_tick` 触发、`max_burst` 限制、HIGH+NORMAL+LOW WFQ 权重。详见 [`outbound-queue-scheduling.md` §九](outbound-queue-scheduling.md)。 |
+
 ---
 
 ## 4. 仍待环境实测（工具已就绪）
@@ -98,22 +104,46 @@
 | 10 万 Channel 订阅 | LT-31 |
 | 未读热路径规模 | LT-33 `unread_bump` |
 | 72h soak | `loadtest-stability.md` |
+| **WFQ 优先级实测**（G-40 已代码修复，待实测） | 慢客户端 + HIGH/NORMAL/LOW 混合投递，验证周期 drain（50ms）下 HIGH 是否按 8/4/1 权重先到；Bandit 不暴露 socket 可写状态，客户端慢的最终堆积仍在 Bandit frames 层 |
 
 将 `reports/*.json` 与环境说明归档至发布记录。
 
 ---
 
-## 5. v1 刻意不做
+## 5. 残留 gap（v1 接受）
+
+> G-40 方案 B 周期 drain 修复后**仍无法对齐设计 §7.6 的残留 gap**，v1 接受，v2 启动前重新评估。
+
+### 5.1 G-40-RESIDUAL：Bandit 不暴露 socket 可写状态
+
+| 维度 | 内容 |
+|------|------|
+| **ID** | G-40-RESIDUAL |
+| **来源** | G-40 方案 B 周期 drain 修复后的残留限制 |
+| **现象** | Bandit `WebSock` behaviour 不把 socket 背压状态反馈给 PacketTransport，`{:push, frames, state}` 返回后 frames 进入 Bandit 自己的 socket 发送缓冲区，PacketTransport 无法知道 Bandit 是否真的发出去、缓冲区多满、TCP 流控是否触发 |
+| **设计预期** | 设计 §7.6 预期"由 `IM.Delivery.ConnectionManager` 在 Socket `{:tcp,:send}` 可写时 drain"——PacketTransport 应能感知 socket 可写事件 |
+| **影响范围** | OutboundQueue 应用层 ✅ 周期 drain 让队列堆积，WFQ 多带权重生效；<br>Bandit frames 队列层 ❌ 客户端慢时仍堆积，**按 FIFO 发**（Bandit 不知道 priority）；<br>TCP / Socket 背压感知 ❌ 无，PacketTransport 无法收 `{tcp, :io_busy}` 类事件 |
+| **实际后果** | 客户端慢 + HIGH/NORMAL/LOW 混合投递时，应用层 OutboundQueue 按 8/4/1 权重出队，但 drain 出来的 bins 进入 Bandit frames 队列后 Bandit 按 FIFO 发，**HIGH 不会真的先到客户端**——应用层 WFQ 优先级在 Bandit frames 层被 FIFO 抹平 |
+| **当前缓解（方案 B 已做的）** | ① 周期 drain（50ms）让队列堆积，aging/coalesce/max_depth 全部生效；② WFQ 多带选择按 8/4/1 权重出队；③ HIGH 队列空时直写快路径；④ `outbound_max_depth=10000` + 丢最旧 LOW 防 OOM；⑤ `idle_timeout_ms` 心跳超时关连接 + `CMD_SYNC_OFFLINE` 重连补拉 |
+| **长期解法（v1 不做）** | A. 迁移到 ThousandIsland2（暴露 socket 可写回调）/绕过 Bandit 直接用 `:gen_tcp` 监听 `{tcp, :io_busy}`；B. 自实现 WebSocket（直接 `:gen_tcp` + ws 帧编解码）；C. 给 Bandit 上游 PR 加 `handle_socket_writable/1` 回调 |
+| **v1 接受理由** | ① 周期 drain 已让应用层 WFQ 生效，单测全绿；② Bandit FIFO 仅在客户端慢 + 多带混合投递时暴露，常见场景下 FIFO 与 WFQ 等价；③ 不影响消息必达性（只影响客户端慢时的优先级排序）；④ 已有兜底（心跳超时 + 重连补拉） |
+| **触发时机** | v2 目标用户出现"客户端慢 + 多带混合投递"场景且投诉 HIGH 没先到时，启动方案 A |
+| **详细分析** | [`outbound-queue-scheduling.md` §9.9](outbound-queue-scheduling.md#99-残留-gapbandit-不暴露-socket-可写状态g-40-residual) |
+
+---
+
+## 6. v1 刻意不做
 
 见 `roadmap.md` deferred 表：Refresh Token、Elasticsearch、Payload GZIP 算法、推送 token 失效回调、聊天室离线历史等。
 
 ---
 
-## 6. 相关文档
+## 7. 相关文档
 
 - [PROGRESS.md](PROGRESS.md) — Phase 13 任务看板
 - [loadtest-report.md](loadtest-report.md) — LT-33 与 Job 说明
 - [release-smoke-messaging.md](release-smoke-messaging.md)
 - [release-smoke-auth.md](release-smoke-auth.md)
+- [outbound-queue-scheduling.md](outbound-queue-scheduling.md) — 出站 WFQ 调度详解（含 §9 G-40 修复与 §9.9 残留 gap）
 - [gap-review-wave3.md](gap-review-wave3.md) — 第三轮全面审核（生产就绪）
 - [local-dev-gotchas.md](local-dev-gotchas.md) — **OrbStack Postgres 端口 / mix test 踩坑**
