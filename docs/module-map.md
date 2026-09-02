@@ -35,6 +35,7 @@
 | Kafka 旁路 | [kafka-event-bus](design/kafka-event-bus.md) | [kafka-event-bus](implementation/elixir/kafka-event-bus.md) | `event.proto` | `IM.EventBus.*` | `event_bus_test.exs` |
 | 离线推送 | [mobile-push](design/mobile-push.md) | [mobile-push](implementation/elixir/mobile-push.md) | `event.proto` | `IM.Delivery.MobilePush` | `mobile_push_test.exs` |
 | 少拷贝投递 | [zero-copy-delivery](design/zero-copy-delivery.md) | [zero-copy-delivery](implementation/elixir/zero-copy-delivery.md) | — | `IM.Delivery.Router`、`IM.Protocol.Push` | `delivery/router_test.exs` |
+| 出站调度（WFQ 优先级 + 丢弃） | — | [outbound-queue-scheduling](implementation/elixir/outbound-queue-scheduling.md) | — | `IM.Delivery.OutboundQueue`、`IMWeb.PacketTransport` | `outbound_queue_test.exs` |
 
 ---
 

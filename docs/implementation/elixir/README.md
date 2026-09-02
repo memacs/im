@@ -52,6 +52,7 @@
 | [modular-architecture.md](modular-architecture.md) | Services + Delivery 分层 |
 | [mobile-push.md](mobile-push.md) | 离线 `im.push` |
 | [zero-copy-delivery.md](zero-copy-delivery.md) | 预编码扇出 |
+| [outbound-queue-scheduling.md](outbound-queue-scheduling.md) | **出站调度详解（WFQ 三带 + 老化 + 合并 + 丢弃策略）**，OutboundQueue + PacketTransport |
 | [release-deploy-test.md](release-deploy-test.md) | Release → K8s → 冒烟 |
 | [release-smoke-messaging.md](release-smoke-messaging.md) | Release 消息/会话未读冒烟 |
 

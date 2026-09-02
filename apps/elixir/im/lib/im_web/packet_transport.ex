@@ -20,6 +20,8 @@ defmodule IMWeb.PacketTransport do
   def init(_opts) do
     timeout = Application.get_env(:im, :auth_timeout_ms, 10_000)
     auth_timer = Process.send_after(self(), :auth_timeout, timeout)
+    drain_interval = Application.get_env(:im, :outbound_drain_interval_ms, 50)
+    {:ok, drain_timer} = :timer.send_interval(drain_interval, :drain_tick)
     IM.Telemetry.Connection.opened()
 
     {:ok,
@@ -28,7 +30,8 @@ defmodule IMWeb.PacketTransport do
        auth_timer: auth_timer,
        idle_timer: nil,
        token_timer: nil,
-       outbound: OutboundQueue.new()
+       outbound: OutboundQueue.new(),
+       drain_timer: drain_timer
      }}
   end
 
@@ -130,11 +133,16 @@ defmodule IMWeb.PacketTransport do
     push_via_queue(state, bin, %{priority: :low})
   end
 
+  def handle_info(:drain_tick, state) do
+    drain_outbound(state)
+  end
+
   def handle_info(_msg, state), do: {:ok, state}
 
   @impl true
   def terminate(_reason, state) do
     cancel_token_timer(state)
+    cancel_drain_timer(state)
 
     case state.conn do
       %{status: :authenticated, context: %{app_key: a, user_id: u, device_id: d} = ctx} ->
@@ -162,11 +170,12 @@ defmodule IMWeb.PacketTransport do
   defp push_via_queue(state, bin, meta) do
     priority = Map.get(meta, :priority, :normal)
 
-    # 队列空时 HIGH 可直写，降低紧急推送延迟
+    # 队列空时 HIGH 可直写，降低紧急推送延迟（设计 §7.6）
     if OutboundQueue.empty?(state.outbound) and
          OutboundQueue.normalize_priority(priority) == :high do
       {:push, {:binary, bin}, refresh_idle(state)}
     else
+      # 否则只入队，由 :drain_tick 周期 drain（设计 §7.6：调度器统一 drain）
       item = %{
         packet_binary: bin,
         priority: priority,
@@ -175,8 +184,22 @@ defmodule IMWeb.PacketTransport do
       }
 
       q = OutboundQueue.enqueue(state.outbound, item)
+      # 返回 {:ok, state}：不立即 drain，等 :drain_tick 触发
+      {:ok, refresh_idle(%{state | outbound: q})}
+    end
+  end
+
+  @doc """
+  触发一次 outbound drain（周期 :drain_tick 调用）。公共函数便于测试。
+
+  返回 `{:push, frames, state}` 或 `{:ok, state}`，可直接作为 `handle_info` 返回值。
+  """
+  def drain_outbound(state) do
+    if OutboundQueue.empty?(state.outbound) do
+      {:ok, state}
+    else
       max_burst = Application.get_env(:im, :priority_max_burst, 16)
-      {bins, q2} = OutboundQueue.drain(q, max_burst)
+      {bins, q2} = OutboundQueue.drain(state.outbound, max_burst)
 
       IM.Telemetry.Outbound.depth(%{
         high: length(q2.high),
@@ -233,6 +256,13 @@ defmodule IMWeb.PacketTransport do
   end
 
   defp cancel_token_timer(_), do: :ok
+
+  defp cancel_drain_timer(%{drain_timer: ref}) do
+    :timer.cancel(ref)
+    :ok
+  end
+
+  defp cancel_drain_timer(_), do: :ok
 
   defp room_deliver?(%{context: nil}, _meta), do: false
 
